@@ -1,6 +1,6 @@
 ---
 import {getEntry} from "astro:content"
-import AuthorHero from "@/layouts/AuthorHero.astro";
+// import AuthorHero from "@/layouts/AuthorHero.astro";
 
 const author = await getEntry('authors', 'default')
 const {Content} = await author.render();
@@ -8,5 +8,5 @@ const {Content} = await author.render();
 ---
 
 <AuthorHero content={author.data}>
-	<Content />
-</AuthorHero>
+	<!-- <Content />
+</AuthorHero> -->
