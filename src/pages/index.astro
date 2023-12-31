@@ -3,6 +3,7 @@ import {getCollection} from "astro:content";
 
 import {SITE_METADATA, ITEMS_PER_PAGE} from '@/consts';
 import RootLayout from "@/layouts/RootLayout.astro";
+import AboutLayout from "@/pages/about.astro";
 import Link from "@/components/Link.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
 import Tag from "@/components/Tag.astro";
@@ -12,8 +13,9 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
 ---
 
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description}>
+    <AboutLayout></AboutLayout>
     <div class="divide-y divide-gray-200 dark:divide-gray-700">
-        <div class="space-y-2 pb-2 pt-6 md:space-y-5">
+        <div class="space-y-2 pb-2 pt-2 md:space-y-5">
             <h1 class="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl sm:leading-10 md:text-3xl md:leading-14">
                 Latest
             </h1>
