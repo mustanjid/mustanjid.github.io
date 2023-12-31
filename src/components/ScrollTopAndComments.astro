@@ -1,4 +1,4 @@
-<div class="fixed bottom-8 right-8 hidden flex-col gap-3 md:hidden" id="commentsAndScrollToTopButtons">
+<div class="fixed top:0 bottom-8 right-8 hidden flex-col gap-3" id="commentsAndScrollToTopButtons">
     <!--TODO: implement this later when comments are ready-->
     <!--{siteMetadata.comments?.provider && (-->
     <!--        <button-->
@@ -46,6 +46,18 @@
             commentsAndScrollToTopButtons.classList.toggle('md:hidden', window.scrollY < 50)
             commentsAndScrollToTopButtons.classList.toggle('md:flex', window.scrollY >= 50)
         })
+
+        window.onscroll = function() {
+  var currentScrollPos = window.pageYOffset;
+
+  // 20 is an arbitrary number here, just to make you think if you need the prevScrollpos variable:
+  if (currentScrollPos >= 20) {
+    // I am using 'display' instead of 'top':
+    document.getElementById("header").style.display = "none";
+  } else {
+    document.getElementById("header").style.display = "initial";
+  }
+}
 
         // const handleScrollToComment = () => {
         //     const comment = document.getElementById('comment')
