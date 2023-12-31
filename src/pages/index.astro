@@ -14,10 +14,67 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
 
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description}>
     <AboutLayout></AboutLayout>
+   
+    <div class="mt-10 flex justify-center">
+        <ol class="items-center sm:flex">
+            <li class="relative mb-6 sm:mb-0">
+                <div class="flex items-center">
+                    <div class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                        <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                </div>
+                <div class="mt-3 sm:pe-8">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Software Engineer</h3>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"><a href="https://dnet.org.bd/" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Dnet-Development Research Network</a></time>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Dhaka, Bangladesh</time>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Mar 2022 - Present</time>
+                </div>
+            </li>
+
+            <li class="relative mb-6 sm:mb-0">
+                <div class="flex items-center">
+                    <div class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                        <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                </div>
+                <div class="mt-3 sm:pe-8">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Junior Software Engineer</h3>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"><a href="https://dnet.org.bd/" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Dnet-Development Research Network</a></time>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Dhaka, Bangladesh</time>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Feb 2021 - Feb 2022</time>
+                </div>
+            </li>
+
+            <li class="relative mb-6 sm:mb-0">
+                <div class="flex items-center">
+                    <div class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                        <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                </div>
+                <div class="mt-3 sm:pe-8">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Research Assistant (Part-Time)</h3>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"><a href="https://www.linkedin.com/company/camlacentre/mycompany/" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">CAMLAs</a></time>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Remote</time>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Mar 2021 - Present</time>
+                </div>
+            </li>
+
+        </ol>
+    </div>
+
     <div class="divide-y divide-gray-200 dark:divide-gray-700">
-        <div class="space-y-2 pb-2 pt-2 md:space-y-5">
-            <h1 class="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl sm:leading-10 md:text-3xl md:leading-14">
-                Latest
+        <div class="space-y-2 pb-2 pt-6 md:space-y-5">
+            <h1 class="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-2xl md:leading-14">
+                Recent Thoughts
             </h1>
             <!-- <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">
                 {SITE_METADATA.description}
@@ -25,7 +82,7 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
         </div>
         <ul class="divide-y divide-gray-200 dark:divide-gray-700">
             {!posts.length && 'No posts found.'}
-            {posts.slice(0, ITEMS_PER_PAGE).map((post) => {
+            {posts.slice(0, 2).map((post) => {
                 const {date, title, summary, tags} = post.data;
                 return (
                         <li class="py-12">
@@ -77,10 +134,10 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
             <div class="flex justify-end text-base font-medium leading-6">
                 <Link
                         href="/blog"
-                        class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                        class="text-white bg-pink-700 hover:bg-pink-800 focus:ring-4 focus:ring-pink-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-pink-600 dark:hover:bg-pink-700 focus:outline-none dark:focus:ring-pink-800"
                         aria-label="All posts"
                 >
-                    All Posts &rarr;
+                    All Thoughts &rarr;
                 </Link>
             </div>
     )}

@@ -4,9 +4,9 @@
  * A few of these are not used yet, and are subject to change, example of this is Author.
  */
 export const SITE_METADATA = {
-    title: 'Astro Starter Blog',
-    headerTitle: 'Astro Starter Blog',
-    description: 'A blog created with Astro and Tailwind.css',
+    title: 'Mustanjid',
+    headerTitle: 'Mustanjid\'s Basket',
+    description: '',
     language: 'en-us',
     theme: 'system', // Options: system, light, dark, Does not work yet
     siteUrl: 'https://mustanjid.github.io/',
@@ -17,14 +17,14 @@ export const SITE_METADATA = {
 
     // The following are subject to change. They are placeholders for now.
     // This project provide a default author content see src/content/authors/default.mdx, so these details are better to be inserted there.
-    author: 'John Doe',
+    author: 'Md Al Mustanjid',
     mastodon: 'https://mastodon.social/@mastodonuser',
     email: 'address@yoursite.com',
-    github: 'https://github.com',
-    twitter: 'https://twitter.com/Twitter',
+    github: 'https://github.com/mustanjid',
+    twitter: 'https://twitter.com/mustanjid_se',
     facebook: 'https://facebook.com',
     youtube: 'https://youtube.com',
-    linkedin: 'https://www.linkedin.com',
+    linkedin: 'https://www.linkedin.com/in/mustanjid/',
 
     // These are not supported yet
     // analytics: {
