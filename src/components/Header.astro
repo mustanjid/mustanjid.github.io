@@ -5,11 +5,9 @@ import Logo from './Logo.astro';
 import MobileNav from "./MobileNav.astro";
 import ThemeSwitcher from "./ThemeSwitcher.astro";
 ---
-<div class="relative mb-16 w-full">
-    <header
-    class='flex justify-between sm:max-w-screen-sm lg:max-w-screen-lg md:max-w-screen-lg py-4 mx-auto fixed z-50 w-full bg-white dark:bg-slate-950'
->
-<!-- <div class='flex h-16 items-center justify-between'> -->
+<div class="relative mb-20">
+    <header class='fixed z-50 bg-white dark:bg-slate-950 fixed w-full max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0 mx-auto'>
+<div class='flex h-16 items-center justify-between'>
         <div>
             <a href="/" aria-label={SITE_METADATA.headerTitle}>
                 <div class="flex items-center justify-between">
@@ -44,7 +42,7 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
             <MobileNav />
         </div>
 
-<!-- </div> -->
+</div>
 
 </header>
 </div>
