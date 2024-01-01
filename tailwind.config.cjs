@@ -17,7 +17,7 @@ module.exports = {
                 sans: ['Space Grotesk', ...fontFamily.sans],
             },
             colors: {
-                primary: colors.pink,
+                primary: colors.blue,
                 gray: colors.gray,
             },
             typography: ({theme}) => ({

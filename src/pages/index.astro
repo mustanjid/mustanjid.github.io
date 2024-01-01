@@ -15,7 +15,7 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description}>
     <AboutLayout></AboutLayout>
    
-    <div class="mt-10 flex justify-center">
+    <div class="mt-6 flex justify-center">
         <ol class="items-center sm:flex">
             <li class="relative mb-6 sm:mb-0">
                 <div class="flex items-center">
@@ -24,7 +24,7 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                    <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                 </div>
                 <div class="mt-3 sm:pe-8">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Software Engineer</h3>
@@ -41,7 +41,7 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                    <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                 </div>
                 <div class="mt-3 sm:pe-8">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Junior Software Engineer</h3>
@@ -58,7 +58,7 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                    <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                 </div>
                 <div class="mt-3 sm:pe-8">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Research Assistant (Part-Time)</h3>
@@ -77,43 +77,45 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
                 Recent Thoughts
             </h1>
         </div>
-        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+
+        <ul class="">
             {!posts.length && 'No posts found.'}
             {posts.slice(0, 2).map((post) => {
                 const {date, title, summary, tags} = post.data;
                 return (
-                        <li class="py-12">
+                        <li class="py-2 ms-6">
                             <article>
-                                <div class="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                                    <dl>
-                                        <dt class="sr-only">Published on</dt>
-                                        <dd class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                                            <FormattedDate date={date}/>
-                                        </dd>
-                                    </dl>
+                                <div class="space-y-2 xl:grid xl:grid-cols-1 xl:items-baseline xl:space-y-0">
+                                    
                                     <div class="space-y-5 xl:col-span-3">
-                                        <div class="space-y-6">
+                                        <div class="space-y-2">
                                             <div>
-                                                <h2 class="text-2xl font-bold leading-8 tracking-tight">
+                                                <h2 class="text-lg font-bold leading-8 tracking-tight">
                                                     <Link href={`/blog/${post.slug}`}
                                                           class="text-gray-900 dark:text-gray-100">
                                                         {title}
                                                     </Link>
                                                 </h2>
-                                                <div class="flex flex-wrap">
+                                                <dl>
+                                        <dt class="sr-only">Published on</dt>
+                                        <dd class="text-sm font-medium leading-7 text-gray-500 dark:text-gray-400">
+                                            <FormattedDate date={date}/>
+                                        </dd>
+                                    </dl>
+                                                <div class="flex flex-wrap leading-7">
                                                     {tags.map(({slug}) => (
                                                             <Tag slug={slug}/>
                                                     ))}
                                                 </div>
                                             </div>
-                                            <div class="prose max-w-none text-gray-500 dark:text-gray-400">
+                                            <div class="max-w-none text-base text-gray-500 dark:text-gray-400">
                                                 {summary}
                                             </div>
                                         </div>
-                                        <div class="text-base font-medium leading-6">
+                                        <div class="text-base font-medium leading-2 flex justify-center">
                                             <Link
                                                     href={`/blog/${post.slug}`}
-                                                    class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                                                    class="text-primary-500 text-base hover:text-primary-600 dark:hover:text-primary-400"
                                                     aria-label={`Read "${title}"`}
                                             >
                                                 Read more &rarr;
@@ -127,4 +129,16 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
             })}
         </ul>
     </div>
+    {posts.length > 3 && (
+        <div class="flex justify-end text-base font-medium leading-6 py-2">
+            <Link
+                    href="/blog"
+                    class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                    aria-label="All posts"
+            >
+                All Posts &rarr;
+            </Link>
+        </div>
+)}
+
 </RootLayout>

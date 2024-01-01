@@ -13,29 +13,30 @@ const {name, avatar, occupation, company, email, github, linkedin, twitter} = As
 ---
     <div class="divide-y divide-gray-200 dark:divide-gray-700">
         <div class="items-start space-y-2 xl:grid xl:grid-cols-3 xl:gap-x-8 xl:space-y-0">
-            <div class="flex flex-col items-center space-x-2 pt-8 sm:pt-6">
+            <div class="flex flex-col items-center space-x-2 pt-6 sm:pt-6">
                 {avatar && (
                         <Image
                                 src={avatar}
                                 alt="avatar"
-                                width={192}
-                                height={192}
-                                class="h-48 w-48 rounded-full"
+                                width={130}
+                                height={130}
+                                class="h-35 w-35 rounded-full"
                         />
                 )}
                 <h3 class="pb-2 pt-4 text-2xl font-bold leading-8 tracking-tight">{name}</h3>
                 <div class="text-gray-500 dark:text-gray-400">{occupation}</div>
                 <div class="text-gray-500 dark:text-gray-400">{company}</div>
 
-                <a href="#" target="_blank" class="inline-flex items-center mt-3 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-200 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"><svg class="w-3.5 h-3.5 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <a href="#" target="_blank" class="inline-flex items-center mt-5 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-200 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"><svg class="w-3.5 h-3.5 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
     <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z"/>
     <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/>
   </svg> Download CV</a>
 
             </div>
-            <div class="prose max-w-none pb-8 pt-8 dark:prose-invert xl:col-span-2">
+
+            <div class="prose max-w-none pb-8 pt-2 dark:prose-invert xl:col-span-2 text-base">
                 <slot/>
-                <div class="flex space-x-3 pt-6 ml-2 mr-2 items-center justify-center">
+                <div class="flex space-x-3 ml-2 mr-2 items-center justify-center text-xs">
                     <SocialIcon kind="php"/>
                     <SocialIcon kind="laravel"/>
                     <SocialIcon kind="node"/>
