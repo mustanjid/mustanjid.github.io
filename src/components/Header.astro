@@ -5,39 +5,47 @@ import Logo from './Logo.astro';
 import MobileNav from "./MobileNav.astro";
 import ThemeSwitcher from "./ThemeSwitcher.astro";
 ---
+<div class="relative mb-16 w-full">
+    <header
+    class='flex justify-between max-w-screen-lg py-4 mx-auto fixed z-50 w-full bg-white dark:bg-slate-950'
+>
+<!-- <div class='flex h-16 items-center justify-between'> -->
+        <div>
+            <a href="/" aria-label={SITE_METADATA.headerTitle}>
+                <div class="flex items-center justify-between">
+                    {/* <div class="mr-3">
+                        <Logo/>
+                    </div> */}
+                    {typeof SITE_METADATA.headerTitle === 'string' ? (
+                            <div class="h-6 text-2xl font-semibold sm:block md:text-lg md:h-7 lg:text-2xl lg:h-6">
+                                {SITE_METADATA.headerTitle}
+                            </div>
+                    ) : (
+                        SITE_METADATA.headerTitle
+                    )}
+                </div>
+            </a>
+        </div>
+        <div class="flex items-center leading-5 space-x-4 sm:space-x-6">
+            {NAVIGATION
+                .filter((link) => link.href !== '/')
+                .map((link) => (
+                        <HeaderLink
+                                href={link.href}
+                                class="hidden sm:block font-medium text-gray-900 dark:text-gray-100"
+                        >
+                            {link.title}
+                        </HeaderLink>
+                ))}
+    
+            <!--TODO: add theme button-->
+            <!--<SearchButton />-->
+            <ThemeSwitcher />
+            <MobileNav />
+        </div>
 
-<header class="flex items-center justify-between py-10 sticky top-0 z-30 bg-white dark:bg-slate-950">
-    <div>
-        <a href="/" aria-label={SITE_METADATA.headerTitle}>
-            <div class="flex items-center justify-between">
-                {/* <div class="mr-3">
-                    <Logo/>
-                </div> */}
-                {typeof SITE_METADATA.headerTitle === 'string' ? (
-                        <div class="h-6 text-2xl font-semibold sm:block md:text-lg md:h-7 lg:text-2xl lg:h-6">
-                            {SITE_METADATA.headerTitle}
-                        </div>
-                ) : (
-                    SITE_METADATA.headerTitle
-                )}
-            </div>
-        </a>
-    </div>
-    <div class="flex items-center leading-5 space-x-4 sm:space-x-6">
-        {NAVIGATION
-            .filter((link) => link.href !== '/')
-            .map((link) => (
-                    <HeaderLink
-                            href={link.href}
-                            class="hidden sm:block font-medium text-gray-900 dark:text-gray-100"
-                    >
-                        {link.title}
-                    </HeaderLink>
-            ))}
+<!-- </div> -->
 
-        <!--TODO: add theme button-->
-        <!--<SearchButton />-->
-        <ThemeSwitcher />
-        <MobileNav />
-    </div>
 </header>
+</div>
+</div>
