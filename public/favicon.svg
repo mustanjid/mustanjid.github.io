@@ -2,7 +2,7 @@
     <style>
         path { fill: gray; }
         @media(prefers-color-scheme: dark) {
-            path { fill: blue; }
+            path { fill: gray; }
         }
     </style>
 </svg>
