@@ -7,9 +7,11 @@ interface Astro {
     description: string;
     imgSrc?: string;
     href?: string;
+    url?: string;
+    stack: string;
 }
 
-const {title, description, imgSrc, href} = Astro.props;
+const {title, description, imgSrc, href, url, stack} = Astro.props;
 ---
 <div class="md max-w-[544px] p-4 md:w-1/2">
     <div class:list={`${imgSrc && 'h-full'} overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}>
@@ -33,7 +35,8 @@ const {title, description, imgSrc, href} = Astro.props;
                             height={306}
                     />
             ))}
-        <div class="p-6">
+        <div class="p-3">
+            <div>
             <h2 class="mb-3 text-2xl font-bold leading-8 tracking-tight">
                 {href ? (
                         <Link href={href} aria-label={`Link to ${title}`}>
@@ -43,16 +46,51 @@ const {title, description, imgSrc, href} = Astro.props;
                     title
                 )}
             </h2>
-            <p class="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">{description}</p>
-            {href && (
+            </div>
+
+            <div>
+            <p class="prose mb-3 text-sm max-w-none text-gray-500 dark:text-gray-400">{description}</p>
+            </div>
+           
+            
+            <div class="flex mb-3">
+            {stack.map( (item) => (<span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{item}</span>)
+            )}
+            </div>
+
+            <div class="flex justify-between px-3 py-2">
+                <div>
+                {href && (
                     <Link
                             href={href}
                             class="text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                             aria-label={`Link to ${title}`}
                     >
-                        Learn more &rarr;
+                        Source Code &rarr;
                     </Link>
             )}
+                </div>
+                { url !== '' ? 
+                
+                <div>
+                {href && (
+                    <Link
+                            href={url}
+                            class="text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            aria-label={`Link to ${title}`}
+                    >Live Demo &rarr;
+                    </Link>
+            )}
+                </div>
+                
+                :
+                
+                " "
+                
+                
+                }
+
+            </div>
         </div>
     </div>
 </div>
