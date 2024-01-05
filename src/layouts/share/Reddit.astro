@@ -3,7 +3,7 @@ import type ButtonProps  from './types';
 
 type Props = ButtonProps;
 
-const { url=Astro.request.url, title } = Astro.props;
+const { url=Astro.request.url, title =Astro.request.title} = Astro.props;
 
 const encoded_url = encodeURIComponent(url);
 let URL = `https://www.reddit.com/submit?url=${encoded_url}&title=${title}`
@@ -11,7 +11,7 @@ let URL = `https://www.reddit.com/submit?url=${encoded_url}&title=${title}`
 ---
 
 <div>
-<a class="fill-current text-gray-700" class="w-6 h-6" target="_blank" href={URL} rel="noopener noreferrer">
+<a class="fill-current text-gray-700" target="_blank" title={title} href={URL} rel="noopener noreferrer">
   <style>
     svg:hover {
       fill:#f21818;

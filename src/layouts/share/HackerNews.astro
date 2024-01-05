@@ -3,7 +3,7 @@ import type ButtonProps  from './types';
 
 type Props = ButtonProps;
 
-const { url=Astro.request.url, title } = Astro.props;
+const { url=Astro.request.url, title =Astro.request.title} = Astro.props;
 
 let URL = `http://news.ycombinator.com/submitlink?u=${url}&t=${title}`
 

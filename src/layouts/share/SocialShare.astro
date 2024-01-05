@@ -13,7 +13,7 @@ interface Props extends ButtonProps {
 
 const DEFAULT_COMPONENTS = [FacebookShareButton, LinkedInShareButton, TwitterShareButton, RedditShareButton, HackerNewsShareButton, EmailShareButton];
 
-const { buttons=DEFAULT_COMPONENTS, url=Astro.request.url, title, description, via} = Astro.props;
+const { buttons=DEFAULT_COMPONENTS, url=Astro.request.url, title=Astro.request.title, description=Astro.request.description, via} = Astro.props;
 
 ---
 

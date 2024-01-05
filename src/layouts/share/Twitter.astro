@@ -3,9 +3,9 @@ import type ButtonProps  from './types';
 
 type Props = ButtonProps;
 
-const { url=Astro.request.url, description, via} = Astro.props;
+const { url=Astro.request.url, description = Astro.request.description, via} = Astro.props;
 
-let URL = `https://twitter.com/intent/tweet?url=${url}`
+let URL = `https://twitter.com/intent/tweet?url=${url}&text=${description}`
 
 if (description) URL += `&text=${description}`
 if (via) URL += `&via=${via}`
