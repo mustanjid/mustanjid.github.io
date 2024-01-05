@@ -74,7 +74,7 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
     <div class="divide-y divide-gray-200 dark:divide-gray-700">
         <div class="space-y-2 pb-2 pt-6 md:space-y-5">
             <h1 class="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-2xl md:leading-14">
-                Recent Thoughts
+               You'll love to read some of my thoughts
             </h1>
         </div>
 
@@ -129,7 +129,7 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
             })}
         </ul>
     </div>
-    {posts.length > 3 && (
+    {posts.length > 2 && (
         <div class="flex justify-end text-base font-medium leading-6 py-2">
             <Link
                     href="/blog"
