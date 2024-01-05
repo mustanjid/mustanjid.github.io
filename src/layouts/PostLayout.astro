@@ -8,6 +8,7 @@ import {type CollectionEntry, getEntries} from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
 import Tag from "../components/Tag.astro";
 import ScrollTopAndComments from "../components/ScrollTopAndComments.astro";
+import SocialShare from "./share/SocialShare.astro";
 
 interface Props {
     post: CollectionEntry<'blog'>;
@@ -68,7 +69,9 @@ const {Content, headings, remarkPluginFrontmatter} = await post.render();
                     <div class="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
                         <div class="prose max-w-none pb-8 pt-10 dark:prose-invert">
                             <slot/>
+                            <SocialShare></SocialShare>
                             <Content/>
+                            <SocialShare></SocialShare>
                         </div>
                         <!--    <div class="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">-->
                         <!--        <Link href={discussUrl(path)} rel="nofollow">-->

@@ -1,0 +1,23 @@
+---
+import FacebookShareButton from "./Facebook.astro";
+import EmailShareButton from "./Email.astro";
+import HackerNewsShareButton from "./HackerNews.astro";
+import LinkedInShareButton from "./LinkedIn.astro";
+import RedditShareButton from "./Reddit.astro";
+import TwitterShareButton from './Twitter.astro';
+import type ButtonProps  from './types';
+
+interface Props extends ButtonProps {
+  buttons?: Object[];
+}
+
+const DEFAULT_COMPONENTS = [FacebookShareButton, LinkedInShareButton, TwitterShareButton, RedditShareButton, HackerNewsShareButton, EmailShareButton];
+
+const { buttons=DEFAULT_COMPONENTS, url=Astro.request.url, title, description, via} = Astro.props;
+
+---
+
+<div class="flex space-x-4 mb-3 mt-6">
+   <div class="fontbold text-base"> {'Share on: '} 
+  </div> { buttons.map((Button) => <Button url={url} description={description} via={via} title={title} /> ) }
+</div>
