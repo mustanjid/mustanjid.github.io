@@ -5,7 +5,7 @@ type Props = ButtonProps;
 
 const { url=Astro.request.url} = Astro.props;
 
-let URL = `https://www.facebook.com/sharer/sharer.php?href=${url}`
+let URL = `https://www.facebook.com/sharer/sharer.php?u=${url}`
 
 ---
 <div>
