@@ -9,6 +9,7 @@ import FormattedDate from "../components/FormattedDate.astro";
 import Tag from "../components/Tag.astro";
 import ScrollTopAndComments from "../components/ScrollTopAndComments.astro";
 import SocialShare from "./share/SocialShare.astro";
+import PostComments from "./PostComments.astro";
 
 interface Props {
     post: CollectionEntry<'blog'>;
@@ -72,23 +73,10 @@ const {Content, headings, remarkPluginFrontmatter} = await post.render();
                             <SocialShare></SocialShare>
                             <Content/>
                             <SocialShare></SocialShare>
+                            <PostComments/>
                         </div>
-                        <!--    <div class="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">-->
-                        <!--        <Link href={discussUrl(path)} rel="nofollow">-->
-                        <!--            Discuss on Twitter-->
-                        <!--        </Link>-->
-                        <!--        {` • `}-->
-                        <!--        <Link href={editUrl(filePath)}>View on GitHub</Link>-->
-                        <!--    </div>-->
-                        <!--    {SITE_METADATA.comments && (-->
-                        <!--            <div-->
-                        <!--                    class="pb-6 pt-6 text-center text-gray-700 dark:text-gray-300"-->
-                        <!--                    id="comment"-->
-                        <!--            >-->
-                        <!--                <Comments slug={slug}/>-->
-                        <!--            </div>-->
-                        <!--    )}-->
                     </div>
+
                     <footer>
                         <div class="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
                             {tags && (
