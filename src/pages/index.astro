@@ -80,7 +80,7 @@ const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
 
         <ul class="">
             {!posts.length && 'No posts found.'}
-            {posts.slice(0, 2).map((post) => {
+            {posts.slice(0, 3).map((post) => {
                 const {date, title, summary, tags} = post.data;
                 return (
                         <li class="py-2 ms-6">
