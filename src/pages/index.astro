@@ -1,144 +1,414 @@
 ---
-import {getCollection} from "astro:content";
+import { getCollection } from "astro:content";
+import { PROJECTS } from "../projects";
 
-import {SITE_METADATA, ITEMS_PER_PAGE} from '@/consts';
+import { SITE_METADATA, ITEMS_PER_PAGE } from "@/consts";
 import RootLayout from "@/layouts/RootLayout.astro";
 import AboutLayout from "@/pages/aboutHero.astro";
 import Link from "@/components/Link.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
 import Tag from "@/components/Tag.astro";
-import {excludeDrafts, sortBlogPosts} from "@/functions";
+import { excludeDrafts, sortBlogPosts } from "@/functions";
 
-const posts = await getCollection('blog', excludeDrafts).then(sortBlogPosts)
+const posts = await getCollection("blog", excludeDrafts).then(sortBlogPosts);
 ---
 
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description}>
-    <AboutLayout></AboutLayout>
-   
-    <div class="mt-6 flex justify-center">
-        <ol class="items-center sm:flex ms-6">
-            <li class="relative mb-6 sm:mb-0">
-                <div class="flex items-center">
-                    <div class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
-                        <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                        </svg>
-                    </div>
-                    <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
-                </div>
-                <div class="mt-3 sm:pe-8">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Software Engineer</h3>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"><a href="https://dnet.org.bd/" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Dnet-Development Research Network</a></time>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Dhaka, Bangladesh</time>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Mar 2022 - Present</time>
-                </div>
-            </li>
+  <AboutLayout />
 
-            <li class="relative mb-6 sm:mb-0">
-                <div class="flex items-center">
-                    <div class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
-                        <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                        </svg>
-                    </div>
-                    <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
-                </div>
-                <div class="mt-3 sm:pe-8">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Junior Software Engineer</h3>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"><a href="https://dnet.org.bd/" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Dnet-Development Research Network</a></time>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Dhaka, Bangladesh</time>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Feb 2021 - Feb 2022</time>
-                </div>
-            </li>
-
-            <li class="relative mb-6 sm:mb-0">
-                <div class="flex items-center">
-                    <div class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
-                        <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                        </svg>
-                    </div>
-                    <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
-                </div>
-                <div class="mt-3 sm:pe-8">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Research Assistant (Part-Time)</h3>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"><a href="https://www.linkedin.com/company/camlacentre/mycompany/" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Centre for Advanced Machine Learning & Applications</a></time>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Remote</time>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600">Mar 2021 - Present</time>
-                </div>
-            </li>
-
-        </ol>
-    </div>
-
-    <div class="divide-y divide-gray-200 dark:divide-gray-700">
-        <div class="space-y-2 pb-2 pt-6 md:space-y-5">
-            <h1 class="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-2xl md:leading-14">
-               You'll love to read some of my thoughts
-            </h1>
-        </div>
-
-        <ul class="">
-            {!posts.length && 'No posts found.'}
-            {posts.slice(0, 3).map((post) => {
-                const {date, title, summary, tags} = post.data;
-                return (
-                        <li class="py-2 ms-6">
-                            <article>
-                                <div class="space-y-2 xl:grid xl:grid-cols-1 xl:items-baseline xl:space-y-0">
-                                    
-                                    <div class="space-y-5 xl:col-span-3">
-                                        <div class="space-y-2">
-                                            <div>
-                                                <h2 class="text-lg font-bold leading-8 tracking-tight">
-                                                    <Link href={`/blog/${post.slug}`}
-                                                          class="text-gray-900 dark:text-gray-100">
-                                                        {title}
-                                                    </Link>
-                                                </h2>
-                                                <dl>
-                                        <dt class="sr-only">Published on</dt>
-                                        <dd class="text-sm font-medium leading-7 text-gray-500 dark:text-gray-400">
-                                            <FormattedDate date={date}/>
-                                        </dd>
-                                    </dl>
-                                                <div class="flex flex-wrap leading-7">
-                                                    {tags.map(({slug}) => (
-                                                            <Tag slug={slug}/>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            <div class="max-w-none text-base text-gray-500 dark:text-gray-400">
-                                                {summary}
-                                            </div>
-                                        </div>
-                                        <div class="text-base font-medium leading-2 flex justify-center">
-                                            <Link
-                                                    href={`/blog/${post.slug}`}
-                                                    class="text-primary-500 text-base hover:text-primary-600 dark:hover:text-primary-400"
-                                                    aria-label={`Read "${title}"`}
-                                            >
-                                                Read more &rarr;
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                        </li>
-                )
-            })}
-        </ul>
-    </div>
-    {posts.length > 2 && (
-        <div class="flex justify-end text-base font-medium leading-6 py-2 sm:mt-4">
-            <Link
-                    href="/blog"
-                    class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                    aria-label="All posts"
+  <!-- <div class="mt-6 flex justify-center">
+    <ol class="items-center sm:flex ms-6">
+      <li class="relative mb-6 sm:mb-0">
+        <div class="flex items-center">
+          <div
+            class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0"
+          >
+            <svg
+              class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
             >
-                All Thoughts &rarr;
-            </Link>
+              <path
+                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+              ></path>
+            </svg>
+          </div>
+          <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
         </div>
-)}
+        <div class="mt-3 sm:pe-8">
+          <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+            Software Engineer
+          </h3>
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            ><a
+              href="https://dnet.org.bd/"
+              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >Dnet-Development Research Network</a
+            ></time
+          >
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            >Dhaka, Bangladesh</time
+          >
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            >Mar 2022 - Present</time
+          >
+        </div>
+      </li>
 
+      <li class="relative mb-6 sm:mb-0">
+        <div class="flex items-center">
+          <div
+            class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0"
+          >
+            <svg
+              class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+              ></path>
+            </svg>
+          </div>
+          <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+        </div>
+        <div class="mt-3 sm:pe-8">
+          <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+            Junior Software Engineer
+          </h3>
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            ><a
+              href="https://dnet.org.bd/"
+              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >Dnet-Development Research Network</a
+            ></time
+          >
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            >Dhaka, Bangladesh</time
+          >
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            >Feb 2021 - Feb 2022</time
+          >
+        </div>
+      </li>
+
+      <li class="relative mb-6 sm:mb-0">
+        <div class="flex items-center">
+          <div
+            class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0"
+          >
+            <svg
+              class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+              ></path>
+            </svg>
+          </div>
+          <div class="sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+        </div>
+        <div class="mt-3 sm:pe-8">
+          <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+            Research Assistant (Part-Time)
+          </h3>
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            ><a
+              href="https://www.linkedin.com/company/camlacentre/mycompany/"
+              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >Centre for Advanced Machine Learning & Applications</a
+            ></time
+          >
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            >Remote</time
+          >
+          <time
+            class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-600"
+            >Mar 2021 - Present</time
+          >
+        </div>
+      </li>
+    </ol>
+  </div> -->
+
+  <!-- <div class="space-y-2 pb-2 pt-6 md:space-y-5">
+      <h1
+        class="text-base font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-xl sm:leading-10 md:text-xl md:leading-14"
+      >
+        You'll love to read some of my thoughts
+      </h1>
+    </div> -->
+
+  <div class="flex flex-col gap-5 m-10">
+    <div>
+      <header class="flex w-full flex-row justify-between gap-2">
+        <h3 class="text-xl font-bold">My Thoughts</h3>
+        <a
+          href="/blog"
+          class="dark:hover:text-red-400 hover:text-blue-600 font-medium cursor-pointer underline decoration-dashed underline-offset-8"
+          target="_self"
+          rel="noreferrer"
+        >
+          See all thoughts
+          <span class="sr-only">See all posts link</span>
+        </a>
+      </header>
+
+      <ul>
+        {!posts.length && "No posts found."}
+        {
+          posts.slice(0, 3).map((post) => {
+            const { date, title, summary, tags } = post.data;
+            return (
+              <li class="my-4">
+                <div class="lg:flex mb-4 lg:mb-2">
+                  <div class="lg:flex-1">
+                    <a
+                      href={`/blog/${post.slug}`}
+                      class="border-b-2 border-b-slate-200 text-base hover:border-b-slate-950 transition ease-linear duration-200"
+                    >
+                      {" "}
+                      {title}
+                    </a>
+                  </div>
+
+                  <div class="text-sm">
+                    <FormattedDate date={date} />
+                  </div>
+                </div>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+
+    <div>
+      <header class="flex w-full flex-row justify-between gap-2">
+        <h3 class="text-xl font-bold">Research Interests</h3>
+        <a
+          href="/about"
+          class="dark:hover:text-red-400 hover:text-blue-600 font-medium cursor-pointer underline decoration-dashed underline-offset-8"
+          target="_self"
+          rel="noreferrer"
+        >
+          See details
+          <span class="sr-only"></span>
+        </a>
+      </header>
+      <article>
+        <h6 class="mt-2 text-primary text-base">
+          My primary research focuses on integrating <span
+            class="font-semibold text-gray-900 underline dark:text-white decoration-blue-500"
+            >computer science</span
+          > with other <span
+            class="font-semibold text-gray-900 underline dark:text-white decoration-blue-500"
+            >interdisciplinary</span
+          > fields to extract meaningful patterns and produce <span
+            class="font-semibold underline underline-offset-1 decoration-2 decoration-blue-400 dark:decoration-blue-600"
+            >knowledge
+          </span> in the age of <span
+            class="font-semibold underline underline-offset-1 decoration-2 decoration-blue-400 dark:decoration-blue-600"
+            >big data.</span
+          >
+        </h6>
+        <h6 class="mt-2 text-primary text-base">
+          Lately, I've been employing state-of-the-art <span
+            class="font-semibold underline underline-offset-1 decoration-2 decoration-blue-400 dark:decoration-blue-600"
+            >machine learning</span
+          > techniques to accurately predict and detect malignant lung cancer in
+          its early stages, thereby facilitating prevention and treatment assessment
+          based on trustworthy and dependable datasets.
+        </h6>
+      </article>
+    </div>
+
+    <div>
+      <header class="flex w-full flex-row justify-between gap-2">
+        <h3 class="text-xl font-bold">Projects</h3>
+        <a
+          href="/projects"
+          class="dark:hover:text-red-400 hover:text-blue-600 font-medium cursor-pointer underline decoration-dashed underline-offset-8"
+          target="_self"
+          rel="noreferrer"
+        >
+          See all projects
+          <span class="sr-only">See all projects</span>
+        </a>
+      </header>
+
+      <div></div>
+
+      <section
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8"
+        data-test="articles-section"
+      >
+        {
+          PROJECTS.slice(0, 3).map((project) => {
+            const { title, description, imgSrc, href, url, stack } = project;
+            return (
+              <div class="col-span-1">
+                <a
+                  href={url}
+                  class="transition-all duration-75 ease-in-out h-full block relative top-0 hover:-top-2 shadow-lg hover:shadow-xl bg-white rounded-xl overflow-hidden astro-DOHJNAO5"
+                  data-test="article-card"
+                >
+                  <img
+                    class="h-36"
+                    src={imgSrc}
+                    alt={title}
+                    width="360"
+                    height="192"
+                  />
+                  <div class="py-6 px-8 astro-DOHJNAO5">
+                    <h4 class="font-bold text-lg leading-tight dark:text-black">
+                      {title}
+                    </h4>
+                    <p class="text-sm mt-2  dark:text-black">
+                      {description.slice(0, 90)}...
+                    </p>
+                    <p class="text-xs text-gray-600 mt-4 flex items-center astro-DOHJNAO5">
+                      Stack: {stack.join(", ")}
+                    </p>
+                  </div>
+                </a>
+              </div>
+            );
+          })
+        }
+      </section>
+    </div>
+
+    <div>
+      <header class="flex w-full flex-row justify-between gap-2">
+        <h3 class="text-xl font-bold">Award & Achievement</h3>
+        <a
+          href="/award"
+          class="dark:hover:text-red-400 hover:text-blue-600 font-medium cursor-pointer underline decoration-dashed underline-offset-8"
+          target="_self"
+          rel="noreferrer"
+        >
+          View all
+          <span class="sr-only">See all posts link</span>
+        </a>
+      </header>
+
+      <h2 class="mt-4 text-lg">Certification</h2>
+      <ul>
+        <li class="my-2">
+          <div class="lg:flex mb-4 lg:mb-2">
+            <div class="lg:flex-1">
+              <p href="" class="text-base">
+                Certificate of Reviewing [Elsevier]
+              </p>
+              <p>Journal: Heliyon</p>
+            </div>
+
+            <div class="text-sm">06 Mar 2023</div>
+          </div>
+        </li>
+      </ul>
+
+      <h2 class="mt-4 text-lg">Hackathon</h2>
+      <ul>
+        <li class="my-2">
+          <div class="lg:flex mb-4 lg:mb-2">
+            <div class="lg:flex-1">
+              <p href="" class="text-base">
+                Workers’ Access to Justice - Bangladesh’s 1st Hackathon to
+                address and ensure workers access to justice
+              </p>
+              <p>Position: 1st Runner Up</p>
+              <p>Team: Justice Journey</p>
+            </div>
+
+            <div class="text-sm">21 Oct 2023</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- <ul class="">
+    {!posts.length && "No posts found."}
+    {
+      posts.slice(0, 3).map((post) => {
+        const { date, title, summary, tags } = post.data;
+        return (
+          <li class="py-2 ms-6">
+            <article>
+              <div class="space-y-2 xl:grid xl:grid-cols-1 xl:items-baseline xl:space-y-0">
+                <div class="space-y-5 xl:col-span-3">
+                  <div class="space-y-2">
+                    <div>
+                      <h2 class="text-lg font-bold leading-8 tracking-tight">
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          class="text-gray-900 dark:text-gray-100"
+                        >
+                          {title}
+                        </Link>
+                      </h2>
+                      <dl>
+                        <dt class="sr-only">Published on</dt>
+                        <dd class="text-sm font-medium leading-7 text-gray-500 dark:text-gray-400">
+                          <FormattedDate date={date} />
+                        </dd>
+                      </dl>
+                      <div class="flex flex-wrap leading-7">
+                        {tags.map(({ slug }) => (
+                          <Tag slug={slug} />
+                        ))}
+                      </div>
+                    </div>
+                    <div class="max-w-none text-base text-gray-500 dark:text-gray-400">
+                      {summary}
+                    </div>
+                  </div>
+                  <div class="text-base font-medium leading-2 flex justify-center">
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      class="text-primary-500 text-base hover:text-primary-600 dark:hover:text-primary-400"
+                      aria-label={`Read "${title}"`}
+                    >
+                      Read more &rarr;
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+        );
+      })
+    }
+  </ul> -->
 </RootLayout>
+
+<!-- {
+  posts.length > 2 && (
+    <div class="flex justify-end text-base font-medium leading-6 py-2 sm:mt-4">
+      <Link
+        href="/blog"
+        class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        aria-label="All posts"
+      >
+        All Thoughts &rarr;
+      </Link>
+    </div>
+  )
+} -->
