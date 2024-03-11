@@ -10,10 +10,11 @@ import RootLayout from "@/layouts/RootLayout.astro";
       >
         Achievement
       </h1>
-      <div class="flex md:flex-row sm:flex-col gap-5">
-        <div class="max-w-md">
+
+      <div class="flex flex-col md:flex-row sm:flex gap-5">
+        <div class="md:max-w-md sm:max-w-sm">
           <ol class="relative text-gray-500 ms-6">
-            <li class="mb-10 ms-6">
+            <li class="mb-2 ms-6">
               <span
                 class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900"
               >
@@ -29,59 +30,145 @@ import RootLayout from "@/layouts/RootLayout.astro";
                   ></path>
                 </svg>
               </span>
+
               <h3
-                class="flex items-center mb-1 text-base font-semibold text-gray-900 dark:text-white"
+                class="flex items-center mb-1 text-base md:text-lg font-semibold text-gray-900 dark:text-white"
               >
                 Workers’ Access to Justice (WA2J) - Bangladesh’s 1st Hackathon
                 to address and ensure workers access to justice
               </h3>
-              <time
-                class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-400"
-                >Organizer: Rule of Law Collaborative-University of South
-                Carolina (USA), BLAST (BD)</time
+
+              <ul
+                class="space-y-2 text-left text-gray-500 dark:text-gray-400 text-sm"
               >
-              <time
-                class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-400"
-                >Position: 1st Runner Up</time
-              >
-              <time
-                class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-400"
-                >Team: Justice Journey</time
-              >
-              <time
-                class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-400"
-                >Place: Ascott Residence, Dhaka, Bangladesh</time
-              >
-              <time
-                class="block mb-2 text-sm font-normal leading-none text-gray-600 dark:text-gray-400"
-                >Duration: 20 Oct 2023 - 21 Oct 2023</time
-              >
-              <p
-                class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400"
-              >
-                Participated in this 36-hours hackathon to focus on improving
-                the justice journeys of formal and informal workers in
-                Bangladesh. We designed and proposed a digital solution aligned
-                with ensuring justice for the domestic workers (still out of
-                law) across Bangladesh. It was pleasure to be a part of this
-                endeavor and to collaborate with such a skilled and diverse
-                team.
-              </p>
+                <li class="flex items-center space-x-2 rtl:space-x-reverse">
+                  <svg
+                    class="flex-shrink-0 w-3 h-3 text-green-500 dark:text-green-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 8 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"></path>
+                  </svg>
+
+                  <span
+                    >Organizer: Rule of Law Collaborative-University of South
+                    Carolina (USA), BLAST (BD)</span
+                  >
+                </li>
+
+                <li class="flex items-center space-x-2 rtl:space-x-reverse">
+                  <svg
+                    class="flex-shrink-0 w-3 h-3 text-green-500 dark:text-green-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 8 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"></path>
+                  </svg>
+
+                  <span>Position: 1st Runner Up</span>
+                </li>
+
+                <li class="flex items-center space-x-2 rtl:space-x-reverse">
+                  <svg
+                    class="flex-shrink-0 w-3 h-3 text-green-500 dark:text-green-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 8 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"></path>
+                  </svg>
+
+                  <span>Team: Justice Journey</span>
+                </li>
+
+                <li class="flex items-center space-x-2 rtl:space-x-reverse">
+                  <svg
+                    class="flex-shrink-0 w-3 h-3 text-green-500 dark:text-green-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 8 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"></path>
+                  </svg>
+
+                  <span>Place: Ascott Residence, Dhaka, Bangladesh</span>
+                </li>
+
+                <li class="flex items-center space-x-2 rtl:space-x-reverse">
+                  <svg
+                    class="flex-shrink-0 w-3 h-3 text-green-500 dark:text-green-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 8 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"></path>
+                  </svg>
+
+                  <span>Duration: 20 Oct 2023 - 21 Oct 2023</span>
+                </li>
+              </ul>
             </li>
           </ol>
         </div>
 
-        <div class="max-w-sm">
-          <img
-            class="h-auto max-w-lg mx-auto rounded dark:shadow-gray-800"
-            src="/static/images/hakathon23.jpeg"
-            alt="image description"
-          />
+        <div class="max-w-lg">
+          <figure class="max-w-lg">
+            <img
+              class="h-auto max-w-full md:max-w-lg rounded-lg dark:shadow-gray-800"
+              src="/static/images/hakathon23.jpeg"
+              alt="image description"
+            />
+            <figcaption
+              class="mt-2 text-xs text-center text-gray-500 dark:text-gray-400"
+            >
+              Honorable judges were presenting the prize to the members of Justice Journey team
+            </figcaption>
+          </figure>
         </div>
       </div>
+      <p class="m-2 text-sm md:text-base font-normal text-gray-500 dark:text-gray-400">
+        Participated in this 36-hours hackathon to focus on improving the
+        justice journeys of formal and informal workers in Bangladesh. We
+        designed and proposed a digital solution aligned with ensuring justice
+        for the domestic workers (still out of law) across Bangladesh. It was
+        pleasure to be a part of this endeavor and to collaborate with such a
+        skilled and diverse team.
+      </p>
 
       <h1
-        class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl sm:leading-10 md:text-3xl md:leading-14"
+        class="text-3xl mt-8 font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl sm:leading-10 md:text-3xl md:leading-14"
       >
         Awards
       </h1>
