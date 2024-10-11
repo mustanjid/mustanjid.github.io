@@ -14,9 +14,14 @@ This calling thing is for js variables. There are **two types of variables** in 
 When working with js, we must have a sound knowledge of the differences between these two types. Call by value and Call by Reference can also be addressed as Pass by value and Pass by Reference respectively. Let’s see what are the primitive and non-primitive data in js. We will explore the features, calling, and passing process of these two variables and their differences.
 
 | Primitive | **Non-primitive Data** |   |
-| --------- | ---------------------- | - |
-| Numbers   | Array                  |   |
-|           |                        |   |
+| :-------: | :--------------------: | - |
+|  Numbers  |          Array         |   |
+|  Strings  |         Object         |   |
+|  Boolean  |        Function        |   |
+|    Null   |                        |   |
+| Undefined |                        |   |
+|   Bigint  |                        |   |
+|   Symbol  |                        |   |
 
 ### Primitive Data
 
@@ -32,7 +37,7 @@ name[1] = 'a' // not changed
 console.log(name) // output: Mustanjid
 ```
 
-It seems very uncommon with js strings. If we want to alter or change one string's alphabet, specifically if we want to change the value of a string, <u>it will not happen as js doesn’t allow us to do that</u>. In addition, we change the value of the string using methods such as toLowerCase, toUpperCase, etc. What was that? Actually, <u>js returns a new string to us</u>, not changing the value of the provided variable.
+It seems very uncommon with js strings. If we want to alter or change one string's alphabet, specifically if we want to change the value of a string, **<u>it will not happen as js doesn’t allow us to do that</u>**. In addition, we change the value of the string using methods such as toLowerCase, toUpperCase, etc. What was that? Actually, **<u>js returns a new string to us</u>**, not changing the value of the provided variable.
 
 ```js
 let nameWithUpperCase = name.toUpperCase();
@@ -42,7 +47,7 @@ console.log(name) // Output: Mustanjid
 
 ### Calling/Passing by value in primitive data type
 
-We commonly do this, by assigning the value of a variable to another variable. When it’s about primitive data types, then the value of the variable is called and copied in this case.  They pass and remember through the value.
+We commonly do this, by assigning the value of a variable to another variable. When it’s about primitive data types, then the value of the variable is called and copied in this case.  **<u>They pass and remember through the value only.</u>**
 
 ```js
 let prevValue = 1;
@@ -78,7 +83,7 @@ console.log(copyArr); //Output: [ "Js", "React", "Vue" ]
 
 ### Calling/Passing by Reference in Non-primitive data types
 
-Is it possible that we’re not copying data!? it’s not a question actually. However, we already learned how non-primitive data types store data with an address. Copying between two objects or arrays is totally different in non-primitive cases. <u>It copies the address eventually</u>, the meaning of it is that&#x20;
+Is it possible that we’re not copying data!? it’s not a question actually. However, we already learned how non-primitive data types store data with an address. Copying between two objects or arrays is totally different in non-primitive cases. **<u>It copies the address eventually</u>**, the meaning of it is that&#x20;
 
 > changing the value of an index in an array will also change the value of the copied array. Same for the object too
 
@@ -99,13 +104,13 @@ Let’s see an example to clear this in our minds.
 
 ### Comparison of non-primitive data types
 
-Suppose, we want to compare values of two arrays or objects. Do we compare as we do in primitive types?&#x20;
+Suppose, we want to compare values of two arrays or objects. Do we compare as we do in primitive types? Never
 
-:::info
-We do sometimes when arrays or objects are copied, see example below
+:::note
+We do sometimes when arrays or objects are copied, see the example below
 :::
 
-Never! We compare through each index or property. So, having the same value doesn’t mean that comparison is the same. 
+! We compare through each index or property. So, having the same value doesn’t mean that comparison is the same. 
 
 ```js
 let obj1 = {
