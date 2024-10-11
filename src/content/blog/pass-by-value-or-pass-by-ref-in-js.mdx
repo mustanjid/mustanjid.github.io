@@ -6,7 +6,7 @@ authors: ['sparrowhawk']
 summary: 'When working with js, we must have a sound knowledge of the differences between these two types. Call by value and Call by Reference can also be addressed as Pass by value and Pass by Reference respectively.'
 ---
 
-This calling thing is for js variables. There are two types of variables in js.
+This calling thing is for js variables. There are **two types of variables** in js.
 
 1. Primitive
 2. Non-primitive/Reference
@@ -20,22 +20,24 @@ When working with js, we must have a sound knowledge of the differences between 
 
 ### Primitive Data
 
-In js, primitives are known as immutable data types; that means we can’t change it once it has been created. If doing so, js will interact differently. Let’s see an example.
+> In js, primitives are known as immutable data types;&#x20;
+
+that means we can’t change it once it has been created. If doing so, js will interact differently. Let’s see an example.
 
 ```js
 let name = 'Mustanjid';
-    console.log(name[1]) // output: u
-    //try to change the second letter of the name
-    name[1] = 'a' // not changed
-    console.log(name) // output: Mustanjid
+console.log(name[1]) // output: u
+//try to change the second letter of the name
+name[1] = 'a' // not changed
+console.log(name) // output: Mustanjid
 ```
 
-It seems very uncommon with js strings. If we want to alter or change one string's alphabet, specifically if we want to change the value of a string, it will not happen as js doesn’t allow us to do that. In addition, we change the value of the string using methods such as toLowerCase, toUpperCase, etc. What was that? Actually, js returns a new string to us, not changing the value of the provided variable.
+It seems very uncommon with js strings. If we want to alter or change one string's alphabet, specifically if we want to change the value of a string, <u>it will not happen as js doesn’t allow us to do that</u>. In addition, we change the value of the string using methods such as toLowerCase, toUpperCase, etc. What was that? Actually, <u>js returns a new string to us</u>, not changing the value of the provided variable.
 
 ```js
- let nameWithUpperCase = name.toUpperCase();
-  console.log(nameWithUpperCase); // Output: MUSTANJID
-  console.log(name) // Output: Mustanjid
+let nameWithUpperCase = name.toUpperCase();
+console.log(nameWithUpperCase); // Output: MUSTANJID
+console.log(name) // Output: Mustanjid
 ```
 
 ### Calling/Passing by value in primitive data type
@@ -61,7 +63,11 @@ console.log(name1 === name2) // Output: true
 
 ### Non-primitive Data Types
 
-Most of the work in js is done by using functions (first-class function-based language), arrays, and objects. We can’t think of js without these three things. These three things are known and recognized as non-primitive data types. It is different from primitive as we can change the value after creating non-primitive data, non-primitive is mutable. When non-primitive data has been initialized, it creates an address in memory and remembers that to store data. It recalls the address to return the value following our needs  (like stack and memory heap).
+Most of the work in js is done by using functions (first-class function-based language), arrays, and objects. We can’t think of js without these three things. These three things are known and recognized as non-primitive data types. It is different from primitive as we can change the value after creating non-primitive data.&#x20;
+
+> Non-primitive is mutable
+
+When non-primitive data has been initialized, it creates an address in memory and remembers that to store data. It recalls the address to return the value following our needs  (like stack and memory heap).
 
 ```js
 let arr = ['Js', 'React', 'Vue'];
@@ -72,10 +78,14 @@ console.log(copyArr); //Output: [ "Js", "React", "Vue" ]
 
 ### Calling/Passing by Reference in Non-primitive data types
 
-Is it possible that we’re not copying data!? it’s not a question actually. However, we already learned how non-primitive data types store data with an address. Copying between two objects or arrays is totally different in non-primitive cases. It copies the address in eventually, the meaning of it is that changing the value of an index in an array will also change the value of the copied array. Same for the object too. Let’s see an example to clear this in our minds.
+Is it possible that we’re not copying data!? it’s not a question actually. However, we already learned how non-primitive data types store data with an address. Copying between two objects or arrays is totally different in non-primitive cases. <u>It copies the address eventually</u>, the meaning of it is that&#x20;
+
+> changing the value of an index in an array will also change the value of the copied array. Same for the object too
+
+Let’s see an example to clear this in our minds.
 
 ```js
-let arr = ['Js', 'React', 'Vue'];
+    let arr = ['Js', 'React', 'Vue'];
     let copyArr = arr;
     console.log(arr); //Output: [ "Js", "React", "Vue" ]
     console.log(copyArr); //Output: [ "Js", "React", "Vue" ]
@@ -89,7 +99,13 @@ let arr = ['Js', 'React', 'Vue'];
 
 ### Comparison of non-primitive data types
 
-Suppose, we want to compare values of two arrays or objects. Do we compare like primitive types? Never! If we do this like arr1 === arr2, it will not work. We compare through each index or property. So, having the same value doesn’t mean that comparison is the same. 
+Suppose, we want to compare values of two arrays or objects. Do we compare as we do in primitive types?&#x20;
+
+:::info
+We do sometimes when arrays or objects are copied, see example below
+:::
+
+Never! We compare through each index or property. So, having the same value doesn’t mean that comparison is the same. 
 
 ```js
 let obj1 = {
@@ -114,10 +130,10 @@ console.log(anObj === copyObj) // Output: true
 
 Let’s recap the major differences between these two data types.
 
-| Primitive                                              | Non-Primitive                                                          |   |
-| ------------------------------------------------------ | ---------------------------------------------------------------------- | - |
-| It is non-mutable.                                     | It is mutable.                                                         |   |
-| It saves data by value.                                | It saves data by address.                                              |   |
+|                        Primitive                       |                              Non-Primitive                             |   |
+| :----------------------------------------------------: | :--------------------------------------------------------------------: | - |
+|                   It is non-mutable.                   |                             It is mutable.                             |   |
+|                 It saves data by value.                |                        It saves data by address.                       |   |
 | In comparison, the value of two variables is measured. | In comparison, the value of address between two variables is measured. |   |
 
 Now read the code below and determine what will be the output. Hope this writing helped you a little.
@@ -135,4 +151,4 @@ passNonPrimitiveByRef(aProductObj)
 console.log(aProductObj.name) // Output:
 ```
 
-Happy coding!!!
+`Happy coding!!!`
