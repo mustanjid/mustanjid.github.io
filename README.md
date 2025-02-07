@@ -1,85 +1,71 @@
-![img.png](img.png)
+## [Your Name]
 
-# Tailwind Astro Starter Project
 [![GitHub Repo stars](https://img.shields.io/github/stars/wanoo21/tailwind-astro-starting-blog?style=social)](https://GitHub.com/wanoo21/tailwind-astro-starting-blog/stargazers/)
 [![GitHub forks](https://img.shields.io/github/forks/wanoo21/tailwind-astro-starting-blog?style=social)](https://GitHub.com/wanoo21/tailwind-astro-starting-blog/network/)
 [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fipwanciu)](https://twitter.com/ipwanciu)
 
-[//]: # ([![Sponsor]&#40;https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/timlrx&#41;]&#40;https://github.com/sponsors/timlrx&#41;)
+## Introduction
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/wanoo21/tailwind-astro-starting-blog)
-    
+Hello! I'm [Your Name], the creator of this Tailwind Astro Starter Project. I built this project to provide a modern, easy-to-use template for building blogs using Astro, Tailwind CSS, and TypeScript. This project is inspired by the [Tailwind Next.js Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog) and aims to offer similar features with a different implementation.
 
-This template is perfect for those who want to use Tailwind CSS and Astro to build a blog. 
+## Why This Blog
 
-It is inspired by the [Tailwind Next.js Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog) - one of the most popular Next.js blogging templates.
+I created this blog template to help developers quickly set up a blog with modern web technologies. Whether you're a beginner or an experienced developer, this template provides a solid foundation for building a blog with features like MDX support, multiple authors, tags, and more.
 
-Feature request or Facing issue? Check the [discussion page](https://github.com/wanoo21/tailwind-astro-starting-blog/discussions) to see if it has been brought up previously. Otherwise, feel free to start a new discussion thread. All ideas are welcomed!
+## Tech Stack
 
-## Demo
-
-[Live Demo](https://tasb.yon.fun/) - Deployed on Vercel.
+- **Astro:** A modern static site generator.
+- **TypeScript:** For type safety and better developer experience.
+- **Tailwind CSS:** Utility-first CSS framework for styling.
+- **MDX:** Combines Markdown with JSX for writing content.
 
 ## Features
 
-- Astro with Typescript
+- Astro with TypeScript
 - Astro MDX support
-- Easy styling customization with [Tailwind 3.3](https://tailwindcss.com/blog/tailwindcss-v3-3) and primary color attribute
-- ~~Perfect lighthouse score~~ - Still have to make some improvements
+- Easy styling customization with Tailwind CSS
 - Mobile-friendly view
 - Light and dark theme
-- ~~Font optimization~~ - Not yet implemented
 - Automatic image optimization via Astro image component
-- Support for tags - each unique tag will be its own page
-- Support for multiple authors
-- ~~3 different blog layouts~~ - Only 2 for now
-- ~~2 different blog listing layouts~~ - Only 1 for now
-- Support for nested routing of blog posts
-- Projects page
-- ~~SEO friendly~~ still working on this, but already supports RSS feed, sitemaps and more!
+- Support for tags and multiple authors
+- Related posts and pagination
+- SEO features like RSS feed and sitemaps
 
-Even thought these features looks the same as the original template, they are implemented in a different way, and there are more to come.
+## How to Implement This Project
 
-However, there are some features that are not in the original template, like:
+### Prerequisites
 
-- Support for multiple authors pages - **each author will have** its own page, with a list of all the posts written by him/her.
-- Support for multiple tags pages - **each tag has its own page with custom description**, that can be customized with markdown. 
-- Related posts - **each post has** a list of related posts, provided by the author inside the markdown file.
-- Pagination inside blog/tags pages - **each blog/tags page has** a pagination.
-- Cool animations provided by Astro.
-- And many more that would come in the future.
+- Node.js and npm installed on your machine.
 
-## Extend / Customize
+### Installation
 
-`src/consts.ts` contains a list of constants that you can customize to your liking, including the blog title, description, author, social media links, etc.
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/wanoo21/tailwind-astro-starting-blog.git
+   cd tailwind-astro-starting-blog
+npm install
+npm run dev
+npm run build
+npm run preview
 
-`src/functions.ts` contains a list of functions that changes the default behavior of the template, including default post sorting and exclude draft posts.
+MIT License
 
-`src/content/authors/default.mdx` contains the default author information. You can add more authors by adding more `.mdx` files in the `src/content/authors` folder.
+Copyright (c) 2023 [Your Name]
 
-`src/content/tags/default.mdx` contains the default tag information. You can add more tags by adding more `.mdx` files in the `src/content/tags` folder.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-`src/content/config.ts` contains all fields for author, blog and tags pages. Check what's required and what's not. You can also add more fields if you want to.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-### 🐳 Docker Commands
-
-All Docker commands are run from the root of the project, from a terminal:
-
-| Command                               | Action                                                   |
-| :------------------------------------ | :------------------------------------------------------- |
-| `docker build -t app:1.0.0 .`         | Build the Docker image for the Astro application.        |
-| `docker run -p 80:4321 app:1.0.0`     | Run a Docker container with the built Astro application. |
-| `docker pull edwardb11/app:2.0.0`     | Download the Docker image from Docker Hub.               |
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
