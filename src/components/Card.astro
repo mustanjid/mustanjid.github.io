@@ -6,14 +6,15 @@ interface Astro {
     title: string;
     description: string;
     imgSrc?: string;
-    href?: string;
+    projectdesc?: string;
+    srccode?: string;
     url?: string;
     stack: string;
 }
 
-const {title, description, imgSrc, href, url, stack} = Astro.props;
+const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.props;
 ---
-<div class="md max-w-[544px] p-4 md:w-1/2">
+<!-- <div class="md max-w-[544px] p-4 md:w-1/2">
     <div class:list={`${imgSrc && 'h-full'} overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}>
         {imgSrc &&
             (href ? (
@@ -90,6 +91,100 @@ const {title, description, imgSrc, href, url, stack} = Astro.props;
                 
                 }
 
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="md max-w-[544px] p-4 md:w-1/2">
+    <div class="group relative h-full overflow-hidden rounded-xl border-2 border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/30">
+        {imgSrc && (
+            <div class="aspect-[3/2] w-full overflow-hidden border-b border-gray-200 dark:border-gray-700">
+                {url ? (
+                    <Link href={url} class="block h-full" aria-label={`Link to ${title}`}>
+                        <Image
+                            alt={title}
+                            src={imgSrc}
+                            class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                            width={1024}
+                            height={682}
+                            loading="lazy"
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                            }}
+                        />
+                    </Link>
+                ) : (
+                    <Image
+                        alt={title}
+                        src={imgSrc}
+                        class="h-full w-full object-cover object-center"
+                        width={1024}
+                        height={682}
+                        loading="lazy"
+                        onError={(e) => {
+                            e.target.style.display = 'none';
+                        }}
+                    />
+                )}
+            </div>
+        )}
+
+        <div class="flex flex-col p-6">
+            <h2 class="mb-2 text-xl font-bold leading-7 tracking-tight text-gray-800 dark:text-gray-100">
+                {url ? (
+                    <Link href={url} class="hover:text-primary-500 dark:hover:text-primary-400">
+                        {title}
+                    </Link>
+                ) : (
+                    title
+                )}
+            </h2>
+
+            <div class="mb-3 flex-1">
+                <p class="line-clamp-10 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+                    {description}
+                </p>
+            </div>
+
+            <div class="mb-3 flex items-baseline gap-2 border-t border-gray-200 pt-3 dark:border-gray-700">
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Tech Stack:</span>
+                <div class="flex flex-1 flex-wrap gap-1.5">
+                    {stack.map((item, index) => (
+                        <span key={index} class="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                            {item}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            <div class="mt-auto flex items-center justify-between gap-2">
+                <div class="flex gap-2">
+                    {projectdesc && (
+                        <Link
+                            href={projectdesc}
+                            class="text-sm font-medium text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                        >
+                            Details →
+                        </Link>
+                    )}
+                    {url && (
+                        <Link
+                            href={url}
+                            class="text-sm font-medium text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                        >
+                            Live Demo →
+                        </Link>
+                    )}
+                </div>
+                {srccode && (
+                    <Link
+                        href={`${srccode}/source`}
+                        class="text-sm font-medium text-blue-500 hover:text-gray-600 dark:text-blue-400 dark:hover:text-gray-300"
+                    >
+                        Source Code
+                    </Link>
+                )}
             </div>
         </div>
     </div>

@@ -1,0 +1,54 @@
+---
+let techNews = "Failed to load news.";
+
+try {
+  const res = await fetch('https://newsapi.org/v2/top-headlines?category=technology&apiKey=e78c17a7e3154f2cbe52de5da0237e45');
+  
+  if (!res.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  const data = await res.json();
+  if (data && data.articles.length > 0) {
+    const article = data.articles[0]; // Get the first article
+    techNews = {
+      title: article.title,
+      url: article.url
+    };
+  }
+} catch (error) {
+  console.error("Failed to fetch tech news:", error);
+}
+---
+<blockquote class="border-s-2 border-gray-300 bg-gray-50 dark:border-gray-500 dark:bg-gray-800">
+<div class="text-xs">
+     <a href={techNews.url} target="_blank" class="font-semibold text-blue-500 underline decoration-indigo-500 m-2">
+    {techNews.title}</a> 
+  </div>
+</blockquote>
+
+  <!-- <style>
+    .typewriter {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 0.75rem; /* text-xs */
+      animation: typing 2.4s steps(28, end) forwards;
+    }
+  
+    .typewriter::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      background: currentColor;
+      height: 1em;
+      vertical-align: text-top;
+      animation: 
+        blink 0.8s steps(1) infinite,
+        hide 0.1s 2.4s forwards; /* 2.4s = typing duration */
+    }
+  
+    @keyframes typing { from { width: 0 } to { width: 100% } }
+    @keyframes blink { 50% { opacity: 0 } }
+    @keyframes hide { to { opacity: 0 } }
+  </style> -->

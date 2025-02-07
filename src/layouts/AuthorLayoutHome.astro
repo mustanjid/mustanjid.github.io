@@ -1,0 +1,79 @@
+---
+import { Image } from "astro:assets";
+import { type CollectionEntry, getCollection } from "astro:content";
+
+import SocialIcon from "@/components/social-icons/index.astro";
+import Link from "../components/Link.astro";
+import Quote from "@/pages/Quote.astro"
+import News from "@/pages/News.astro"
+
+interface Props {
+  content: CollectionEntry<"authors">["data"];
+  slug: string;
+}
+
+const {
+  name,
+  avatar,
+  occupation,
+  company,
+  email,
+  github,
+  linkedin,
+  twitter,
+} = Astro.props.content;
+
+---
+  <div class="divide-y divide-gray-200 dark:divide-gray-700 pb-5">
+
+    <div class="items-start space-y-2 xl:grid xl:grid-cols-3 xl:gap-x-8 xl:space-y-0">
+      <div class="flex flex-col items-center space-x-2 pt-0">
+        <h2 class="pt- text-xl leading-8 tracking-tight">
+          Welcome to my digital basket
+        </h2>
+        <h2 class="pb-2 pt-2 text-3xl leading-8 tracking-tight">
+          I'm {name}
+        </h2>
+        <div class="text-gray-500 dark:text-gray-400">{company}</div>
+        <div class="flex space-x-3 pt-4">
+          {github && <SocialIcon kind="github" href={github} />}
+          {linkedin && <SocialIcon kind="linkedin" href={linkedin} />}
+          {twitter && <SocialIcon kind="twitter" href={"https://www.hackerrank.com/profile/mustanjid"} />}
+        </div>
+        <div class="text-gray-500 dark:text-gray-400"> <h2 class="pt-3 text-2xl">Let’s grow as we go.</h2></div>
+       
+      </div>
+
+      <div class="xl:col-span-2 max-w-none d-flex">
+  
+        <h2 class="pb-2 text-lg ">This is my basket where I write down what I’m figuring out as I learn software development—thoughts, experiments, and projects I tinker with. Just notes from my messy middle. If you’re curious, peek inside! Maybe we’ll stumble on the same “aha!” moments, or you’ll find something useful for your own path.</h2>
+        <div class="grid grid-cols-2 gap-1 mt-2">
+          <a href="/about" class="flex items-center space-x-1">
+            <span>🕵️‍♂️</span>
+            <span>More about me</span>
+          </a>
+          <a href="#" class="flex items-center space-x-1">
+            <span>📃</span>
+            <span>View resume</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1 mt-4">
+          <a href="/blog" class="flex items-center space-x-1">
+            <span>📝</span>
+            <span>My Thoughts</span>
+          </a>
+          <a href="/projects" class="flex items-center space-x-1">
+            <span>🧑‍💻</span>
+            <span>What I have built?</span>
+          </a>
+        </div>
+
+        <!-- <Quote />
+        <News /> -->
+
+      </div>
+
+    </div>
+
+  </div>

@@ -4,9 +4,9 @@
  * A few of these are not used yet, and are subject to change, example of this is Author.
  */
 export const SITE_METADATA = {
-    title: 'Mustanjid',
-    headerTitle: 'Mustanjid\'s Basket',
-    description: '',
+    title: 'Md Al Mustanjid',
+    headerTitle: 'Mustanjid\'s Basket (MB)',
+    description: 'Md Al Mustanjid portfolio showcasing expertise in React, Laravel, and full-stack development.',
     language: 'en-us',
     theme: 'system', // Options: system, light, dark, Does not work yet
     siteUrl: 'https://mustanjid.github.io/',
@@ -19,12 +19,13 @@ export const SITE_METADATA = {
     // This project provide a default author content see src/content/authors/default.mdx, so these details are better to be inserted there.
     author: 'Md Al Mustanjid',
     mastodon: 'https://mastodon.social/@mastodonuser',
-    email: 'address@yoursite.com',
+    email: '',
     github: 'https://github.com/mustanjid',
-    twitter: 'https://twitter.com/mustanjid_se',
+    twitter: 'https://www.hackerrank.com/profile/mustanjid',
     facebook: 'https://facebook.com',
     youtube: 'https://youtube.com',
     linkedin: 'https://www.linkedin.com/in/mustanjid/',
+    keywords: ["Software Engineer", "Portfolio", "JavaScript", "Laravel", "React", "Md Al Mustanjid", "Web development"],
 
     // These are not supported yet
     // analytics: {
@@ -105,8 +106,8 @@ export const ITEMS_PER_PAGE = 6;
 export const NAVIGATION = [
     {href: '/', title: 'Home'},
     {href: '/blog', title: 'Thoughts'},
-    {href: '/about', title: 'Research'},
+    {href: '/tags', title: 'Tags'},
     {href: '/projects', title: 'Projects'},
     {href: '/award', title: 'Achievement'},
-    {href: '/tags', title: 'Tags'},
+    {href: '/about', title: 'About'},
 ]

@@ -1,0 +1,50 @@
+---
+let quote = "Failed to load quote.";
+let author = "";
+
+try {
+  const res = await fetch('https://zenquotes.io/api/random');
+  if (!res.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const data = await res.json();
+  quote = data[0].q;
+  author = data[0].a;
+} catch (error) {
+  console.error("Failed to fetch quote:", error);
+}
+---
+
+<div class="pt-2">
+<blockquote class="p-1 my-2 border-s-2 border-gray-300 bg-gray-50 dark:border-gray-500 dark:bg-gray-800">
+    <p class="text-xs italic font-medium leading-relaxed text-gray-900 dark:text-white">
+        "{quote}" - {author}
+    </p>
+</blockquote>
+</div>
+
+<!-- <style>
+    .typewriter {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 0.75rem; /* text-xs */
+      animation: typing 2.4s steps(28, end) forwards;
+    }
+  
+    .typewriter::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      background: currentColor;
+      height: 1em;
+      vertical-align: text-top;
+      animation: 
+        blink 0.8s steps(1) infinite,
+        hide 0.1s 2.4s forwards; /* 2.4s = typing duration */
+    }
+  
+    @keyframes typing { from { width: 0 } to { width: 100% } }
+    @keyframes blink { 50% { opacity: 0 } }
+    @keyframes hide { to { opacity: 0 } }
+  </style> -->

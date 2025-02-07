@@ -1,74 +1,106 @@
 ---
 import { Image } from "astro:assets";
-import { type CollectionEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 
 import SocialIcon from "@/components/social-icons/index.astro";
 import RootLayout from "./RootLayout.astro";
+import Link from "../components/Link.astro";
+import { sortBlogPosts } from "../functions";
+import { ITEMS_PER_PAGE } from "../consts";
 
 interface Props {
-  content: CollectionEntry<"authors">;
+  content: CollectionEntry<"authors">["data"];
+  slug: string;
 }
 
-const { name, avatar, occupation, company, email, github, linkedin, twitter } =
-  Astro.props.content;
+const {
+  name,
+  avatar,
+  occupation,
+  company,
+  email,
+  github,
+  linkedin,
+  twitter,
+} = Astro.props.content;
+
+// Get the author's posts
+const authorPosts = await getCollection(
+  "blog",
+  ({ data: { authors, draft } }) => {
+    return !draft && authors.some((author) => author.slug === Astro.props.slug);
+  }
+)
+  .then(sortBlogPosts)
+  .then((posts) => {
+    return posts.slice(0, ITEMS_PER_PAGE).map((post) => {
+      return { title: post.data.title, slug: post.slug };
+    });
+  });
 ---
 
-<div class="divide-y divide-gray-200 dark:divide-gray-700">
-  <div
-    class="items-start space-y-2 xl:grid xl:grid-cols-3 xl:gap-x-8 xl:space-y-0"
-  >
-    <div class="flex flex-col items-center">
-      {
-        avatar && (
-          <Image
-            src={avatar}
-            alt="avatar"
-            width={110}
-            height={110}
-            class="h-35 w-35 rounded-full"
-          />
-        )
-      }
-      <h3 class="pt-2 text-xl font-bold leading-8 tracking-tight">
-        {name}
-      </h3>
-      <div class="text-gray-500 dark:text-gray-400">{occupation}</div>
-      <div class="text-gray-500 dark:text-gray-400">{company}</div>
-
-      <a
-        href="#"
-        target="_blank"
-        class="inline-flex items-center mt-2 px-2 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-200 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-        ><svg
-          class="w-3.5 h-3.5 me-2.5"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z"
-          ></path>
-          <path
-            d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
-          ></path>
-        </svg> Download CV</a
+<RootLayout title={name} description="gh">
+  <div class="divide-y divide-gray-200 dark:divide-gray-700">
+    <div class="space-y-2 pb-2 pt-2 md:space-y-2">
+      <h1
+        class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-4xl md:leading-14"
       >
-      <p class="text-sm mt-2">reach out: mustanjid[dot]se[at]gmail[dot]com</p>
+        {("About")}
+      </h1>
+      <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">
+        {("Unpacking My Identity, Motivations, and Direction")}
+      </p>
+  </div>
+
+    <div class="items-start space-y-2 xl:grid xl:grid-cols-3 xl:gap-x-8 xl:space-y-0">
+      <div class="flex flex-col items-center space-x-2 pt-8">
+        {
+          avatar && (
+            <Image
+              src={avatar}
+              alt="avatar"
+              width={192}
+              height={192}
+              class="h-48 w-48 rounded-2xl drop-shadow-md"
+            />
+          )
+        }
+        <h2 class="pb-2 pt-4 text-2xl font-bold leading-8 tracking-tight">
+          {name}
+        </h2>
+        <div class="text-gray-500 dark:text-gray-400 text-xl">{occupation}</div>
+        <div class="text-gray-500 dark:text-gray-400 text-xl">{company}</div>
+        <div class="flex space-x-3 pt-6">
+          {github && <SocialIcon kind="github" href={github} />}
+          {linkedin && <SocialIcon kind="linkedin" href={linkedin} />}
+          {twitter && <SocialIcon kind="twitter" href={twitter} />}
+        </div>
+      </div>
+
+      <div class="xl:col-span-2 max-w-none d-flex">
+        <div class="prose pb-8 pt-8 dark:prose-invert">
+          <slot />
+        </div>
+
+        {
+          authorPosts.length > 0 && (
+            <div class="pt-8">
+              <h2 class="text-2xl font-bold leading-8 tracking-tight">
+                {("layouts.authorLayout.latestPosts")}
+              </h2>
+              <ul class="space-y-4 mt-4">
+                {authorPosts.map(({ slug, title }) => (
+                  <li>
+                    <Link href={`/blog/${slug}`}>{title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+      
     </div>
 
-    <div class="prose max-w-none pt-2 sm:p-3 dark:prose-invert xl:col-span-2 text-sm">
-      <slot />
-      <!-- <div class="flex space-x-3 ml-2 mr-2 items-center justify-center text-xs">
-        <SocialIcon kind="php" />
-        <SocialIcon kind="laravel" />
-        <SocialIcon kind="node" />
-        <SocialIcon kind="react" />
-        <SocialIcon kind="ms" />
-        <SocialIcon kind="post" />
-        <SocialIcon kind="robot" />
-        <SocialIcon kind="report" />
-      </div> -->
-    </div>
   </div>
-</div>
+</RootLayout>
