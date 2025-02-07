@@ -1,7 +1,7 @@
 <h1 align="center">Welcome to Mustanjid's Basket</h1>
 
 <h3 align="center"><i>Learning never stops, and the best way to grow is to share.</i></h3>
-
+<a href="https://mustanjid.github.io/"><img src="/public/mb-1.png" alt="MB" /></a>
 <p align="center">
   <a href="https://github.com/mustanjid/mustanjid.github.io/stargazers/"><img src="https://img.shields.io/github/stars/mustanjid/mustanjid.github.io?style=social" alt="GitHub Repo stars"></a>
   <a href="https://github.com/mustanjid/mustanjid.github.io/network/"><img src="https://img.shields.io/github/forks/mustanjid/mustanjid.github.io?style=social" alt="GitHub forks"></a>
@@ -10,7 +10,6 @@
   <a href="https://github.com/mustanjid/mustanjid.github.io/graphs/contributors"><img src="https://img.shields.io/github/contributors/mustanjid/mustanjid.github.io" alt="GitHub contributors"></a>
   <a href="https://github.com/mustanjid/mustanjid.github.io/blob/main/LICENSE"><img src="https://img.shields.io/github/license/mustanjid/mustanjid.github.io" alt="GitHub license"></a>
 </p>
-<a href="https://karhdo-blog.vercel.app"><img src="https://raw.githubusercontent.com/Karhdo/karhdo.dev/main/public/static/images/projects/karhdo-blog.png" alt="Image Karhdo's Blog Website" /></a>
 <h3 align="center"><i>Let’s grow as we go.</i></h3>
 
 ## Introduction
