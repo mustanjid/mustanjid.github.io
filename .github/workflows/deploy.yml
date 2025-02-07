@@ -28,8 +28,8 @@ jobs:
       - name: Build Astro site
         run: npm run build
 
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v2  # Ensure the correct version
+      - name: Upload GitHub Pages artifact (without deprecated actions)
+        uses: actions/upload-pages-artifact@v4  # Correct version, replaces upload-artifact
         with:
           path: dist  # Astro build folder
 
@@ -42,4 +42,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2  # Correct deploy action version
+        uses: actions/deploy-pages@v4  # Correct deploy action version
