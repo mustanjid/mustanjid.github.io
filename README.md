@@ -8,6 +8,8 @@
 
 Hello! I'm Md Al Mustanjid, the creator of this blog Project, which I address as **Mustanjid's Basket**. I built this project to provide a modern, easy-to-use template for building blogs using Astro, Tailwind CSS, and TypeScript. This project is inspired by the [Tailwind Next.js Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog) and aims to offer similar features with a different implementation.
 
+[Live website](https://mustanjid.github.io/)
+
 ## Why This Blog
 
 This is where I scribble down thoughts, experiments, and half-baked projects while navigating the wild world of software development. Think of it as a basket from the trenches—full of messy code, “why is this broken?!” moments, and occasional victories. If you’re here, let’s geek out about the process, not just the polished results.
