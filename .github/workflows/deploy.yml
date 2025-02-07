@@ -17,22 +17,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js (Latest LTS)
+      - name: Setup Node.js (latest LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 20  # Updated to latest LTS
-          cache: 'npm'  # Cache dependencies for faster builds
+          node-version: 20  # Node.js 20 (latest LTS)
 
       - name: Install dependencies
-        run: npm ci  # Faster and more reliable than `npm install`
+        run: npm ci  # Clean install
 
       - name: Build Astro site
         run: npm run build
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v2  # Ensure the correct version
         with:
-          path: dist  # Ensure Astro outputs to `dist`
+          path: dist  # Astro build folder
 
   deploy:
     needs: build
@@ -43,4 +42,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v2  # Correct deploy action version
