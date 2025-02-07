@@ -1,116 +1,91 @@
-# <p align="center">Welcome to Mustanjid's Basket</p>
----
+<h1 align="center">Welcome to Mustanjid's Basket</h1>
+
+<h3 align="center"><i>Learning never stops, and the best way to grow is to share.</i></h3>
 
 <p align="center">
-  <img src="https://mustanjid.github.io/preview-image.png" alt="Blog Preview" />
+  <a href="https://github.com/mustanjid/mustanjid.github.io/stargazers/"><img src="https://img.shields.io/github/stars/mustanjid/mustanjid.github.io?style=social" alt="GitHub Repo stars"></a>
+  <a href="https://github.com/mustanjid/mustanjid.github.io/network/"><img src="https://img.shields.io/github/forks/mustanjid/mustanjid.github.io?style=social" alt="GitHub forks"></a>
+  <a href="https://github.com/mustanjid/mustanjid.github.io/pulls"><img src="https://img.shields.io/github/issues-pr/mustanjid/mustanjid.github.io" alt="GitHub pull requests"></a>
+  <a href="https://github.com/mustanjid/mustanjid.github.io/issues"><img src="https://img.shields.io/github/issues/mustanjid/mustanjid.github.io" alt="GitHub issues"></a>
+  <a href="https://github.com/mustanjid/mustanjid.github.io/graphs/contributors"><img src="https://img.shields.io/github/contributors/mustanjid/mustanjid.github.io" alt="GitHub contributors"></a>
+  <a href="https://github.com/mustanjid/mustanjid.github.io/blob/main/LICENSE"><img src="https://img.shields.io/github/license/mustanjid/mustanjid.github.io" alt="GitHub license"></a>
 </p>
-
-<p align="center">
-  <a href="https://github.com/mustanjid/mustanjid.github.io/stargazers">
-    <img src="https://img.shields.io/github/stars/mustanjid/mustanjid.github.io?style=social" alt="GitHub Repo stars" />
-  </a>
-  <a href="https://github.com/mustanjid/mustanjid.github.io/network/members">
-    <img src="https://img.shields.io/github/forks/mustanjid/mustanjid.github.io?style=social" alt="GitHub forks" />
-  </a>
-  <a href="https://github.com/mustanjid/mustanjid.github.io/pulls">
-    <img src="https://img.shields.io/github/issues-pr/mustanjid/mustanjid.github.io" alt="GitHub pull requests" />
-  </a>
-  <a href="https://github.com/mustanjid/mustanjid.github.io/issues">
-    <img src="https://img.shields.io/github/issues/mustanjid/mustanjid.github.io" alt="GitHub issues" />
-  </a>
-  <a href="https://github.com/mustanjid/mustanjid.github.io/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/mustanjid/mustanjid.github.io" alt="GitHub contributors" />
-  </a>
-  <a href="https://github.com/mustanjid/mustanjid.github.io/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/mustanjid/mustanjid.github.io" alt="GitHub license" />
-  </a>
-</p>
+<a href="https://karhdo-blog.vercel.app"><img src="https://raw.githubusercontent.com/Karhdo/karhdo.dev/main/public/static/images/projects/karhdo-blog.png" alt="Image Karhdo's Blog Website" /></a>
+<h3 align="center"><i>Let’s grow as we go.</i></h3>
 
 ## Introduction
----
-Hello! I'm **Md Al Mustanjid**, the creator of this blog project, which I address as **Mustanjid's Basket**. I built this project to provide a modern, easy-to-use template for building blogs using Astro, Tailwind CSS, and TypeScript. This project is inspired by the [Tailwind Next.js Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog) and aims to offer similar features with a different implementation.
 
-🔗 **[Live Website](https://mustanjid.github.io/)**
+Hello! I'm Md Al Mustanjid, the creator of this blog Project, which I address as **Mustanjid's Basket**. I built this project to provide a modern, easy-to-use template for building blogs using Astro, Tailwind CSS, and TypeScript. This project is inspired by the [Tailwind Next.js Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog) and aims to offer similar features with a different implementation.
 
-## Why This Blog?
----
+[Live website](https://mustanjid.github.io/)
 
-This is where I document my journey in software development, including:
-- Experiments
-- Lessons learned
-- Small projects
-- Debugging struggles and solutions
+## Why This Blog
 
-Think of it as a **basket of knowledge**—full of messy code, "why is this broken?!" moments, and occasional victories. **Let's grow as we go.** 🚀
+This is where I scribble down thoughts, experiments, and half-baked projects while navigating the wild world of software development. Think of it as a basket from the trenches—full of messy code, “why is this broken?!” moments, and occasional victories. If you’re here, let’s geek out about the process, not just the polished results.
 
 ## Tech Stack
----
 
-- **Astro** → A modern static site generator.
-- **TypeScript** → Ensures type safety and better developer experience.
-- **Tailwind CSS** → Utility-first CSS framework for styling.
-- **MDX** → Combines Markdown with JSX for content writing.
+- **Astro:** A modern static site generator.
+- **TypeScript:** For type safety and better developer experience.
+- **Tailwind CSS:** Utility-first CSS framework for styling.
+- **MDX:** Combines Markdown with JSX for writing content.
 
 ## Features
----
+- Astro with TypeScript
+- Astro MDX support
+- Easy styling customization with Tailwind CSS
+- Mobile-friendly view
+- Light and dark theme
+- Automatic image optimization via Astro image component
+- Support for tags and multiple authors
+- Related posts and pagination
+- SEO features like RSS feed and sitemaps
 
-✅ Astro with TypeScript  
-✅ MDX support for writing blog posts  
-✅ Easy styling customization with Tailwind CSS  
-✅ Mobile-friendly responsive design  
-✅ Light and dark theme support  
-✅ Automatic image optimization via Astro image component  
-✅ Support for tags and multiple authors  
-✅ Related posts and pagination  
-✅ SEO-friendly features like RSS feed and sitemaps  
-
-## 🚀 How to Install and Run
----
-
+## How to Implement This Project
 ### Prerequisites
----
-- **Node.js** and **npm** installed on your machine.
 
-### Installation Steps
----
+- Node.js and npm installed on your machine.
 
-1. **Clone the repository:**
+### Installation
+1. Clone the repository:
    ```sh
    git clone https://github.com/mustanjid/mustanjid.github.io.git
-   cd mustanjid.github.io
    ```
-
-2. **Install dependencies:**
+2. Install dependencies:
    ```sh
    npm install
    ```
 
-3. **Start the development server:**
+3. Start the development server:
    ```sh
    npm run dev
    ```
 
-4. **Build the production site:**
+4. Build the production site:
    ```sh
    npm run build
    ```
 
-5. **Preview the production build locally:**
+5. Preview the production build locally:
    ```sh
    npm run preview
    ```
+## License
 
-## 📜 License
----
+MIT License
 
-MIT License  
+&copy; Md Al Mustanjid
 
-```text
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software...
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND...
-```
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-📌 **Full license available**
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
