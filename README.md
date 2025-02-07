@@ -1,4 +1,4 @@
-## [Welcome to my digital basket]
+# Welcome to my Mustanjid's Basket
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/wanoo21/tailwind-astro-starting-blog?style=social)](https://GitHub.com/wanoo21/tailwind-astro-starting-blog/stargazers/)
 [![GitHub forks](https://img.shields.io/github/forks/wanoo21/tailwind-astro-starting-blog?style=social)](https://GitHub.com/wanoo21/tailwind-astro-starting-blog/network/)
@@ -44,14 +44,26 @@ This is where I scribble down thoughts, experiments, and half-baked projects whi
    ```sh
    git clone https://github.com/wanoo21/tailwind-astro-starting-blog.git
    cd tailwind-astro-starting-blog
-npm install
-npm run dev
-npm run build
-npm run preview
+
+2. Install dependencies:
+   ```sh
+   npm install
+
+3. Start the development server:
+   ```sh
+   npm run dev
+
+4. Build the production site:
+   ```sh
+   npm run build
+
+5. Preview the production build locally:
+   ```sh
+   npm run preview
 
 MIT License
 
-Copyright (c) 2023 [Your Name]
+Copyright (c) Md Al Mustanjid
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
