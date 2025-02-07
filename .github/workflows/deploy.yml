@@ -17,18 +17,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js
+      - name: Setup Node.js (Latest LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20  # Updated to latest LTS
+          cache: 'npm'  # Cache dependencies for faster builds
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci  # Faster and more reliable than `npm install`
 
       - name: Build Astro site
         run: npm run build
 
-      - name: Upload artifact for deployment
+      - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
           path: dist  # Ensure Astro outputs to `dist`
