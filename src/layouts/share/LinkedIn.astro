@@ -3,9 +3,8 @@ import type ButtonProps  from './types';
 
 type Props = ButtonProps;
 
-const { url=Astro.request.url} = Astro.props;
-
-let URL = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
+const url = encodeURIComponent(Astro.props.url ?? Astro.request.url);
+const URL = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
 
 ---
 
