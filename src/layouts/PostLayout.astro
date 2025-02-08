@@ -45,28 +45,9 @@ const {Content, headings, remarkPluginFrontmatter} = await post.render();
                         </div>
                     </div>
                 </header>
+                
                 <div class="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
-                    <dl class="pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
-                        <dt class="sr-only">Authors</dt>
-                        <dd>
-                            <ul class="flex flex-wrap justify-center items-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
-                                <!--TODO: Add support for multiple authors-->
-                                {authors.map(({data, slug}) => (
-                                        <li class="flex items-center space-x-2">
-                                            {data.avatar && (
-                                                    <Image src={data.avatar} width={38} height={38} alt="avatar"
-                                                           class="h-10 w-10 rounded-full"/>
-                                            )}
-                                            <dl class="whitespace-nowrap text-sm font-medium leading-5">
-                                                <dt class="sr-only">Name</dt>
-                                                <dd class="text-gray-900 dark:text-gray-100">{data.name}</dd>
-                                            </dl>
-                                        </li>
-                                ))}
-                            </ul>
-                        </dd>
-                    </dl>
-                    
+                  
                     <div class="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
                         <div class="prose max-w-none pb-8 pt-10 dark:prose-invert">
                             <slot/>
