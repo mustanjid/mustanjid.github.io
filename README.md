@@ -69,6 +69,8 @@ This is where I scribble down thoughts, experiments, and half-baked projects whi
    ```sh
    npm run preview
    ```
+## Image Credit
+The favicon used for this website has been collected from [Flaticon](https://www.flaticon.com/free-icon/web-browser_3822393?term=basket+coding&page=1&position=13&origin=search&related_id=3822393)
 ## License
 
 MIT License

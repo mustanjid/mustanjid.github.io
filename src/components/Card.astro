@@ -106,8 +106,8 @@ const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.pro
                             alt={title}
                             src={imgSrc}
                             class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                            width={1024}
-                            height={682}
+                            width={500}
+                            height={382}
                             loading="lazy"
                             onError={(e) => {
                                 e.target.style.display = 'none';
@@ -119,8 +119,8 @@ const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.pro
                         alt={title}
                         src={imgSrc}
                         class="h-full w-full object-cover object-center"
-                        width={1024}
-                        height={682}
+                        width={500}
+                        height={382}
                         loading="lazy"
                         onError={(e) => {
                             e.target.style.display = 'none';
@@ -131,7 +131,7 @@ const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.pro
         )}
 
         <div class="flex flex-col p-6">
-            <h2 class="mb-2 text-xl font-bold leading-7 tracking-tight text-gray-800 dark:text-gray-100">
+            <h2 class="mb-2 text-2xl font-bold leading-7 tracking-tight text-gray-800 dark:text-gray-100">
                 {url ? (
                     <Link href={url} class="hover:text-primary-500 dark:hover:text-primary-400">
                         {title}
@@ -142,7 +142,7 @@ const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.pro
             </h2>
 
             <div class="mb-3 flex-1">
-                <p class="line-clamp-10 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+                <p class="line-clamp-10 text-lg leading-relaxed text-gray-500 dark:text-gray-400">
                     {description}
                 </p>
             </div>
