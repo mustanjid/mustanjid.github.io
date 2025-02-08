@@ -4,7 +4,7 @@
  * A few of these are not used yet, and are subject to change, example of this is Author.
  */
 export const SITE_METADATA = {
-    title: 'Md Al Mustanjid',
+    title: 'Mustanjid\'s Basket (MB)',
     headerTitle: 'Mustanjid\'s Basket (MB)',
     description: 'Md Al Mustanjid portfolio showcasing expertise in React, Laravel, and full-stack development.',
     language: 'en-us',
