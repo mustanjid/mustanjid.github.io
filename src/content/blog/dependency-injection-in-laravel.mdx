@@ -1,0 +1,264 @@
+---
+title: 'Dependency Injection in Laravel: A Better Way to Manage Dependencies'
+date: '2025-02-14'
+tags: ['php', 'laravel', 'oop', 'designpattern', 'programminglanguage']
+authors: ['sparrowhawk']
+summary: 'We all depend on something. From the moment we wake up, we rely on our alarm clock, coffee machine, or phone to start the day. Software systems are no different - they depend on services like databases, payment gateways, or email providers to function. But as applications grow, managing these dependencies becomes complex.'
+---
+
+# Dependency Injection in Laravel: A Better Way to Manage Dependencies
+
+We all depend on something. From the moment we wake up, we rely on our alarm clock, coffee machine, or phone to start the day. Software systems are no different - they depend on services like databases, payment gateways, or email providers to function. But as applications grow, managing these dependencies becomes complex. Imagine building a notification system for an e-commerce app. Our initial implementation might look like this:
+
+```txt
+class NotificationService 
+{
+    public function send()
+    {
+        $emailService = new EmailService(); // Direct instantiation
+        return $emailService->send("Welcome!");
+    }
+}
+```
+
+Here, the `NotificationService` is tightly coupled to `EmailService`. If we need a new notification method, we must modify `NotificationService`, making the code rigid and less maintainable.
+
+This is where **Dependency Injection (DI)** comes in.
+
+## Dependency Injection (DI) and its types
+
+Dependency injection (DI) is a design pattern where a class receives its required dependencies from other sources rather than creating them internally. DI also allows us to inject dependencies instead of hardcoding them into the class.
+
+### Types of Dependency Injection
+
+Laravel supports four common types of dependency injection:
+
+1. **Constructor Injection**
+2. **Method Injection**
+3. **Binding**
+4. **Contextual Binding**
+
+Before moving into the details of each injecting method, we prepare our project setup for implementing each one. Avoiding how to install the laravel project or something like that, assuming you have already done it.
+
+
+### Define the interface (Contract)
+Create a new `interfaces` folder inside `app` and define a `MessageService` interface. So, any class going to implement it must have the `send($msg)` method.
+
+`app/Interfaces/MessageService.php`
+
+```txt
+namespace App\Interfaces;
+interface MessageService {
+    public function send(string $message): string;
+}
+```
+
+### Create services (Implementations)
+
+Inside `app/Services`, create implementations of `MessageService`.
+Create another folder and name it as **‘services’.** Here, we are going to put all message services individually. All services must implement the `MessageService `interface. We will create two services, the first one is `EmailService`, and the second one is `SMSService`.
+
+`app/Services/EmailService.php`
+
+```txt
+namespace App\Services;
+use App\Interfaces\MessageService;
+class EmailService implements MessageService {
+    public function send($message) {
+        return "Email: $message";
+    }
+}
+```
+
+`app/Services/SmsService.php`
+
+```txt
+namespace App\Services;
+use App\Interfaces\MessageService;
+class SMSService implements MessageService
+{
+    public function send($message)
+    {
+        return "SMS sent: " . $message;
+    }
+}
+```
+### Create the `NotificationService`
+Now, let's create a `NotificationService` inside the `app/Services` directory. This service will act as a bridge between our application and message services.
+Instead of directly using an email or SMS service everywhere in our code, we use this `NotificationService` to keep things organized and flexible. This way, we can easily switch between different messaging services without changing our core logic.
+
+`app/Services/NotificationService.php`
+
+```txt
+namespace App\Services;
+use App\Interfaces\MessageService;
+class NotificationService
+{
+    private $messageService;
+    public function __construct(MessageService $messageService)
+    {
+        $this->messageService = $messageService;
+    }
+    public function send($message){
+        return $this->messageService->send($message);
+    }
+}
+```
+
+## Implementation of DI with laravel
+
+### Constructor Injection (Most Common)
+
+The most commonly used way to inject dependencies in laravel. In this case, the dependency is passed through the constructor of a class and stored in a property for further use. It is best to use it for multiple dependencies and class-based uses.
+
+```txt
+class NotificationController extends Controller
+{
+    private $messageService;
+    private $notifyService; //contextual binding
+    
+    //expects an instance of MessageService
+    //When Laravel instantiates this controller, it automatically injects the bound implementation of MessageService
+    /* thru this, we can send notifications without worrying about which 
+    specific message service (Email or SMS) is being used */
+    public function __construct(MessageService $messageService, NotifyService $notifyService)
+    {
+        $this->messageService = $messageService;
+        $this->notifyService = $notifyService;
+    }
+
+    //return the response from the send method of the injected MessageService instance
+    public function sendNotification(){
+        return response()->json(
+            [
+                "Email with binding & constructor injection of DI" => $this->messageService->send("Emailed by constructor injection"),
+                "SMS with contextual binding injection of DI" => $this->notifyService->send("SMS by contextual binding")
+            ]
+        );
+    }
+    
+}
+```
+
+### Method Injection
+
+Instead of injecting the dependency in the constructor, we can inject it directly into a method. Laravel automatically resolves and injects services into the method when it's called. It is best to use when it is needed for a single time and dependency is only needed inside a single method. It also reduces unnecessary properties of a class.
+
+```txt
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Interfaces\MessageService;
+use GuzzleHttp\Psr7\Message;
+use Mockery\Matcher\Not;
+use App\Services\NotifyService;
+
+class NotificationController extends Controller
+{
+    //Method Injection (MI)
+    public function sendNotificationWithMI(MessageService $messageService)
+    {
+        return response()->json([
+            'message' => $messageService->send("Emailed by Method Injection of DI")
+        ]);
+    }
+    
+}
+```
+
+### Binding
+
+To tell Laravel which implementation of `MessageService` to inject, we bind it inside the `AppServiceProvider` class of laravel. In future, if we need to switch sms service then just change it to sms. Register dependency bindings in the service provider.
+
+```txt
+namespace App\Providers;
+
+use App\Interfaces\MessageService;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Email;
+use App\Services\EmailService;
+use App\Services\SMSService;
+use Illuminate\Notifications\Notification;
+use App\Services\NotifyService;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        // need to bind the MessageService interface to a concrete implementation (Email or Sms)
+        // whenever MessageService is injected, Laravel will automatically provide an instance of EmailService.
+        // if we change the binding to SMSService, Laravel will provide an instance of SMSService
+        // just a simple modification in the bind method
+        $this->app->bind(MessageService::class, EmailService::class);
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}
+```
+
+### Contextual Binding
+
+Suppose, we need a single service but for different platforms with different sources. So, instead of setting in the right source each time, we can provide the correct one automatically based on where it is being used. Contextual binding allows us to use different parts of the application to use different implementations of the same interface without modifying the code. We can think of it using when different classes need different dependencies.
+
+```txt
+namespace App\Providers;
+
+use App\Interfaces\MessageService;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Email;
+use App\Services\EmailService;
+use App\Services\SMSService;
+use Illuminate\Notifications\Notification;
+use App\Services\NotifyService;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        // need to bind the MessageService interface to a concrete implementation (Email or Sms)
+        // whenever MessageService is injected, Laravel will automatically provide an instance of EmailService.
+        // if we change the binding to SMSService, Laravel will provide an instance of SMSService
+        // just a simple modification in the bind method
+        $this->app->bind(MessageService::class, EmailService::class);
+
+        //contextual binding: 
+        //to setup specific implementation of an interface to inject only for a specific class.
+        $this->app->when(NotifyService::class)
+            ->needs(MessageService::class)
+           ->give(SMSService::class);
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}
+```
+
+### DI Comparison Table
+
+| DI Injection Methods       | Implementation                                                                                           | Benefits                                                       |
+| -------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Constructor Injection      | `NotificationService`, `NotificationController`                                                          | Best for class-wide dependencies, ensures consistency.         |
+| Method Injection           | `sendNotification(MessageService $messageService)`                                                       | Best for one-time use, avoids unnecessary properties.          |
+| AppServiceProvider Binding | `$this->app->bind(MessageService::class, EmailService::class);`                                          | Allows switching implementations without modifying code.       |
+| Contextual Binding         | `$this->app->when(NotificationService::class)->needs(MessageService::class)->give(EmailService::class);` | Allows different classes to receive different implementations. |
+
+&#x20;[View Source Code on GitHub](https://github.com/mustanjid/AdvanceOOPwithLv/tree/DependencyInjectionwithLv11 "click here to get the source code")
+
+`Happy Coding!!!`
