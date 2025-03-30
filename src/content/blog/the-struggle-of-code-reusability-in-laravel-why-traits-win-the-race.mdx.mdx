@@ -1,0 +1,348 @@
+---
+title: "The Struggle of Code Reusability in Laravel : Why Traits Win the Race?"
+date: "2025-03-29"
+tags: ["php", "laravel", "oop", "programminglanguage"]
+authors: ["sparrowhawk"]
+summary: "The title has already conveyed so much. In web development with Laravel or a PHP environment, we often need to use the same method across multiple classes.  Suppose we are creating a vehicle rental system that includes various types of vehicles. We can consider a base class named Vehicle, which can be extended to encompass different kinds of vehicles as child classes."
+---
+
+The title has already conveyed so much. In web development with Laravel or a PHP environment, we often need to use the same method across multiple classes. Suppose we are creating a vehicle rental system that includes various types of vehicles. We can consider a base class named Vehicle, which can be extended to encompass different kinds of vehicles as child classes. So, here, **inheritance** is the solution? Let's see.
+
+The Vehicle class serves as our parent class. It includes shared properties that all vehicles have, with the primary function being movement. In this parent class, we'll define these properties and the function as a method, creating a solid foundation for all vehicle types. We will rent cars, boats, and amphibious vehicles. Vehicles can have different capabilities:
+
+- Cars can only drive.
+- Boats can only sail.
+- Amphibious Vehicles can both drive and sail.
+
+```txt
+//Vehicle Class
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+
+class Vehicle extends Model{
+    protected $fillable = ['model', 'speed'];
+
+	public function move(){
+		return "{$this->model} is moving at {$this->speed} km/h.";
+	}
+}
+```
+
+## Attempt: Using inheritance?
+
+Now, all vehicles inherit this base class.
+
+#### Car Class
+
+```txt
+namespace App\Models;
+
+class Car extends Vehicle {
+    public function drive() {
+        return "{$this->model} is driving on land.";
+    }
+}
+```
+
+#### Boat Class
+
+```txt
+namespace App\Models;
+
+class Boat extends Vehicle {
+    public function sail() {
+        return "{$this->model} is sailing on water.";
+    }
+}
+```
+
+> But what are we gonna do for AmphibiousVehicle?
+
+_First, it can't inherit both Car and Boat classes together to get both functions, php doesn't support it._ But, it can inherit from the vehicle class and implement both the drive and sail functions. We currently have duplicate **_drive( ) and sail( )_** logic in two different classes. **_What's the issue?_** One thing! Have you noticed the repeated code? <u>Here, we are creating DRY code</u>. If we need modifications or changes, we will have to write the code twice!&#x20;
+
+## Attempt: Using Interface?
+
+Since multiple inheritance isn't possible, another option we can try is **interface**.
+
+```txt
+//Drive Interface
+
+namespace App\Contracts;
+
+interface Drivable {
+    public function drive();
+}
+
+//Sail Interface
+
+namespace App\Contracts;
+
+interface Sailable {
+    public function sail();
+}
+```
+
+#### Implementing Interfaces in Car & Boat
+
+```txt
+//Car
+namespace App\Models;
+
+use App\Contracts\Drivable;
+
+class Car extends Vehicle implements Drivable {
+    public function drive() {
+        return "{$this->model} is driving on land.";
+    }
+}
+
+//Boat
+namespace App\Models;
+
+use App\Contracts\Sailable;
+
+class Boat extends Vehicle implements Sailable {
+    public function sail() {
+        return "{$this->model} is sailing on water.";
+    }
+}
+```
+
+#### Now, let's implement AmphibiousVehicle using both interfaces.
+
+```txt
+namespace App\Models;
+
+use App\Contracts\Drivable;
+use App\Contracts\Sailable;
+
+class AmphibiousVehicle extends Vehicle implements Drivable, Sailable {
+    public function drive() {
+        return "{$this->model} is driving on land.";
+    }
+
+    public function sail() {
+        return "{$this->model} is sailing on water.";
+    }
+}
+```
+
+> _Wait, isn't this duplicate code? Interfaces don't solve code duplication! We still have to write the same logic in multiple places._
+
+## Ultimate Solution: Traits!
+
+#### Create Traits for Drive & Sail
+
+```txt
+//Drive Trait
+namespace App\Traits;
+
+//any vehicle drive on land will use this trait
+trait DriveTrait{
+	public function drive(){
+		return "{$this->model} is driving on the land";
+	}
+}
+
+//Sail Trait
+namespace App\Traits;
+
+//any vehicle sail on water will use this trait
+trait SailTrait{
+	public function sail(){
+		return "{$this->model} is sailing on the water";
+	}
+}
+```
+
+#### Set Traits in Models
+
+```txt
+//Car
+namespace App\Models;
+
+use App\Traits\DriveTrait;
+use App\Models\Vehicle;
+
+class Car extends Vehicle{
+	use DriveTrait;
+}
+
+//Boat
+namespace App\Models;
+
+use App\Traits\SailTrait;
+use App\Models\Vehicle;
+
+class Boat extends Vehicle{
+	use SailTrait;
+}
+
+//AmphibiousVehicle
+namespace App\Models;
+
+use App\Traits\DriveTrait;
+use App\Traits\SailTrait;
+use App\Models\Vehicle;
+
+class AmphibiousVehicle extends Vehicle{
+	//Trait helps to share multiple behaviours at the same time easily
+	use DriveTrait, SailTrait;
+}
+```
+
+> No more duplicate code! AmphibiousVehicle now inherits both!
+
+#### Set a route and test our classes and traits.
+
+```txt
+use Illuminate\Support\Facades\Route;
+use App\Models\Boat;
+use App\Models\Car;
+use App\Models\AmphibiousVehicle;
+
+Route::get('/vehicles', function(){
+	$car = new Car(['model' => 'Tesla', 'speed' => 150]);
+	$boat = new Boat(['model' => 'Yamaha', 'speed' => 80]);
+	$amphibious  = new AmphibiousVehicle(['model' => 'Hydra Spyder', 'speed' => 100]);
+
+	return [
+		'Car Drive' => $car->move().", ".$car->drive(),
+		'Boat Sail' => $boat->move().", ".$boat->Sail(),
+		'Amphibious Drive' => $amphibious->move().", ".$amphibious->drive(),
+        'Amphibious Sail' => $amphibious->move().", ".$amphibious->sail(),
+	];
+});
+```
+
+Get the source code [here](https://github.com/mustanjid/AdvanceOOPwithLv/tree/Trait "here")
+
+## Discover even more to uncover the essential traits that can make a difference.
+
+### **Can a Trait have properties?**
+
+Yes, it should be in a function of a trait, not directly within a trait.
+
+```txt
+namespace App\Traits;
+
+trait Logger {
+	//$logPrefix = "[LOG]:"; // Error: props can't declare within trait
+
+    public function logMessage($message){
+        $logPrefix = "[LOG]:"; // set props inside a function
+		return $logPrefix. $message;
+	}
+}
+```
+
+### **What happens if two Traits have methods with the same name in a class? How do you resolve conflicts?**
+
+To address conflicts in the same method between two traits, we can utilize either **_'insteadof'_** or **_'as'._**
+
+```txt
+//Debugger Trait
+namespace App\Traits;
+
+trait Debugger{
+	public function logMessage($message){
+		return "Logging from Debugger:" . $message;
+	}
+}
+
+////Logger Trait
+namespace App\Traits;
+
+trait Logger {
+    public function logMessage($message){
+        $logPrefix = "[LOG]:";
+		return $logPrefix. $message;
+	}
+}
+
+//LogService
+namespace App\Services;
+use App\Traits\Logger;
+use App\Traits\Debugger;
+
+class LogService{
+	use Logger, Debugger
+    { Debugger::logMessage insteadof Logger;
+        Logger::logMessage as logFromLogger;
+    }
+}
+```
+
+### **Can a Trait use another Trait?**
+
+Yes.
+
+### **Can Traits have constructors?**
+
+No. But, we can call a method from a trait in the constructor of the class.
+
+```txt
+trait LoggerTrait {
+    public function setup() {
+        echo "Logger is ready!\n";
+    }
+}
+
+class Car {
+    use LoggerTrait;
+
+    public function __construct() {
+        $this->setup(); // Calling the trait method
+    }
+}
+```
+
+### **Can Traits have abstract methods?**
+
+Yes, A trait can define abstract methods that must be implemented by the class using the trait.
+
+### **Can Traits implement interfaces?**
+
+No, a trait cannot directly implement an interface. However, a class that incorporates a trait can implement an interface, allowing the methods from the trait to fulfill the contract of the interface.
+
+```txt
+interface Loggable {
+    public function logMessage($message);
+}
+
+trait Logger {
+    public function logMessage($message) {
+        echo "Logging: $message";
+    }
+}
+
+class AppService implements Loggable {
+    use Logger; // This satisfies the Loggable interface
+}
+```
+
+### **Can we restrict access modifiers in a Trait?**
+
+Yes, we can change the visibility of a method from a trait inside a class.
+
+```txt
+trait Logger {
+    public function logMessage() {
+        echo "Logging message";
+    }
+}
+
+class App {
+    use Logger {
+        logMessage as private; // Now it's private in this class
+    }
+}
+
+$app = new App();
+$app->logMessage(); //Error: logMessage() is private
+
+```
+
+`Happy coding!!!`
