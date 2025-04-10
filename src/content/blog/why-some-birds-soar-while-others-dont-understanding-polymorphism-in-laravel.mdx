@@ -1,0 +1,165 @@
+---
+title: "Why Some Birds Soar While Others Don’t: Understanding Polymorphism in Laravel"
+date: "2025-04-10"
+tags: ["oop", "php", "laravel", "programminglanguage"]
+authors: ["sparrowhawk"]
+summary: "Birds can fly in the sky—no surprises, right?
+But do all birds fly in the same way? Maybe not. Some flap quickly, others glide for long distances, and some don’t fly at all (hello, ostrich!). So, why am I talking like this? Well, here lies an important concept in Object-Oriented Programming (OOP), and that is: Polymorphism."
+---
+
+Birds can fly in the sky—no surprises, right? But do all birds fly in the same way? Maybe not. Some flap quickly, others glide for long distances, and some don’t fly at all (hello, ostrich!). So, why am I talking like this? Well, an essential concept in object-oriented programming (OOP) lies here: Polymorphism.
+
+### What is Polymorphism?
+
+Polymorphism comes from a Greek word meaning “many forms.” It refers to the ability of a method, function, or object to take on many forms. In simpler words:&#x20;
+
+> One method, many actions.
+
+It allows us to write flexible and reusable code where the same interface or method name behaves differently depending on the context or class.
+
+### Types of Polymorphism
+
+Polymorphism generally comes in two primary forms:
+
+### Compile-Time Polymorphism
+
+&#x20;It is known as static polymorphism or method overloading. It is achieved using method overloading.
+
+### Method overloading
+
+It occurs when a class has multiple methods with the same name but differing parameter lists.\*\*\*\* The method name is the same, but the parameters vary.
+
+> PHP does not natively support method overloading like other languages.
+
+In PHP, multiple methods cannot have the same name, but we can simulate overloading using the `__call()` magic method to handle calls to undefined or dynamic methods.
+
+```js
+//BirdFlyService
+
+namespace App\Services;
+
+class BirdFlyService
+{
+   public function __call($function, $arguments)
+   {
+	   if($function === "fly"){
+		   if (count($arguments) === 0){
+			   return "The bird is flying normally.";
+		   }elseif(count($arguments) === 1){
+			   return "The bird is flying at {$arguments[0]} speed";
+		   }elseif(count($arguments) === 2){
+			   return "The bird is flying at {$arguments[0]} speed in the {$arguments[1]}";
+		   }
+	   }
+	   return "Method does not exist";
+   }
+}
+
+//Route
+
+Route::get('/method-overload', function(){
+	$birds = new BirdFlyService();
+
+	return response()->json([
+		$birds->fly(), // no args
+		$birds->fly('fast'), // 1 args
+		$birds->fly('fast', 'north'), // 2 args
+        $birds->flying(), // method does not exist
+        $birds->fly('fast', 'north', 'extra'), // method does not exist
+	]);
+});
+```
+
+The **BirdFlyService** class simulates overloading through the `__call() `magic method, which handles different arguments for the `fly()` method based on the <u>**number of parameters passed**</u>. The method can be called with no, one, or two arguments, each returning a different message.
+
+### Run-Time Polymorphism (Dynamic)
+
+This is known as dynamic binding or late binding. It determines which method to execute at runtime, based on the actual type of the object, rather than at compile time. This is achieved through method overriding.
+
+### Method overriding
+
+It happens when a subclass overrides a method from its parent class with its own version.
+
+Create an interface and name it as '**Flyable**'. The base class '**Bird'** will implement this interface.
+
+```js
+namespace App\Models;
+
+use App\Interfaces\Flyable;
+
+class Bird implements Flyable
+{
+	public function fly(){
+		 return "The bird is flying in a general way.";
+	}
+}
+```
+
+Create the base class '**Bird**', extending to other child classes.
+
+```js
+namespace App\Models;
+
+use App\Interfaces\Flyable;
+
+class Bird implements Flyable
+{
+	public function fly(){
+		 return "The bird is flying in a general way.";
+	}
+}
+```
+
+Create the child classes inheriting the base class '**Bird**'
+
+```js
+//Eagle
+
+class Eagle extends Bird
+{
+	public function fly(){
+		 return "The eagle is flying high!";
+	}
+}
+
+//Ostrich
+
+class Ostrich extends Bird
+{
+	public function fly(){
+		 return "The ostrich can not fly";
+	}
+}
+
+//Sparrow
+
+class Sparrow extends Bird
+{
+	public function fly(){
+		 return "The sparrow is flapping quickly!";
+	}
+}
+
+//Route
+Route::get('/method-override', function(){
+    $bird = [
+        new Bird(),
+        new Eagle(),
+        new Sparrow(),
+        new Ostrich(),
+    ];
+
+    $results = [];
+    foreach($bird as $b){
+        $results[] = $b->fly();
+    }
+
+	return response()->json($results);
+});
+```
+
+The child classes (`Eagle`, `Ostrich`, `Sparrow`) override the `fly()` method to provide their own specialized behavior, such as flying high or flapping quickly. Accessing the `/method-override` route, you’ll receive various responses from different birds, each executing its own version of the `fly()` method based on its class.
+
+Get the complete code [here](https://github.com/mustanjid/AdvanceOOPwithLv/tree/Polymorphism)
+
+`Happy coding!`
