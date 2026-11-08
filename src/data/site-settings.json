@@ -1,0 +1,7 @@
+{
+  "rightNow": { "enabled": false, "text": "", "updatedAt": "" },
+  "news": { "enabled": false },
+  "achievement": { "enabled": false, "title": "", "description": "", "date": "", "url": "", "expires": "" },
+  "latestCard": { "showResearch": false },
+  "spotlight": { "kind": "other", "stage": "idea", "title": "", "summary": "", "tags": [], "repoUrl": "", "demoUrl": "" }
+}

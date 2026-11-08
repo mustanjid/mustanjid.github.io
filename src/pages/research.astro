@@ -1,12 +1,75 @@
 ---
-import {getEntry} from "astro:content"
-import ResearchLayout from "@/layouts/Research.astro";
-import AuthorLayout from "@/layouts/AuthorLayout.astro";
+import { getResearchEntries } from "@/functions";
+import RootLayout from "@/layouts/RootLayout.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
 
-const author = await getEntry('authors', 'default')
-const {Content} = await author.render();
+const entries = await getResearchEntries();
+
+const GROUPS = [
+  { key: "published", title: "Published", statuses: ["published"] },
+  { key: "accepted", title: "Accepted", statuses: ["accepted"] },
+  { key: "pending", title: "Under review / Submitted", statuses: ["under-review", "submitted"] },
+  { key: "preprint", title: "Preprints", statuses: ["preprint"] },
+  { key: "prep", title: "In preparation", statuses: ["in-preparation"] },
+];
+const LABEL: Record<string, string> = {
+  published: "Published",
+  accepted: "Accepted",
+  "under-review": "Under review",
+  submitted: "Submitted",
+  preprint: "Preprint",
+  "in-preparation": "In preparation",
+};
+const BADGE: Record<string, string> = {
+  published: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+  accepted: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200",
+  "under-review": "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+  submitted: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+  preprint: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+  "in-preparation": "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+};
+const doiUrl = (d?: string) => (d ? (d.startsWith("http") ? d : `https://doi.org/${d}`) : undefined);
 ---
 
-<!-- <AuthorLayout content={author.data}>
-	<Content />
-</AuthorLayout> -->
+<RootLayout title="MB-Research" description="Research papers, preprints and work in progress.">
+  <div class="space-y-8">
+    <div class="space-y-2 pb-2 pt-2">
+      <h1 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">Research</h1>
+      <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">
+        Papers, preprints and work in progress in machine learning and bioinformatics.
+      </p>
+    </div>
+
+    {entries.length === 0 && <p class="text-gray-500 dark:text-gray-400">No entries yet.</p>}
+
+    {GROUPS.map((g) => {
+      const items = entries.filter((e) => g.statuses.includes(e.data.status));
+      return items.length > 0 && (
+        <section class="space-y-4">
+          <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">{g.title}</h2>
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            {items.map((e) => (
+              <li class="py-4 space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class={`rounded px-2 py-0.5 text-xs font-medium ${BADGE[e.data.status]}`}>{LABEL[e.data.status]}</span>
+                  {e.data.draft && <span class="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">draft (hidden in production)</span>}
+                  <span class="text-sm text-gray-500 dark:text-gray-400"><FormattedDate date={e.data.date} /></span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{e.data.title}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{e.data.authors}</p>
+                {e.data.venue && <p class="text-sm italic text-gray-600 dark:text-gray-400">{e.data.venue}</p>}
+                {e.data.summary && <p class="text-gray-700 dark:text-gray-300">{e.data.summary}</p>}
+                <div class="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-sm">
+                  {doiUrl(e.data.doi) && <a class="text-primary-500 hover:underline" href={doiUrl(e.data.doi)}>DOI</a>}
+                  {e.data.url && <a class="text-primary-500 hover:underline" href={e.data.url}>Publisher</a>}
+                  {e.data.preprintUrl && <a class="text-primary-500 hover:underline" href={e.data.preprintUrl}>Preprint</a>}
+                  {e.data.codeUrl && <a class="text-primary-500 hover:underline" href={e.data.codeUrl}>Code</a>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    })}
+  </div>
+</RootLayout>

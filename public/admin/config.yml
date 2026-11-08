@@ -1,0 +1,189 @@
+backend:
+  name: github
+  repo: mustanjid/mustanjid.github.io
+  branch: main
+
+# Saves commit straight to main and trigger a deploy (about a minute or two).
+publish_mode: simple
+media_folder: public/static/uploads
+public_folder: /static/uploads
+site_url: https://mustanjid.github.io/
+display_url: https://mustanjid.github.io/
+
+collections:
+  # ---------------------------------------------------------------- Homepage switches
+  - name: settings
+    label: "Homepage settings"
+    files:
+      - name: homepage
+        label: "Homepage switches"
+        file: src/data/site-settings.json
+        format: json
+        fields:
+          - label: "Right now"
+            name: rightNow
+            widget: object
+            collapsed: false
+            fields:
+              - { label: "Show", name: enabled, widget: boolean, default: false }
+              - { label: "What I'm thinking about (max 140 characters)", name: text, widget: string, required: false, pattern: ['^.{0,140}$', "Keep it under 140 characters"] }
+              - { label: "Last updated", name: updatedAt, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false, hint: "Set this to today whenever you change the line." }
+
+          - label: "Daily news"
+            name: news
+            widget: object
+            fields:
+              - { label: "Show daily tech and research news", name: enabled, widget: boolean, default: false }
+
+          - label: "Achievement highlight"
+            name: achievement
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Show", name: enabled, widget: boolean, default: false }
+              - { label: "Title", name: title, widget: string, required: false }
+              - { label: "One-line description", name: description, widget: string, required: false }
+              - { label: "Date", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+              - { label: "Link", name: url, widget: string, required: false }
+              - { label: "Hide automatically after", name: expires, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false, hint: "Optional. Leave empty to keep showing until you switch it off." }
+
+          - label: "Latest card (right side of the two-card section)"
+            name: latestCard
+            widget: object
+            fields:
+              - { label: "Show latest research paper (off = show the project spotlight)", name: showResearch, widget: boolean, default: false }
+
+          - label: "Project spotlight"
+            name: spotlight
+            widget: object
+            collapsed: true
+            hint: "Shown on the right card when the research switch is off."
+            fields:
+              - label: "Kind"
+                name: kind
+                widget: select
+                default: other
+                options:
+                  - { label: "Research project", value: research }
+                  - { label: "ML project", value: ml }
+                  - { label: "DevOps / Cloud", value: devops }
+                  - { label: "Other", value: other }
+              - label: "Stage"
+                name: stage
+                widget: select
+                default: idea
+                options:
+                  - { label: "Idea", value: idea }
+                  - { label: "Plan", value: plan }
+                  - { label: "In progress", value: in-progress }
+                  - { label: "Demo", value: demo }
+                  - { label: "Shipped", value: shipped }
+              - { label: "Title", name: title, widget: string, required: false }
+              - { label: "Summary", name: summary, widget: text, required: false }
+              - { label: "Tags", name: tags, widget: list, required: false }
+              - { label: "Repository link", name: repoUrl, widget: string, required: false }
+              - { label: "Demo link", name: demoUrl, widget: string, required: false }
+
+  # ---------------------------------------------------------------- Thoughts (blog)
+  - name: blog
+    label: "Thoughts"
+    folder: src/content/blog
+    extension: mdx
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: [date, title]
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - { label: "Date", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Last modified", name: lastmod, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+      - label: "Tags"
+        name: tags
+        widget: relation
+        collection: tags
+        search_fields: [name]
+        value_field: "{{slug}}"
+        display_fields: [name]
+        multiple: true
+      - label: "Authors"
+        name: authors
+        widget: relation
+        collection: authors
+        search_fields: [name]
+        value_field: "{{slug}}"
+        display_fields: [name]
+        multiple: true
+        default: [sparrowhawk]
+      - { label: "Summary", name: summary, widget: text, required: false }
+      - { label: "Cover image", name: images, widget: string, required: false }
+      - { label: "Draft (hidden on the live site)", name: draft, widget: boolean, default: true }
+      - { label: "Share on LinkedIn after deploy", name: linkedin, widget: boolean, default: false, required: false }
+      - { label: "LinkedIn caption", name: linkedinText, widget: text, required: false }
+      - { label: "Already posted to LinkedIn (set by the bot)", name: linkedinPosted, widget: boolean, default: false, required: false }
+      - { label: "Body", name: body, widget: markdown }
+
+  # ---------------------------------------------------------------- Research
+  - name: research
+    label: "Research"
+    folder: src/content/research
+    extension: mdx
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: [date, title, status]
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - label: "Status"
+        name: status
+        widget: select
+        options:
+          - { label: "Published", value: published }
+          - { label: "Accepted", value: accepted }
+          - { label: "Under review", value: under-review }
+          - { label: "Submitted", value: submitted }
+          - { label: "Preprint", value: preprint }
+          - { label: "In preparation", value: in-preparation }
+      - { label: "Authors", name: authors, widget: string, hint: "Comma-separated, in published order" }
+      - { label: "Venue (journal or conference)", name: venue, widget: string, required: false, hint: "Leave empty while under review if the journal should stay private." }
+      - { label: "Date (published, or submitted)", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "DOI", name: doi, widget: string, required: false }
+      - { label: "Publisher link", name: url, widget: string, required: false }
+      - { label: "Preprint link", name: preprintUrl, widget: string, required: false }
+      - { label: "Code link", name: codeUrl, widget: string, required: false }
+      - { label: "Plain-language summary", name: summary, widget: text, required: false }
+      - { label: "Tags", name: tags, widget: list, required: false }
+      - { label: "Featured", name: featured, widget: boolean, default: false, required: false }
+      - { label: "Draft (hidden on the live site)", name: draft, widget: boolean, default: false }
+      - { label: "Notes", name: body, widget: markdown, required: false }
+
+  # ---------------------------------------------------------------- Tags
+  - name: tags
+    label: "Tags"
+    folder: src/content/tags
+    extension: mdx
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Name", name: name, widget: string }
+      - { label: "Description", name: description, widget: string, required: false }
+      - { label: "Body", name: body, widget: markdown, required: false }
+
+  # ---------------------------------------------------------------- Authors (edit only)
+  - name: authors
+    label: "Authors"
+    folder: src/content/authors
+    extension: mdx
+    format: frontmatter
+    create: false
+    delete: false
+    fields:
+      - { label: "Name", name: name, widget: string }
+      - { label: "Email", name: email, widget: string }
+      - { label: "Avatar", name: avatar, widget: string, required: false }
+      - { label: "Occupation", name: occupation, widget: string, required: false }
+      - { label: "Company", name: company, widget: string, required: false }
+      - { label: "Twitter / HackerRank link", name: twitter, widget: string, required: false }
+      - { label: "LinkedIn link", name: linkedin, widget: string, required: false }
+      - { label: "GitHub link", name: github, widget: string, required: false }
+      - { label: "Body", name: body, widget: markdown, required: false }

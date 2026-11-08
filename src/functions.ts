@@ -25,3 +25,15 @@ export const sortBlogPosts = (posts: CollectionEntry<'blog'>[]): CollectionEntry
 export const excludeDrafts = ({data}: CollectionEntry<'blog'>): boolean => {
     return import.meta.env.PROD ? !data.draft : true;
 }
+
+/**
+ * Research entries, newest first. Astro 3 returns undefined for an empty collection,
+ * so guard it: the site must still build before the first paper is added.
+ */
+export const getResearchEntries = async (): Promise<CollectionEntry<'research'>[]> => {
+    const {getCollection} = await import('astro:content');
+    const all = (await getCollection('research')) ?? [];
+    return all
+        .filter(({data}) => (import.meta.env.PROD ? !data.draft : true))
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+}
