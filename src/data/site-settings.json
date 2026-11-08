@@ -1,7 +1,30 @@
 {
-  "rightNow": { "enabled": false, "text": "", "updatedAt": "" },
-  "news": { "enabled": false },
-  "achievement": { "enabled": false, "title": "", "description": "", "date": "", "url": "", "expires": "" },
-  "latestCard": { "showResearch": false },
-  "spotlight": { "kind": "other", "stage": "idea", "title": "", "summary": "", "tags": [], "repoUrl": "", "demoUrl": "" }
+  "rightNow": {
+    "enabled": true,
+    "text": "leaning Sveltia",
+    "updatedAt": "2026-11-09"
+  },
+  "news": {
+    "enabled": false
+  },
+  "achievement": {
+    "enabled": false,
+    "title": "",
+    "description": "",
+    "date": "",
+    "url": "",
+    "expires": ""
+  },
+  "latestCard": {
+    "showResearch": false
+  },
+  "spotlight": {
+    "kind": "other",
+    "stage": "idea",
+    "title": "",
+    "summary": "",
+    "tags": [],
+    "repoUrl": "",
+    "demoUrl": ""
+  }
 }
