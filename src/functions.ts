@@ -1,4 +1,4 @@
-import type {CollectionEntry} from "astro:content";
+import {getCollection, type CollectionEntry} from "astro:content";
 
 /**
  * Filter blog posts by published date and order them.
@@ -31,7 +31,6 @@ export const excludeDrafts = ({data}: CollectionEntry<'blog'>): boolean => {
  * so guard it: the site must still build before the first paper is added.
  */
 export const getResearchEntries = async (): Promise<CollectionEntry<'research'>[]> => {
-    const {getCollection} = await import('astro:content');
     const all = (await getCollection('research')) ?? [];
     return all
         .filter(({data}) => (import.meta.env.PROD ? !data.draft : true))

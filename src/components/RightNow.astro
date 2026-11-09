@@ -1,0 +1,35 @@
+---
+// One-line "what I'm thinking about right now" strip, controlled from /admin > Homepage settings.
+import { settings } from "@/data/settings";
+import FormattedDate from "@/components/FormattedDate.astro";
+
+const { enabled, text, updatedAt } = settings.rightNow;
+const show = enabled && text.trim().length > 0;
+// Dim the strip when the line hasn't been touched for 30+ days (evaluated when the site builds).
+const ageDays = updatedAt ? Math.floor((Date.now() - updatedAt.getTime()) / 86_400_000) : undefined;
+const stale = ageDays !== undefined && ageDays > 30;
+---
+
+{show && (
+  <section
+    aria-label="Right now"
+    class:list={[
+      "mt-6 flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-700 dark:bg-gray-800/50",
+      stale && "opacity-60",
+    ]}
+  >
+    <span
+      aria-hidden="true"
+      class:list={["mt-2 h-2 w-2 flex-none rounded-full", stale ? "bg-gray-400" : "bg-green-500 animate-pulse motion-reduce:animate-none"]}
+    ></span>
+    <p class="text-gray-700 dark:text-gray-200">
+      <span class="font-semibold text-gray-900 dark:text-gray-100">Right now</span>
+      <span class="mx-1 text-gray-400">&middot;</span>{text}
+    </p>
+    {updatedAt && (
+      <span class="ml-auto whitespace-nowrap pt-0.5 text-xs text-gray-500 dark:text-gray-400">
+        <FormattedDate date={updatedAt} />
+      </span>
+    )}
+  </section>
+)}

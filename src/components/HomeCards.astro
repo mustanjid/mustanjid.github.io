@@ -1,0 +1,162 @@
+---
+// Two equal cards under the hero.
+//   Left : latest thought (blog post)
+//   Right: latest research paper if "showResearch" is on, otherwise the project spotlight
+// Each card has Expand (full width of the section, in place) and Open (the item itself).
+import { getCollection } from "astro:content";
+import { settings } from "@/data/settings";
+import { excludeDrafts, sortBlogPosts, getResearchEntries } from "@/functions";
+import { STATUS_LABEL, STATUS_BADGE, doiUrl } from "@/research-ui";
+import FormattedDate from "@/components/FormattedDate.astro";
+import Tag from "@/components/Tag.astro";
+
+const posts = sortBlogPosts((await getCollection("blog", excludeDrafts)) ?? []);
+const post = posts[0];
+const earlier = posts.slice(1, 6);
+
+const papers = await getResearchEntries();
+const paper = settings.latestCard.showResearch ? papers[0] : undefined;
+const spot = !paper && settings.spotlight.title ? settings.spotlight : undefined;
+const hasRight = Boolean(paper || spot);
+const cardCount = (post ? 1 : 0) + (hasRight ? 1 : 0);
+
+const KIND: Record<string, string> = { research: "Research project", ml: "ML project", devops: "DevOps / Cloud", other: "Project" };
+const STAGE: Record<string, string> = { idea: "Idea", plan: "Plan", "in-progress": "In progress", demo: "Demo", shipped: "Shipped" };
+
+const eyebrow = "text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400";
+const title = "mt-2 text-xl font-bold leading-snug tracking-tight text-gray-900 dark:text-gray-100";
+const chip = "rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300";
+const link = "text-primary-500 hover:text-primary-600 dark:hover:text-primary-400";
+const expandBtn = "rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800";
+const card = "home-card flex flex-col rounded-xl border border-gray-200 p-5 dark:border-gray-700";
+const spotOpen = spot ? (spot.demoUrl ?? spot.repoUrl) : undefined;
+---
+
+{cardCount > 0 && (
+  <section aria-label="Latest thoughts and research" data-home-cards class:list={["home-grid mt-10 grid gap-6", cardCount === 2 ? "md:grid-cols-2" : "md:grid-cols-1"]}>
+
+    {post && (
+      <article id="card-thoughts" data-card class={card}>
+        <p class={eyebrow}>Latest thought</p>
+        <h2 class={title}><a href={`/blog/${post.slug}`} class="hover:underline">{post.data.title}</a></h2>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400"><FormattedDate date={post.data.date} /></p>
+        <div class="mt-2 flex flex-wrap leading-7">
+          {post.data.tags.map(({ slug }) => <Tag slug={slug} />)}
+        </div>
+        {post.data.summary && <p class="home-clamp mt-2 text-gray-600 dark:text-gray-300">{post.data.summary}</p>}
+
+        <div data-more class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+          {earlier.length > 0 && <h3 class={eyebrow}>Earlier thoughts</h3>}
+          <ul class="mt-2 space-y-2">
+            {earlier.map((p) => (
+              <li class="flex flex-wrap items-baseline justify-between gap-x-4">
+                <a href={`/blog/${p.slug}`} class="font-medium text-gray-900 hover:underline dark:text-gray-100">{p.data.title}</a>
+                <span class="text-sm text-gray-500 dark:text-gray-400"><FormattedDate date={p.data.date} /></span>
+              </li>
+            ))}
+          </ul>
+          <a href="/blog" class={`${link} mt-3 inline-block text-sm font-medium`}>All thoughts &rarr;</a>
+        </div>
+
+        <div class="mt-auto flex items-center gap-4 pt-4">
+          <button type="button" data-expand hidden aria-expanded="false" aria-controls="card-thoughts" class={expandBtn}>Expand</button>
+          <a href={`/blog/${post.slug}`} class={`${link} text-sm font-medium`} aria-label={`Open "${post.data.title}"`}>Open &rarr;</a>
+        </div>
+      </article>
+    )}
+
+    {paper && (
+      <article id="card-research" data-card class={card}>
+        <p class={eyebrow}>Latest research</p>
+        <div class="mt-2 flex flex-wrap items-center gap-2">
+          <span class={`rounded px-2 py-0.5 text-xs font-medium ${STATUS_BADGE[paper.data.status]}`}>{STATUS_LABEL[paper.data.status]}</span>
+          <span class="text-sm text-gray-500 dark:text-gray-400"><FormattedDate date={paper.data.date} /></span>
+        </div>
+        <h2 class={title}>{paper.data.title}</h2>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{paper.data.authors}</p>
+        {paper.data.venue && <p class="text-sm italic text-gray-600 dark:text-gray-400">{paper.data.venue}</p>}
+        {paper.data.summary && <p class="home-clamp mt-2 text-gray-600 dark:text-gray-300">{paper.data.summary}</p>}
+
+        <div data-more class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+          {paper.data.tags.length > 0 && <div class="mb-3 flex flex-wrap gap-2">{paper.data.tags.map((t) => <span class={chip}>{t}</span>)}</div>}
+          <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            {doiUrl(paper.data.doi) && <a class={link} href={doiUrl(paper.data.doi)} target="_blank" rel="noopener noreferrer">DOI</a>}
+            {paper.data.url && <a class={link} href={paper.data.url} target="_blank" rel="noopener noreferrer">Publisher</a>}
+            {paper.data.preprintUrl && <a class={link} href={paper.data.preprintUrl} target="_blank" rel="noopener noreferrer">Preprint</a>}
+            {paper.data.codeUrl && <a class={link} href={paper.data.codeUrl} target="_blank" rel="noopener noreferrer">Code</a>}
+          </div>
+          <a href="/research" class={`${link} mt-3 inline-block text-sm font-medium`}>All research &rarr;</a>
+        </div>
+
+        <div class="mt-auto flex items-center gap-4 pt-4">
+          <button type="button" data-expand hidden aria-expanded="false" aria-controls="card-research" class={expandBtn}>Expand</button>
+          <a href={`/research#${paper.slug}`} class={`${link} text-sm font-medium`} aria-label={`Open "${paper.data.title}"`}>Open &rarr;</a>
+        </div>
+      </article>
+    )}
+
+    {spot && (
+      <article id="card-spotlight" data-card class={card}>
+        <p class={eyebrow}>Now building &middot; {KIND[spot.kind]}</p>
+        <div class="mt-2 flex flex-wrap items-center gap-2">
+          <span class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">{STAGE[spot.stage]}</span>
+        </div>
+        <h2 class={title}>{spot.title}</h2>
+        {spot.summary && <p class="home-clamp mt-2 text-gray-600 dark:text-gray-300">{spot.summary}</p>}
+
+        <div data-more class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+          {spot.tags.length > 0 && <div class="mb-3 flex flex-wrap gap-2">{spot.tags.map((t) => <span class={chip}>{t}</span>)}</div>}
+          <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            {spot.repoUrl && <a class={link} href={spot.repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>}
+            {spot.demoUrl && <a class={link} href={spot.demoUrl} target="_blank" rel="noopener noreferrer">Demo</a>}
+          </div>
+        </div>
+
+        <div class="mt-auto flex items-center gap-4 pt-4">
+          <button type="button" data-expand hidden aria-expanded="false" aria-controls="card-spotlight" class={expandBtn}>Expand</button>
+          {spotOpen && <a href={spotOpen} class={`${link} text-sm font-medium`} target="_blank" rel="noopener noreferrer" aria-label={`Open ${spot.title}`}>Open &rarr;</a>}
+        </div>
+      </article>
+    )}
+  </section>
+)}
+
+<style>
+  .home-clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+  .home-card[hidden] { display: none; }
+  .home-card [data-more] { display: none; }
+  .home-card[data-expanded="true"] [data-more] { display: block; }
+  .home-card[data-expanded="true"] .home-clamp { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .home-grid[data-expanded="true"] { grid-template-columns: minmax(0, 1fr); }
+</style>
+
+<script>
+  // Progressive enhancement: without JS the Expand buttons stay hidden and Open still works.
+  const grid = document.querySelector<HTMLElement>("[data-home-cards]");
+  if (grid) {
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-card]"));
+    const setOpen = (card: HTMLElement, open: boolean) => {
+      const btn = card.querySelector<HTMLButtonElement>("[data-expand]");
+      card.dataset.expanded = String(open);
+      grid.dataset.expanded = String(open);
+      cards.forEach((c) => { if (c !== card) c.hidden = open; });
+      if (btn) {
+        btn.setAttribute("aria-expanded", String(open));
+        btn.textContent = open ? "Collapse" : "Expand";
+        btn.focus({ preventScroll: true });
+      }
+      card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    };
+    cards.forEach((card) => {
+      const btn = card.querySelector<HTMLButtonElement>("[data-expand]");
+      if (!btn) return;
+      btn.hidden = false;
+      btn.addEventListener("click", () => setOpen(card, card.dataset.expanded !== "true"));
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      const open = cards.find((c) => c.dataset.expanded === "true");
+      if (open) setOpen(open, false);
+    });
+  }
+</script>
