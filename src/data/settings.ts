@@ -13,6 +13,7 @@ const schema = z.object({
     enabled: z.boolean().default(false),
     text: z.string().max(140, "Right now line must be 140 characters or fewer").default(""),
     updatedAt: date,
+    url,
   }).default({}),
   news: z.object({
     enabled: z.boolean().default(false),
@@ -28,6 +29,7 @@ const schema = z.object({
   latestCard: z.object({
     showResearch: z.boolean().default(false),
   }).default({}),
+  scholarUrl: url,
   spotlight: z.object({
     kind: z.enum(["research", "ml", "devops", "other"]).default("other"),
     stage: z.enum(["idea", "plan", "in-progress", "demo", "shipped"]).default("idea"),

@@ -1,6 +1,7 @@
 ---
 import { getResearchEntries } from "@/functions";
 import FormattedDate from "@/components/FormattedDate.astro";
+import { settings } from "@/data/settings";
 import { STATUS_LABEL, doiUrl, paperPdfUrl } from "@/research-ui";
 
 const entries = await getResearchEntries();
@@ -10,12 +11,12 @@ const journal = entries.filter(({ data }) => data.publicationType === "journal" 
 const conference = entries.filter(({ data }) => data.publicationType === "conference");
 const groupedEntries = [
   { title: "Under Review", items: underReview },
-  { title: "Thesis", items: thesis },
   { title: "Journal", items: journal },
   { title: "Conference", items: conference },
+  { title: "Thesis", items: thesis },
 ].filter(({ items }) => items.length > 0);
 
-const scholarUrl = "https://scholar.google.com/scholar?q=%22Md+Al+Mustanjid%22";
+const scholarUrl = settings.scholarUrl ?? "https://scholar.google.com/scholar?q=%22Md+Al+Mustanjid%22";
 const citationFor = (entry: (typeof entries)[number]) => entry.data.citation?.trim() || [
   `${entry.data.authors}${entry.data.date ? ` (${entry.data.date.getFullYear()})` : ""}.`,
   `${entry.data.title}.`,
@@ -44,7 +45,7 @@ const citationFor = (entry: (typeof entries)[number]) => entry.data.citation?.tr
           return (
             <li id={entry.slug} class="scroll-mt-24">
               <div class="space-y-3">
-                <p class="leading-7 text-gray-800 dark:text-gray-200">{citationFor(entry)}</p>
+                <p class="text-sm leading-6 text-gray-800 dark:text-gray-200">{citationFor(entry)}</p>
                 <div class="flex flex-wrap gap-2">
                   {pdfLink && <a class="inline-flex min-h-9 items-center rounded border border-primary-600 px-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-300 dark:hover:bg-gray-800" href={pdfLink} target="_blank" rel="noopener noreferrer">Read PDF</a>}
                   {!pdfLink && paperLink && <a class="inline-flex min-h-9 items-center rounded border border-primary-600 px-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-300 dark:hover:bg-gray-800" href={paperLink} target="_blank" rel="noopener noreferrer">Paper</a>}

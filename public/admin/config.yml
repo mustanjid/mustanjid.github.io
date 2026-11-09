@@ -28,6 +28,7 @@ collections:
               - { label: "Show", name: enabled, widget: boolean, default: false }
               - { label: "What I'm thinking about (max 140 characters)", name: text, widget: string, required: false, pattern: ['^.{0,140}$', "Keep it under 140 characters"] }
               - { label: "Last updated", name: updatedAt, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false, hint: "Set this to today whenever you change the line." }
+              - { label: "Link for this status", name: url, widget: string, required: false }
 
           - label: "Daily news"
             name: news
@@ -52,6 +53,8 @@ collections:
             widget: object
             fields:
               - { label: "Show latest research paper (off = show the project spotlight)", name: showResearch, widget: boolean, default: false }
+
+              - { label: "Google Scholar profile or search URL", name: scholarUrl, widget: string, required: false }
 
           - label: "Project spotlight"
             name: spotlight

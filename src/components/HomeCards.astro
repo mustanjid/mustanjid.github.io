@@ -1,162 +1,123 @@
 ---
-// Two equal cards under the hero.
-//   Left : latest thought (blog post)
-//   Right: latest research paper if "showResearch" is on, otherwise the project spotlight
-// Each card has Expand (full width of the section, in place) and Open (the item itself).
 import { getCollection } from "astro:content";
 import { settings } from "@/data/settings";
-import { excludeDrafts, sortBlogPosts, getResearchEntries } from "@/functions";
-import { STATUS_LABEL, STATUS_BADGE, doiUrl } from "@/research-ui";
+import RightNow from "@/components/RightNow.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
-import Tag from "@/components/Tag.astro";
+import { excludeDrafts, sortBlogPosts, getResearchEntries } from "@/functions";
+import { STATUS_LABEL, STATUS_BADGE, doiUrl, paperPdfUrl } from "@/research-ui";
 
-const posts = sortBlogPosts((await getCollection("blog", excludeDrafts)) ?? []);
-const post = posts[0];
-const earlier = posts.slice(1, 6);
-
+const posts = sortBlogPosts((await getCollection("blog", excludeDrafts)) ?? []).slice(0, 4);
+const latestPost = posts[0];
+const olderPosts = posts.slice(1);
 const papers = await getResearchEntries();
-const paper = settings.latestCard.showResearch ? papers[0] : undefined;
-const spot = !paper && settings.spotlight.title ? settings.spotlight : undefined;
-const hasRight = Boolean(paper || spot);
-const cardCount = (post ? 1 : 0) + (hasRight ? 1 : 0);
-
-const KIND: Record<string, string> = { research: "Research project", ml: "ML project", devops: "DevOps / Cloud", other: "Project" };
-const STAGE: Record<string, string> = { idea: "Idea", plan: "Plan", "in-progress": "In progress", demo: "Demo", shipped: "Shipped" };
-
-const eyebrow = "text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400";
-const title = "mt-2 text-xl font-bold leading-snug tracking-tight text-gray-900 dark:text-gray-100";
-const chip = "rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300";
-const link = "text-primary-500 hover:text-primary-600 dark:hover:text-primary-400";
-const expandBtn = "rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800";
-const card = "home-card flex flex-col rounded-xl border border-gray-200 p-5 dark:border-gray-700";
-const spotOpen = spot ? (spot.demoUrl ?? spot.repoUrl) : undefined;
+const ongoingStatuses = new Set(["accepted", "under-review", "submitted", "preprint", "in-preparation"]);
+const ongoingPaper = papers.find(({ data }) => ongoingStatuses.has(data.status));
+const paper = settings.latestCard.showResearch ? ongoingPaper ?? papers[0] : undefined;
+const project = !paper && settings.spotlight.title ? settings.spotlight : undefined;
+const paperLabel = paper && paper === ongoingPaper ? "Latest ongoing research" : "Latest research";
+const kindLabel: Record<string, string> = { research: "Research project", ml: "ML project", devops: "DevOps / Cloud", other: "Project" };
+const stageLabel: Record<string, string> = { idea: "Idea", plan: "Planned", "in-progress": "In progress", demo: "Demo", shipped: "Shipped" };
+const accent = "h-1 w-12 rounded-full bg-primary-500";
+const textLink = "font-medium text-primary-600 hover:underline dark:text-primary-400";
 ---
 
-{cardCount > 0 && (
-  <section aria-label="Latest thoughts and research" data-home-cards class:list={["home-grid mt-10 grid gap-6", cardCount === 2 ? "md:grid-cols-2" : "md:grid-cols-1"]}>
+<section aria-label="Latest updates and current focus" class="mt-8 grid gap-10 md:grid-cols-2 md:items-start">
+  <div class="min-w-0 space-y-5">
+    <header class="space-y-3">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Latest thoughts</h2>
+      <div class={accent} aria-hidden="true"></div>
+    </header>
 
-    {post && (
-      <article id="card-thoughts" data-card class={card}>
-        <p class={eyebrow}>Latest thought</p>
-        <h2 class={title}><a href={`/blog/${post.slug}`} class="hover:underline">{post.data.title}</a></h2>
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400"><FormattedDate date={post.data.date} /></p>
-        <div class="mt-2 flex flex-wrap leading-7">
-          {post.data.tags.map(({ slug }) => <Tag slug={slug} />)}
-        </div>
-        {post.data.summary && <p class="home-clamp mt-2 text-gray-600 dark:text-gray-300">{post.data.summary}</p>}
+    <RightNow />
 
-        <div data-more class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
-          {earlier.length > 0 && <h3 class={eyebrow}>Earlier thoughts</h3>}
-          <ul class="mt-2 space-y-2">
-            {earlier.map((p) => (
-              <li class="flex flex-wrap items-baseline justify-between gap-x-4">
-                <a href={`/blog/${p.slug}`} class="font-medium text-gray-900 hover:underline dark:text-gray-100">{p.data.title}</a>
-                <span class="text-sm text-gray-500 dark:text-gray-400"><FormattedDate date={p.data.date} /></span>
-              </li>
-            ))}
-          </ul>
-          <a href="/blog" class={`${link} mt-3 inline-block text-sm font-medium`}>All thoughts &rarr;</a>
-        </div>
-
-        <div class="mt-auto flex items-center gap-4 pt-4">
-          <button type="button" data-expand hidden aria-expanded="false" aria-controls="card-thoughts" class={expandBtn}>Expand</button>
-          <a href={`/blog/${post.slug}`} class={`${link} text-sm font-medium`} aria-label={`Open "${post.data.title}"`}>Open &rarr;</a>
-        </div>
+    {latestPost && (
+      <article class="rounded border border-gray-200 border-l-4 border-l-emerald-500 bg-gray-50 p-4 dark:border-gray-700 dark:border-l-emerald-400 dark:bg-gray-900/50">
+        <p class="text-xs text-gray-500 dark:text-gray-400"><FormattedDate date={latestPost.data.date} /></p>
+        <h3 class="mt-1 text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">{latestPost.data.title}</h3>
+        {latestPost.data.summary && <p class="mt-2 text-sm leading-5 text-gray-600 dark:text-gray-300">{latestPost.data.summary}</p>}
+        <a class="mt-3 inline-flex min-h-9 items-center rounded border border-emerald-600 px-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 dark:border-emerald-400 dark:text-emerald-200 dark:hover:bg-gray-800" href={`/blog/${latestPost.slug}`}>Read now <span class="ml-2" aria-hidden="true">&rarr;</span></a>
       </article>
     )}
+
+    <div>
+      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+        {olderPosts.map((post) => (
+          <li>
+            <a href={`/blog/${post.slug}`} class="group flex items-start justify-between gap-4 py-3">
+              <span class="min-w-0">
+                <span class="block text-sm font-semibold leading-5 text-gray-900 group-hover:text-primary-600 dark:text-gray-100 dark:group-hover:text-primary-400">{post.data.title}</span>
+                <span class="mt-1 block text-xs text-gray-500 dark:text-gray-400"><FormattedDate date={post.data.date} /></span>
+              </span>
+              <span aria-hidden="true" class="shrink-0 text-primary-600 dark:text-primary-400">&rarr;</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href="/blog" class={`${textLink} mt-3 inline-block text-sm`}>All thoughts</a>
+    </div>
+  </div>
+
+  <div class="min-w-0 space-y-5">
+    <header class="space-y-3">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Current focus</h2>
+      <div class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-1 w-7 bg-amber-500"></span>
+        <span class="h-2 w-2 rotate-45 bg-emerald-500"></span>
+        <span class="h-1 w-4 bg-gray-300 dark:bg-gray-600"></span>
+      </div>
+    </header>
 
     {paper && (
-      <article id="card-research" data-card class={card}>
-        <p class={eyebrow}>Latest research</p>
-        <div class="mt-2 flex flex-wrap items-center gap-2">
+      <article class="rounded border border-gray-200 border-l-4 border-l-primary-500 bg-gray-50 p-4 dark:border-gray-700 dark:border-l-primary-400 dark:bg-gray-900/50 sm:p-5">
+        <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{paperLabel}</p>
+        <div class="flex flex-wrap items-center gap-2">
           <span class={`rounded px-2 py-0.5 text-xs font-medium ${STATUS_BADGE[paper.data.status]}`}>{STATUS_LABEL[paper.data.status]}</span>
-          {paper.data.date && <span class="text-sm text-gray-500 dark:text-gray-400"><FormattedDate date={paper.data.date} /></span>}
+          {paper.data.date && <span class="text-xs text-gray-500 dark:text-gray-400"><FormattedDate date={paper.data.date} /></span>}
         </div>
-        <h2 class={title}>{paper.data.title}</h2>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{paper.data.authors}</p>
-        {paper.data.venue && <p class="text-sm italic text-gray-600 dark:text-gray-400">{paper.data.venue}</p>}
-        {paper.data.summary && <p class="home-clamp mt-2 text-gray-600 dark:text-gray-300">{paper.data.summary}</p>}
-
-        <div data-more class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
-          {paper.data.tags.length > 0 && <div class="mb-3 flex flex-wrap gap-2">{paper.data.tags.map((t) => <span class={chip}>{t}</span>)}</div>}
-          <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-            {doiUrl(paper.data.doi) && <a class={link} href={doiUrl(paper.data.doi)} target="_blank" rel="noopener noreferrer">DOI</a>}
-            {paper.data.url && <a class={link} href={paper.data.url} target="_blank" rel="noopener noreferrer">Publisher</a>}
-            {paper.data.preprintUrl && <a class={link} href={paper.data.preprintUrl} target="_blank" rel="noopener noreferrer">Preprint</a>}
-            {paper.data.codeUrl && <a class={link} href={paper.data.codeUrl} target="_blank" rel="noopener noreferrer">Code</a>}
-          </div>
-          <a href="/research" class={`${link} mt-3 inline-block text-sm font-medium`}>All research &rarr;</a>
-        </div>
-
-        <div class="mt-auto flex items-center gap-4 pt-4">
-          <button type="button" data-expand hidden aria-expanded="false" aria-controls="card-research" class={expandBtn}>Expand</button>
-          <a href={`/research#${paper.slug}`} class={`${link} text-sm font-medium`} aria-label={`Open "${paper.data.title}"`}>Open &rarr;</a>
+        <h3 class="mt-3 text-lg font-bold leading-6 text-gray-900 dark:text-gray-100">{paper.data.title}</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">{paper.data.authors}</p>
+        {paper.data.venue && <p class="mt-1 text-sm italic text-gray-500 dark:text-gray-400">{paper.data.venue}</p>}
+        {paper.data.summary && (
+          <details class="mt-3">
+            <summary class="cursor-pointer text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">Read description</summary>
+            <p class="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-300">{paper.data.summary}</p>
+          </details>
+        )}
+        <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+          {paperPdfUrl(paper.data.url, paper.data.preprintUrl, paper.data.doi) && <a class={textLink} href={paperPdfUrl(paper.data.url, paper.data.preprintUrl, paper.data.doi)} target="_blank" rel="noopener noreferrer">Read PDF</a>}
+          {doiUrl(paper.data.doi) && <a class={textLink} href={doiUrl(paper.data.doi)} target="_blank" rel="noopener noreferrer">DOI</a>}
+          {paper.data.url && <a class={textLink} href={paper.data.url} target="_blank" rel="noopener noreferrer">Publisher</a>}
+          {paper.data.preprintUrl && <a class={textLink} href={paper.data.preprintUrl} target="_blank" rel="noopener noreferrer">Preprint</a>}
+          {paper.data.codeUrl && <a class={textLink} href={paper.data.codeUrl} target="_blank" rel="noopener noreferrer">Code</a>}
+          <a class={textLink} href={`/research#${paper.slug}`}>Research details</a>
         </div>
       </article>
     )}
 
-    {spot && (
-      <article id="card-spotlight" data-card class={card}>
-        <p class={eyebrow}>Now building &middot; {KIND[spot.kind]}</p>
-        <div class="mt-2 flex flex-wrap items-center gap-2">
-          <span class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">{STAGE[spot.stage]}</span>
+    {project && (
+      <article class="rounded border border-gray-200 border-l-4 border-l-emerald-500 bg-gray-50 p-4 dark:border-gray-700 dark:border-l-emerald-400 dark:bg-gray-900/50 sm:p-5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">{kindLabel[project.kind]}</span>
+          <span class="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">{stageLabel[project.stage]}</span>
         </div>
-        <h2 class={title}>{spot.title}</h2>
-        {spot.summary && <p class="home-clamp mt-2 text-gray-600 dark:text-gray-300">{spot.summary}</p>}
-
-        <div data-more class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
-          {spot.tags.length > 0 && <div class="mb-3 flex flex-wrap gap-2">{spot.tags.map((t) => <span class={chip}>{t}</span>)}</div>}
-          <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-            {spot.repoUrl && <a class={link} href={spot.repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>}
-            {spot.demoUrl && <a class={link} href={spot.demoUrl} target="_blank" rel="noopener noreferrer">Demo</a>}
-          </div>
-        </div>
-
-        <div class="mt-auto flex items-center gap-4 pt-4">
-          <button type="button" data-expand hidden aria-expanded="false" aria-controls="card-spotlight" class={expandBtn}>Expand</button>
-          {spotOpen && <a href={spotOpen} class={`${link} text-sm font-medium`} target="_blank" rel="noopener noreferrer" aria-label={`Open ${spot.title}`}>Open &rarr;</a>}
+        <h3 class="mt-3 text-lg font-bold leading-6 text-gray-900 dark:text-gray-100">{project.title}</h3>
+        {project.summary && (
+          <details class="mt-3">
+            <summary class="cursor-pointer text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">Project details</summary>
+            <p class="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-300">{project.summary}</p>
+          </details>
+        )}
+        {project.tags.length > 0 && <ul class="mt-3 flex flex-wrap gap-2">{project.tags.map((tag) => <li class="rounded bg-white px-2 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">{tag}</li>)}</ul>}
+        <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+          {project.repoUrl && <a class={textLink} href={project.repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>}
+          {project.demoUrl && <a class={textLink} href={project.demoUrl} target="_blank" rel="noopener noreferrer">Live demo</a>}
+          <a class={textLink} href="/projects">Projects</a>
         </div>
       </article>
     )}
-  </section>
-)}
 
-<style>
-  .home-clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
-  .home-card[hidden] { display: none; }
-  .home-card [data-more] { display: none; }
-  .home-card[data-expanded="true"] [data-more] { display: block; }
-  .home-card[data-expanded="true"] .home-clamp { display: block; -webkit-line-clamp: unset; overflow: visible; }
-  .home-grid[data-expanded="true"] { grid-template-columns: minmax(0, 1fr); }
-</style>
+    {!paper && !project && <p class="rounded border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">Choose a research paper or project in Homepage settings to feature here.</p>}
 
-<script>
-  // Progressive enhancement: without JS the Expand buttons stay hidden and Open still works.
-  const grid = document.querySelector<HTMLElement>("[data-home-cards]");
-  if (grid) {
-    const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-card]"));
-    const setOpen = (card: HTMLElement, open: boolean) => {
-      const btn = card.querySelector<HTMLButtonElement>("[data-expand]");
-      card.dataset.expanded = String(open);
-      grid.dataset.expanded = String(open);
-      cards.forEach((c) => { if (c !== card) c.hidden = open; });
-      if (btn) {
-        btn.setAttribute("aria-expanded", String(open));
-        btn.textContent = open ? "Collapse" : "Expand";
-        btn.focus({ preventScroll: true });
-      }
-      card.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    };
-    cards.forEach((card) => {
-      const btn = card.querySelector<HTMLButtonElement>("[data-expand]");
-      if (!btn) return;
-      btn.hidden = false;
-      btn.addEventListener("click", () => setOpen(card, card.dataset.expanded !== "true"));
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key !== "Escape") return;
-      const open = cards.find((c) => c.dataset.expanded === "true");
-      if (open) setOpen(open, false);
-    });
-  }
-</script>
+    {settings.scholarUrl && <a class={`${textLink} inline-block text-sm`} href={settings.scholarUrl} target="_blank" rel="noopener noreferrer">Google Scholar &rarr;</a>}
+  </div>
+</section>

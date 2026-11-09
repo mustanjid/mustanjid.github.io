@@ -19,6 +19,7 @@ import Node from './icons/Node.astro'
 import Robot from './icons/Robot.astro'
 import Hacker from './icons/Hacker.astro'
 import Leetcode from './icons/Leetcode.astro'
+import Scholar from './icons/Scholar.astro'
 
 
 const components = {
@@ -41,7 +42,8 @@ const components = {
     node:Node,
     robot:Robot,
     hacker: Hacker,
-    leetcode: Leetcode
+    leetcode: Leetcode,
+    scholar: Scholar
 }
 
 type Props = {
@@ -52,11 +54,13 @@ type Props = {
 
 const {kind, href, size = 8} = Astro.props
 const SocialSvg = components[kind]
+const sizeClasses: Record<number, string> = { 4: "h-4 w-4", 5: "h-5 w-5", 6: "h-6 w-6", 8: "h-8 w-8" }
+const iconSize = sizeClasses[size] ?? "h-5 w-5"
 ---
 
 
 <a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href={href}>
     <span class="sr-only">{kind}</span>
     <SocialSvg
-            class={`fill-current text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 h-${size} w-${size}`}/>
+            class={`fill-current text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 ${iconSize}`}/>
 </a>

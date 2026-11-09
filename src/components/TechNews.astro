@@ -1,0 +1,112 @@
+---
+import { settings } from "@/data/settings";
+
+const enabled = settings.news.enabled;
+---
+
+{enabled && (
+    <section aria-label="Latest in tech" class="flex min-w-0 items-center gap-2 rounded-full border border-amber-200 bg-amber-50 p-1 text-amber-950 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-100">
+      <span class="shrink-0 rounded-full bg-amber-200 px-3 py-1 text-xs font-semibold text-amber-950 dark:bg-amber-900 dark:text-amber-100">Latest in tech</span>
+      <div data-tech-news class="min-w-0 flex-1" aria-live="off">
+        <div class="news-window">
+          <div class="news-track" data-news-track>
+            <div class="news-set" data-news-set><span class="text-sm text-gray-500 dark:text-gray-400">Loading latest tech stories...</span></div>
+          </div>
+        </div>
+      </div>
+      <a class="shrink-0 px-2 text-sm font-semibold text-amber-800 hover:underline dark:text-amber-200" href="https://news.ycombinator.com/" target="_blank" rel="noopener noreferrer" aria-label="More technology news from Hacker News">&rarr;</a>
+  </section>
+)}
+
+<style>
+  .news-window { overflow: hidden; }
+  .news-track { display: flex; width: max-content; animation: news-scroll 48s linear infinite; }
+  .news-set { display: flex; flex: none; align-items: center; gap: 2.5rem; padding-right: 2.5rem; white-space: nowrap; }
+  .news-set a { max-width: min(34rem, 72vw); overflow: hidden; color: inherit; text-overflow: ellipsis; }
+  .news-set a:hover { color: rgb(5 150 105); text-decoration: underline; }
+  .news-dot { color: rgb(245 158 11); }
+  .news-window:hover .news-track, .news-window:focus-within .news-track { animation-play-state: paused; }
+  @keyframes news-scroll { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .news-track { width: 100%; animation: none; }
+    .news-window { overflow-x: auto; }
+    .news-set[aria-hidden="true"] { display: none; }
+  }
+</style>
+
+<script>
+  interface HackerNewsStory {
+    id: number;
+    type?: string;
+    title?: string;
+    url?: string;
+  }
+
+  const techTopic = /\b(ai|artificial intelligence|apple|browser|cloud|computer|cybersecurity|data|developer|digital|github|gpu|h100|hacker|internet|javascript|linux|machine learning|microsoft|nvidia|open source|payment|programming|python|robot|rust|security|server|software|startup|technology|tech|web)\b/i;
+  const root = document.querySelector<HTMLElement>("[data-tech-news]");
+  const track = root?.querySelector<HTMLElement>("[data-news-track]");
+  const primarySet = track?.querySelector<HTMLElement>("[data-news-set]");
+
+  if (root && track && primarySet) {
+    const showStories = (stories: HackerNewsStory[]) => {
+      const links = stories.map((story) => {
+        const url = story.url ? new URL(story.url) : undefined;
+        if (!url || !["http:", "https:"].includes(url.protocol) || !story.title) return undefined;
+
+        const item = document.createElement("span");
+        const dot = document.createElement("span");
+        dot.className = "news-dot";
+        dot.setAttribute("aria-hidden", "true");
+        dot.textContent = "•";
+
+        const link = document.createElement("a");
+        link.href = url.href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = story.title;
+        link.setAttribute("aria-label", `${story.title} (opens in a new tab)`);
+        item.className = "inline-flex items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-300";
+        item.append(dot, link);
+        return item;
+      }).filter((item): item is HTMLSpanElement => Boolean(item));
+
+      if (links.length === 0) throw new Error("No current headlines available");
+      primarySet.replaceChildren(...links);
+      const duplicate = primarySet.cloneNode(true) as HTMLElement;
+      duplicate.setAttribute("aria-hidden", "true");
+      duplicate.setAttribute("inert", "");
+      track.replaceChildren(primarySet, duplicate);
+      root.dataset.loaded = "true";
+    };
+
+    const loadStories = async () => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 9000);
+      try {
+        const response = await fetch("https://hacker-news.firebaseio.com/v0/topstories.json", { signal: controller.signal, cache: "no-store" });
+        if (!response.ok) throw new Error("Could not load headline list");
+        const ids = await response.json() as number[];
+        const records = await Promise.all(ids.slice(0, 24).map(async (id) => {
+          try {
+            const result = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`, { signal: controller.signal, cache: "no-store" });
+            return result.ok ? await result.json() as HackerNewsStory : undefined;
+          } catch {
+            return undefined;
+          }
+        }));
+        showStories(records.filter((story): story is HackerNewsStory => Boolean(story?.type === "story" && story.title && story.url && techTopic.test(story.title))).slice(0, 3));
+      } catch {
+        const fallback = document.createElement("a");
+        fallback.href = "https://news.ycombinator.com/";
+        fallback.textContent = "Live headlines are unavailable. Browse Hacker News.";
+        fallback.className = "text-sm font-medium text-gray-600 underline dark:text-gray-300";
+        primarySet.replaceChildren(fallback);
+        track.replaceChildren(primarySet);
+      } finally {
+        clearTimeout(timeout);
+      }
+    };
+
+    void loadStories();
+  }
+</script>

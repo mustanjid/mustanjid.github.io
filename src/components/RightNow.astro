@@ -3,7 +3,7 @@
 import { settings } from "@/data/settings";
 import FormattedDate from "@/components/FormattedDate.astro";
 
-const { enabled, text, updatedAt } = settings.rightNow;
+const { enabled, text, updatedAt, url } = settings.rightNow;
 const show = enabled && text.trim().length > 0;
 // Dim the strip when the line hasn't been touched for 30+ days (evaluated when the site builds).
 const ageDays = updatedAt ? Math.floor((Date.now() - updatedAt.getTime()) / 86_400_000) : undefined;
@@ -13,23 +13,11 @@ const stale = ageDays !== undefined && ageDays > 30;
 {show && (
   <section
     aria-label="Right now"
-    class:list={[
-      "mt-6 flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-700 dark:bg-gray-800/50",
-      stale && "opacity-60",
-    ]}
+    class:list={["inline-flex w-full max-w-full flex-wrap items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 p-1 text-sm text-emerald-950 sm:w-auto", stale && "opacity-60", "dark:border-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-100"]}
   >
-    <span
-      aria-hidden="true"
-      class:list={["mt-2 h-2 w-2 flex-none rounded-full", stale ? "bg-gray-400" : "bg-green-500 animate-pulse motion-reduce:animate-none"]}
-    ></span>
-    <p class="text-gray-700 dark:text-gray-200">
-      <span class="font-semibold text-gray-900 dark:text-gray-100">Right now</span>
-      <span class="mx-1 text-gray-400">&middot;</span>{text}
-    </p>
-    {updatedAt && (
-      <span class="ml-auto whitespace-nowrap pt-0.5 text-xs text-gray-500 dark:text-gray-400">
-        <FormattedDate date={updatedAt} />
-      </span>
-    )}
+    <span class="shrink-0 rounded-full bg-emerald-200 px-3 py-1 text-xs font-semibold text-emerald-950 dark:bg-emerald-900 dark:text-emerald-100">Now</span>
+    <p class="min-w-0 flex-1 px-1 py-1 leading-5">{text}</p>
+    {updatedAt && <time class="ml-auto whitespace-nowrap px-2 text-[11px] text-emerald-800 sm:inline dark:text-emerald-300" datetime={updatedAt.toISOString()}><FormattedDate date={updatedAt} /></time>}
+    {url && <a class="shrink-0 px-2 py-1 text-base font-semibold text-emerald-800 hover:underline dark:text-emerald-200" href={url} aria-label="Open current status">&rarr;</a>}
   </section>
 )}
