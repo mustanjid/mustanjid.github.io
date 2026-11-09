@@ -1,11 +1,11 @@
 {
   "rightNow": {
     "enabled": true,
-    "text": "leaning Sveltia",
+    "text": "Learning Sveltia CMS for managing my own portfolio",
     "updatedAt": "2026-11-09"
   },
   "news": {
-    "enabled": false
+    "enabled": true
   },
   "achievement": {
     "enabled": false,
@@ -16,7 +16,7 @@
     "expires": ""
   },
   "latestCard": {
-    "showResearch": false
+    "showResearch": true
   },
   "spotlight": {
     "kind": "other",
