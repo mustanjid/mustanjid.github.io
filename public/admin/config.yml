@@ -143,9 +143,18 @@ collections:
           - { label: "Submitted", value: submitted }
           - { label: "Preprint", value: preprint }
           - { label: "In preparation", value: in-preparation }
+      - label: "Publication type"
+        name: publicationType
+        widget: select
+        required: false
+        options:
+          - { label: "Thesis", value: thesis }
+          - { label: "Journal", value: journal }
+          - { label: "Conference", value: conference }
+      - { label: "Citation text shown in the list", name: citation, widget: text, required: false, hint: "Optional. Set the exact formatted citation displayed on the Publications page and homepage." }
       - { label: "Authors", name: authors, widget: string, hint: "Comma-separated, in published order" }
       - { label: "Venue (journal or conference)", name: venue, widget: string, required: false, hint: "Leave empty while under review if the journal should stay private." }
-      - { label: "Date (published, or submitted)", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Date (published, or submitted)", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
       - { label: "DOI", name: doi, widget: string, required: false }
       - { label: "Publisher link", name: url, widget: string, required: false }
       - { label: "Preprint link", name: preprintUrl, widget: string, required: false }

@@ -17,5 +17,13 @@ export const STATUS_BADGE: Record<string, string> = {
   "in-preparation": "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
 };
 
-export const doiUrl = (d?: string): string | undefined =>
-  d ? (d.startsWith("http") ? d : `https://doi.org/${d}`) : undefined;
+export const doiUrl = (doi?: string): string | undefined => {
+  const value = doi?.trim();
+  if (!value) return undefined;
+
+  const identifier = value.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "");
+  return /^10\.\d{4,9}\/\S+$/i.test(identifier) ? `https://doi.org/${identifier}` : undefined;
+};
+
+export const paperPdfUrl = (...urls: (string | undefined)[]): string | undefined =>
+  urls.find((url) => url && /^https?:\/\/\S+\.pdf(?:[?#].*)?$/i.test(url));

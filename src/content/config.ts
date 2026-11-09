@@ -56,9 +56,13 @@ const research = defineCollection({
         title: z.string(),
         // Where the paper stands. Change this as it moves through the pipeline.
         status: z.enum(['published', 'accepted', 'under-review', 'submitted', 'preprint', 'in-preparation']),
+        publicationType: z.enum(['thesis', 'journal', 'conference']).optional(),
+        citation: z.string().optional(),
         authors: z.string(),                 // free text, e.g. "A. Name, B. Name, You"
         venue: z.string().optional(),        // journal/conference; leave empty while under review if you prefer
-        date: z.coerce.date(),               // publication date, or submission date for pending work
+        publisher: z.string().optional(),
+        citationDetails: z.string().optional(),
+        date: z.coerce.date().optional(),     // publication date, or submission date for pending work
         doi: z.string().optional(),
         url: z.string().url().optional(),    // publisher page
         preprintUrl: z.string().url().optional(), // arXiv / bioRxiv / SSRN

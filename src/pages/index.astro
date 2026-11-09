@@ -4,6 +4,7 @@ import RootLayout from "@/layouts/RootLayout.astro";
 import AuthorLayoutHome from "@/pages/aboutHero.astro";
 import RightNow from "@/components/RightNow.astro";
 import HomeCards from "@/components/HomeCards.astro";
+import Publications from "@/components/Publications.astro";
 ---
 
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description}>
@@ -14,4 +15,6 @@ import HomeCards from "@/components/HomeCards.astro";
   <!-- Coming next: daily news, achievement highlight. -->
 
   <HomeCards />
+
+  <Publications />
 </RootLayout>

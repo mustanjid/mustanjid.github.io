@@ -34,5 +34,5 @@ export const getResearchEntries = async (): Promise<CollectionEntry<'research'>[
     const all = (await getCollection('research')) ?? [];
     return all
         .filter(({data}) => (import.meta.env.PROD ? !data.draft : true))
-        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+        .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
 }

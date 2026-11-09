@@ -1,0 +1,108 @@
+---
+import { getResearchEntries } from "@/functions";
+import FormattedDate from "@/components/FormattedDate.astro";
+import { STATUS_LABEL, doiUrl, paperPdfUrl } from "@/research-ui";
+
+const entries = await getResearchEntries();
+const underReview = entries.filter(({ data }) => data.status === "under-review" || data.status === "submitted");
+const thesis = entries.filter(({ data }) => data.publicationType === "thesis");
+const journal = entries.filter(({ data }) => data.publicationType === "journal" && data.status !== "under-review" && data.status !== "submitted");
+const conference = entries.filter(({ data }) => data.publicationType === "conference");
+const groupedEntries = [
+  { title: "Under Review", items: underReview },
+  { title: "Thesis", items: thesis },
+  { title: "Journal", items: journal },
+  { title: "Conference", items: conference },
+].filter(({ items }) => items.length > 0);
+
+const scholarUrl = "https://scholar.google.com/scholar?q=%22Md+Al+Mustanjid%22";
+const citationFor = (entry: (typeof entries)[number]) => entry.data.citation?.trim() || [
+  `${entry.data.authors}${entry.data.date ? ` (${entry.data.date.getFullYear()})` : ""}.`,
+  `${entry.data.title}.`,
+  entry.data.venue,
+  entry.data.citationDetails,
+].filter(Boolean).join(" ");
+---
+
+<section aria-labelledby="publications-title" class="mt-12 space-y-7">
+  <header class="flex flex-wrap items-end justify-between gap-4 border-b border-gray-200 pb-4 dark:border-gray-700">
+    <h2 id="publications-title" class="text-3xl font-extrabold leading-tight text-gray-900 dark:text-gray-100">Publications</h2>
+    <a class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400" href={scholarUrl} target="_blank" rel="noopener noreferrer">200+ citations on Google Scholar</a>
+  </header>
+
+  {entries.length === 0 && <p class="text-gray-500 dark:text-gray-400">No publications yet.</p>}
+
+  {groupedEntries.map((group) => (
+    <section aria-label={group.title} class="space-y-3">
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{group.title}</h3>
+      <ul class="list-disc space-y-4 pl-6">
+        {group.items.map((entry) => {
+          const dialogId = `details-${entry.slug}`;
+          const doiLink = doiUrl(entry.data.doi);
+          const pdfLink = paperPdfUrl(entry.data.url, entry.data.preprintUrl, entry.data.doi);
+          const paperLink = doiLink ?? entry.data.url ?? entry.data.preprintUrl;
+          return (
+            <li id={entry.slug} class="scroll-mt-24">
+              <div class="space-y-3">
+                <p class="leading-7 text-gray-800 dark:text-gray-200">{citationFor(entry)}</p>
+                <div class="flex flex-wrap gap-2">
+                  {pdfLink && <a class="inline-flex min-h-9 items-center rounded border border-primary-600 px-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-300 dark:hover:bg-gray-800" href={pdfLink} target="_blank" rel="noopener noreferrer">Read PDF</a>}
+                  {!pdfLink && paperLink && <a class="inline-flex min-h-9 items-center rounded border border-primary-600 px-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-300 dark:hover:bg-gray-800" href={paperLink} target="_blank" rel="noopener noreferrer">Paper</a>}
+                  {pdfLink && doiLink && <a class="inline-flex min-h-9 items-center rounded border border-gray-300 px-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={doiLink} target="_blank" rel="noopener noreferrer">DOI</a>}
+                  <button type="button" data-paper-open={dialogId} aria-haspopup="dialog" aria-controls={dialogId} class="inline-flex min-h-9 items-center rounded border border-gray-300 px-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800">View details</button>
+                </div>
+              </div>
+
+              <dialog id={dialogId} data-paper-dialog aria-labelledby={`${dialogId}-title`} class="m-auto max-h-[85vh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto rounded border border-gray-200 bg-white p-0 text-left text-gray-900 shadow-2xl backdrop:bg-black/60 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100">
+                <div class="flex items-start justify-between gap-4 border-b border-gray-200 p-5 dark:border-gray-700">
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">{STATUS_LABEL[entry.data.status]}</p>
+                    <h3 id={`${dialogId}-title`} class="mt-2 text-xl font-bold leading-7">{entry.data.title}</h3>
+                  </div>
+                  <button type="button" data-paper-close class="shrink-0 rounded border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800">Close</button>
+                </div>
+                <div class="space-y-5 p-5">
+                  <dl class="grid gap-4 text-sm sm:grid-cols-[8rem_minmax(0,1fr)]">
+                    <dt class="font-semibold text-gray-500 dark:text-gray-400">Authors</dt>
+                    <dd>{entry.data.authors}</dd>
+                    {entry.data.venue && <><dt class="font-semibold text-gray-500 dark:text-gray-400">Journal / venue</dt><dd>{entry.data.venue}</dd></>}
+                    {entry.data.publisher && <><dt class="font-semibold text-gray-500 dark:text-gray-400">Publisher</dt><dd>{entry.data.publisher}</dd></>}
+                    {entry.data.date && <><dt class="font-semibold text-gray-500 dark:text-gray-400">Date</dt><dd><FormattedDate date={entry.data.date} /></dd></>}
+                    {entry.data.citationDetails && <><dt class="font-semibold text-gray-500 dark:text-gray-400">Publication</dt><dd>{entry.data.citationDetails}</dd></>}
+                    {doiLink && <><dt class="font-semibold text-gray-500 dark:text-gray-400">DOI</dt><dd>{entry.data.doi}</dd></>}
+                  </dl>
+                  <section>
+                    <h4 class="font-semibold">Description</h4>
+                    <p class="mt-2 whitespace-pre-line text-sm leading-6 text-gray-700 dark:text-gray-300">{entry.data.summary?.trim() || "No description has been added yet."}</p>
+                  </section>
+                  <div class="flex flex-wrap gap-2 text-sm">
+                    {pdfLink && <a class="inline-flex min-h-9 items-center rounded border border-primary-600 px-3 font-semibold text-primary-700 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-300 dark:hover:bg-gray-800" href={pdfLink} target="_blank" rel="noopener noreferrer">Read PDF</a>}
+                    {doiLink && <a class="inline-flex min-h-9 items-center rounded border border-gray-300 px-3 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={doiLink} target="_blank" rel="noopener noreferrer">DOI</a>}
+                    {entry.data.url && <a class="inline-flex min-h-9 items-center rounded border border-gray-300 px-3 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={entry.data.url} target="_blank" rel="noopener noreferrer">Publisher page</a>}
+                    {entry.data.preprintUrl && <a class="inline-flex min-h-9 items-center rounded border border-gray-300 px-3 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={entry.data.preprintUrl} target="_blank" rel="noopener noreferrer">Preprint</a>}
+                    {entry.data.codeUrl && <a class="inline-flex min-h-9 items-center rounded border border-gray-300 px-3 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={entry.data.codeUrl} target="_blank" rel="noopener noreferrer">Code</a>}
+                  </div>
+                </div>
+              </dialog>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  ))}
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-paper-open]").forEach((button) => {
+    const dialogId = button.dataset.paperOpen;
+    const dialog = dialogId ? document.getElementById(dialogId) as HTMLDialogElement | null : null;
+    button.addEventListener("click", () => dialog?.showModal());
+  });
+
+  document.querySelectorAll<HTMLDialogElement>("[data-paper-dialog]").forEach((dialog) => {
+    dialog.querySelector<HTMLButtonElement>("[data-paper-close]")?.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+</script>
