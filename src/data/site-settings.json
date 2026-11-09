@@ -19,9 +19,9 @@
     "showResearch": true
   },
   "spotlight": {
-    "kind": "other",
+    "kind": "research",
     "stage": "idea",
-    "title": "",
+    "title": "A paper on drug desingn",
     "summary": "",
     "tags": [],
     "repoUrl": "",
