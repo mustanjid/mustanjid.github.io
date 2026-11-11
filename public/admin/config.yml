@@ -5,6 +5,7 @@ backend:
 
 # Saves commit straight to main and trigger a deploy (about a minute or two).
 publish_mode: simple
+local_backend: true   # only used when you open /admin on localhost (npm run dev)
 media_folder: public/static/uploads
 public_folder: /static/uploads
 site_url: https://mustanjid.github.io/
@@ -100,6 +101,139 @@ collections:
               - { label: "Repository link", name: repoUrl, widget: string, required: false }
               - { label: "Demo link", name: demoUrl, widget: string, required: false }
 
+  # ---------------------------------------------------------------- Site content (was hardcoded)
+  - name: site
+    label: "Site content"
+    files:
+      - name: site
+        label: "Site identity & social links"
+        file: src/data/site.json
+        format: json
+        fields:
+          - { label: "Site title", name: title, widget: string, hint: "Browser tab title and RSS title." }
+          - { label: "Header title", name: headerTitle, widget: string, hint: "Text shown next to the logo in the header." }
+          - { label: "Site description", name: description, widget: text, hint: "Used for SEO and link previews." }
+          - { label: "Author name", name: author, widget: string, hint: "Shown in the footer copyright." }
+          - { label: "SEO keywords", name: keywords, widget: list, required: false }
+          - label: "Social links"
+            name: social
+            widget: object
+            fields:
+              - { label: "GitHub", name: github, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+              - { label: "LinkedIn", name: linkedin, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+              - { label: "HackerRank (footer icon)", name: hackerrank, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+
+      - name: home
+        label: "Home page intro"
+        file: src/data/home.json
+        format: json
+        fields:
+          - { label: "Tagline words", name: tagline, widget: list, required: false, hint: "Shown under your photo, separated by |. Example: Support Eng, Researcher, Bio Enthusiast" }
+          - label: "Intro paragraphs"
+            name: intro
+            widget: list
+            required: false
+            field: { label: "Paragraph", name: paragraph, widget: text }
+          - { label: "Closing line", name: closing, widget: string, required: false, hint: "Appears before the CV and moments links." }
+          - { label: "CV file or link", name: cvUrl, widget: file, required: false, media_folder: public/static, public_folder: /static, hint: "Upload a PDF, or leave empty to hide the CV link." }
+          - { label: "CV link text", name: cvLabel, widget: string, default: "CV" }
+          - { label: "Show link to Moments", name: showMomentsLink, widget: boolean, default: true }
+
+      - name: research-page
+        label: "Research page"
+        file: src/data/research-page.json
+        format: json
+        fields:
+          - { label: "Research interests", name: interests, widget: list, required: false }
+
+      - name: achievements
+        label: "Achievements & certificates"
+        file: src/data/achievements.json
+        format: json
+        fields:
+          - label: "Featured achievement"
+            name: featured
+            widget: object
+            collapsed: false
+            fields:
+              - { label: "Show", name: enabled, widget: boolean, default: true }
+              - { label: "Eyebrow line", name: eyebrow, widget: string, required: false, hint: "Example: Featured achievement · October 2023" }
+              - { label: "Title", name: title, widget: string, required: false }
+              - { label: "Description", name: description, widget: text, required: false }
+              - { label: "Photo", name: image, widget: image, required: false, media_folder: public/static/images, public_folder: /static/images }
+              - { label: "Photo description (alt text)", name: imageAlt, widget: string, required: false }
+              - { label: "Organizers", name: organizers, widget: string, required: false }
+              - { label: "Team", name: team, widget: string, required: false }
+              - { label: "Location", name: location, widget: string, required: false }
+          - label: "Awards & scholarships"
+            name: awards
+            widget: list
+            required: false
+            summary: "{{fields.date}} — {{fields.title}}"
+            fields:
+              - { label: "Date or range", name: date, widget: string, hint: "Example: 2020–2022" }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Description", name: description, widget: text, required: false }
+          - label: "Certificates"
+            name: certificates
+            widget: list
+            required: false
+            summary: "{{fields.title}} — {{fields.provider}}"
+            fields:
+              - { label: "Title", name: title, widget: string }
+              - { label: "Provider", name: provider, widget: string }
+              - { label: "Certificate image", name: image, widget: image, media_folder: public/static/images/certificates, public_folder: /static/images/certificates }
+
+      - name: moments
+        label: "Moments gallery"
+        file: src/data/moments.json
+        format: json
+        fields:
+          - { label: "Intro line", name: intro, widget: string, required: false }
+          - label: "Moments"
+            name: items
+            widget: list
+            required: false
+            summary: "{{fields.caption}}"
+            fields:
+              - { label: "Photo", name: src, widget: image, media_folder: public/static/images, public_folder: /static/images }
+              - { label: "Photo description (alt text)", name: alt, widget: string, required: false }
+              - { label: "Caption", name: caption, widget: string }
+              - { label: "Write-up", name: writeup, widget: text, required: false }
+              - label: "Background sketch"
+                name: motif
+                widget: select
+                default: art
+                options:
+                  - { label: "Art / mural", value: art }
+                  - { label: "Gears", value: gears }
+                  - { label: "City", value: city }
+                  - { label: "Leaf", value: leaf }
+                  - { label: "Lake", value: lake }
+                  - { label: "Mountains", value: mountains }
+
+  # ---------------------------------------------------------------- Development projects (was src/projects.ts)
+  - name: projects
+    label: "Dev projects"
+    folder: src/content/projects
+    extension: json
+    format: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{order}}. {{title}}"
+    sortable_fields: [order, title]
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - { label: "Order", name: order, widget: number, value_type: int, min: 1, default: 100, hint: "Lower numbers appear first. The first project is the one featured on the Latest tab." }
+      - { label: "Draft (hidden on the live site)", name: draft, widget: boolean, default: false }
+      - { label: "Description", name: description, widget: text }
+      - { label: "Project image", name: imgSrc, widget: image, required: false, hint: "Upload an image or paste a full image URL." }
+      - { label: "Project notes link (README)", name: projectdesc, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Source code link", name: srccode, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Live demo link", name: url, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Tech stack", name: stack, widget: list, required: false }
+
   # ---------------------------------------------------------------- Thoughts (blog)
   - name: blog
     label: "Thoughts"
@@ -131,7 +265,26 @@ collections:
         multiple: true
         default: [sparrowhawk]
       - { label: "Summary", name: summary, widget: text, required: false }
-      - { label: "Cover image", name: images, widget: string, required: false }
+      - { label: "Cover image", name: images, widget: image, required: false }
+      - label: "Layout"
+        name: layout
+        widget: select
+        required: false
+        default: list
+        options:
+          - { label: "List", value: list }
+          - { label: "Tags and list", value: tags-and-list }
+      - { label: "Canonical URL", name: canonicalUrl, widget: string, required: false, hint: "Only if this post was first published somewhere else." }
+      - { label: "Bibliography", name: bibliography, widget: string, required: false }
+      - label: "Related posts"
+        name: related
+        widget: relation
+        collection: blog
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+        multiple: true
+        required: false
       - { label: "Draft (hidden on the live site)", name: draft, widget: boolean, default: true }
       - { label: "Share on LinkedIn after deploy", name: linkedin, widget: boolean, default: false, required: false }
       - { label: "LinkedIn caption", name: linkedinText, widget: text, required: false }
@@ -170,14 +323,16 @@ collections:
       - { label: "Citation text shown in the list", name: citation, widget: text, required: false, hint: "Optional. Set the exact formatted citation displayed on the Publications page and homepage." }
       - { label: "Authors", name: authors, widget: string, hint: "Comma-separated, in published order" }
       - { label: "Venue (journal or conference)", name: venue, widget: string, required: false, hint: "Leave empty while under review if the journal should stay private." }
+      - { label: "Publisher", name: publisher, widget: string, required: false, hint: "Example: IEEE, Springer" }
+      - { label: "Citation details", name: citationDetails, widget: string, required: false, hint: "Volume, issue, pages. Example: 22(5), bbab115" }
       - { label: "Date (published, or submitted)", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
       - { label: "DOI", name: doi, widget: string, required: false }
-      - { label: "PDF link", name: pdfUrl, widget: string, required: false }
-      - { label: "Publisher link", name: url, widget: string, required: false }
-      - { label: "Preprint link", name: preprintUrl, widget: string, required: false }
-      - { label: "Code link", name: codeUrl, widget: string, required: false }
-      - { label: "Dataset link", name: datasetUrl, widget: string, required: false }
-      - { label: "Project link", name: projectUrl, widget: string, required: false }
+      - { label: "PDF link", name: pdfUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Publisher link", name: url, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Preprint link", name: preprintUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Code link", name: codeUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Dataset link", name: datasetUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Project link", name: projectUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
       - { label: "Cover image", name: image, widget: image, required: false }
       - { label: "Plain-language summary", name: summary, widget: text, required: false }
       - { label: "Tags", name: tags, widget: list, required: false }

@@ -2,6 +2,7 @@
 import RootLayout from "@/layouts/RootLayout.astro";
 import Publications from "@/components/Publications.astro";
 import CurrentResearch from "@/components/CurrentResearch.astro";
+import { researchPageData } from "@/data/content";
 ---
 
 <RootLayout title="MB-Research" description="Research papers, preprints and work in progress.">
@@ -12,15 +13,7 @@ import CurrentResearch from "@/components/CurrentResearch.astro";
   <section aria-labelledby="research-interests-title" class="mb-10 mt-5">
     <h2 id="research-interests-title" class="mb-2 text-sm font-bold uppercase tracking-wide text-gray-700 dark:text-gray-200">Research Interests</h2>
     <ul class="flex flex-wrap gap-2">
-      {[
-        "Bioinformatics",
-        "Systems biology",
-        "Network biology",
-        "Disease pathway analysis",
-        "Machine learning",
-        "Pattern recognition",
-        "Data mining",
-      ].map((interest) => (
+      {researchPageData.interests.map((interest) => (
         <li class="rounded-full border border-primary-200 bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-800 dark:border-primary-800 dark:bg-primary-950 dark:text-primary-200">{interest}</li>
       ))}
     </ul>

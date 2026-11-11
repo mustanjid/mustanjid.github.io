@@ -1,10 +1,10 @@
 ---
 import Card from "@/components/Card.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
-import { getResearchEntries } from "@/functions";
-import { PROJECTS } from "../projects";
+import { getResearchEntries, getProjects } from "@/functions";
 
 const researchProjects = await getResearchEntries();
+const PROJECTS = await getProjects();
 const latestResearch = researchProjects[0];
 const latestDevelopment = PROJECTS[0];
 ---

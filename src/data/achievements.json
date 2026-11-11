@@ -1,0 +1,77 @@
+{
+  "featured": {
+    "enabled": true,
+    "eyebrow": "Featured achievement · October 2023",
+    "title": "1st Runner Up — Workers’ Access to Justice Hackathon",
+    "description": "Worked with Team Justice Journey in Bangladesh’s first hackathon focused on workers’ access to justice. We proposed a digital solution to improve access to justice for domestic workers.",
+    "image": "/static/images/hakathon23.jpeg",
+    "imageAlt": "Justice Journey team receiving the hackathon award",
+    "organizers": "Rule of Law Collaborative, University of South Carolina, and BLAST",
+    "team": "Justice Journey",
+    "location": "Dhaka, Bangladesh"
+  },
+  "awards": [
+    {
+      "date": "2020–2022",
+      "title": "Research Publication Award",
+      "description": "Recognized for scholarly publications by the Division of Research, Daffodil International University."
+    },
+    {
+      "date": "2015–2018",
+      "title": "Undergraduate Merit Scholarship",
+      "description": "Received a merit scholarship throughout the undergraduate program."
+    },
+    {
+      "date": "2009",
+      "title": "Government Junior Scholarship",
+      "description": "Awarded by the Ministry of Education, Bangladesh."
+    },
+    {
+      "date": "2006",
+      "title": "Government Primary Scholarship",
+      "description": "Awarded by the Ministry of Education, Bangladesh."
+    }
+  ],
+  "certificates": [
+    {
+      "title": "Object Oriented Analysis & Design",
+      "provider": "DevSkill",
+      "image": "/static/images/certificates/devskill.png"
+    },
+    {
+      "title": "JavaScript Algorithms & Data Structures",
+      "provider": "freeCodeCamp",
+      "image": "/static/images/certificates/FCJs.png"
+    },
+    {
+      "title": "Responsive Web Design",
+      "provider": "freeCodeCamp",
+      "image": "/static/images/certificates/Responsive.png"
+    },
+    {
+      "title": "Certificate of Reviewing",
+      "provider": "Elsevier",
+      "image": "/static/images/certificates/Reviewer2.png"
+    },
+    {
+      "title": "Certificate of Reviewing",
+      "provider": "Elsevier",
+      "image": "/static/images/certificates/Reviewer.png"
+    },
+    {
+      "title": "An Introduction to Peer Review",
+      "provider": "Clarivate",
+      "image": "/static/images/certificates/PublonPeerReview.png"
+    },
+    {
+      "title": "Reviewing in the Sciences",
+      "provider": "Clarivate",
+      "image": "/static/images/certificates/PublonScience.png"
+    },
+    {
+      "title": "Python for Data Science",
+      "provider": "Kaggle",
+      "image": "/static/images/certificates/Kgaale.png"
+    }
+  ]
+}

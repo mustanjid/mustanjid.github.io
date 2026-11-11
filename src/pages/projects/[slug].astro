@@ -1,8 +1,9 @@
 ---
 import RootLayout from "@/layouts/RootLayout.astro";
-import { PROJECTS } from "@/projects";
+import { getProjects, type DevProject } from "@/functions";
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+    const PROJECTS = await getProjects();
     return PROJECTS.map((project) => ({
         params: { slug: project.slug },
         props: { project },
@@ -10,7 +11,7 @@ export function getStaticPaths() {
 }
 
 interface Props {
-    project: (typeof PROJECTS)[number];
+    project: DevProject;
 }
 
 const { project } = Astro.props;

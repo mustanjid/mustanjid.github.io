@@ -36,3 +36,26 @@ export const getResearchEntries = async (): Promise<CollectionEntry<'research'>[
         .filter(({data}) => (import.meta.env.PROD ? !data.draft : true))
         .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
 }
+
+/**
+ * Development projects from the `projects` collection, ordered by the CMS "order" field.
+ * Returns the same shape the old src/projects.ts exported, so Card.astro is unchanged.
+ */
+export const getProjects = async () => {
+    const all = (await getCollection('projects')) ?? [];
+    return all
+        .filter(({data}) => (import.meta.env.PROD ? !data.draft : true))
+        .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title))
+        .map(({id, data}) => ({
+            slug: id.replace(/\.json$/, ''),
+            title: data.title,
+            description: data.description,
+            imgSrc: data.imgSrc || undefined,
+            projectdesc: data.projectdesc || undefined,
+            srccode: data.srccode || undefined,
+            url: data.url || undefined,
+            stack: data.stack,
+        }));
+}
+
+export type DevProject = Awaited<ReturnType<typeof getProjects>>[number];

@@ -1,39 +1,8 @@
 ---
 import RootLayout from "@/layouts/RootLayout.astro";
+import { achievementsData } from "@/data/content";
 
-const certificates = [
-  { title: "Object Oriented Analysis & Design", provider: "DevSkill", image: "/static/images/certificates/devskill.png" },
-  { title: "JavaScript Algorithms & Data Structures", provider: "freeCodeCamp", image: "/static/images/certificates/FCJs.png" },
-  { title: "Responsive Web Design", provider: "freeCodeCamp", image: "/static/images/certificates/Responsive.png" },
-  { title: "Certificate of Reviewing", provider: "Elsevier", image: "/static/images/certificates/Reviewer2.png" },
-  { title: "Certificate of Reviewing", provider: "Elsevier", image: "/static/images/certificates/Reviewer.png" },
-  { title: "An Introduction to Peer Review", provider: "Clarivate", image: "/static/images/certificates/PublonPeerReview.png" },
-  { title: "Reviewing in the Sciences", provider: "Clarivate", image: "/static/images/certificates/PublonScience.png" },
-  { title: "Python for Data Science", provider: "Kaggle", image: "/static/images/certificates/Kgaale.png" },
-];
-
-const awards = [
-  {
-    date: "2020–2022",
-    title: "Research Publication Award",
-    description: "Recognized for scholarly publications by the Division of Research, Daffodil International University.",
-  },
-  {
-    date: "2015–2018",
-    title: "Undergraduate Merit Scholarship",
-    description: "Received a merit scholarship throughout the undergraduate program.",
-  },
-  {
-    date: "2009",
-    title: "Government Junior Scholarship",
-    description: "Awarded by the Ministry of Education, Bangladesh.",
-  },
-  {
-    date: "2006",
-    title: "Government Primary Scholarship",
-    description: "Awarded by the Ministry of Education, Bangladesh.",
-  },
-];
+const { certificates, awards, featured } = achievementsData;
 ---
 
 <RootLayout title="Achievements & Certificates" description="Selected achievements, awards, scholarships, and professional certificates.">
@@ -50,27 +19,26 @@ const awards = [
     </nav>
 
     <section data-achievement-section="awards" class="space-y-8">
+      {featured.enabled && featured.title && (
       <article class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/50">
         <div class="grid md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
           <figure class="min-h-56 bg-gray-100 dark:bg-gray-800">
-            <img src="/static/images/hakathon23.jpeg" alt="Justice Journey team receiving the hackathon award" class="h-full min-h-56 w-full object-cover" loading="lazy" />
-            <figcaption class="sr-only">Justice Journey team receiving the hackathon award.</figcaption>
+            {featured.image && <img src={featured.image} alt={featured.imageAlt ?? ""} class="h-full min-h-56 w-full object-cover" loading="lazy" />}
+            {featured.imageAlt && <figcaption class="sr-only">{featured.imageAlt}</figcaption>}
           </figure>
           <div class="flex flex-col justify-center p-5 sm:p-7">
-            <p class="text-sm font-semibold uppercase tracking-wide text-primary-700 dark:text-primary-300">Featured achievement · October 2023</p>
-            <h2 class="mt-2 text-xl font-bold leading-7 text-gray-900 dark:text-gray-100 sm:text-2xl">1st Runner Up — Workers’ Access to Justice Hackathon</h2>
-            <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Worked with Team Justice Journey in Bangladesh’s first hackathon focused on workers’ access to justice. We proposed a digital solution to improve access to justice for domestic workers.</p>
+            <p class="text-sm font-semibold uppercase tracking-wide text-primary-700 dark:text-primary-300">{featured.eyebrow}</p>
+            <h2 class="mt-2 text-xl font-bold leading-7 text-gray-900 dark:text-gray-100 sm:text-2xl">{featured.title}</h2>
+            <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">{featured.description}</p>
             <dl class="mt-5 grid gap-2 text-sm sm:grid-cols-[5rem_minmax(0,1fr)]">
-              <dt class="font-semibold text-gray-500 dark:text-gray-400">Organizers</dt>
-              <dd class="text-gray-700 dark:text-gray-200">Rule of Law Collaborative, University of South Carolina, and BLAST</dd>
-              <dt class="font-semibold text-gray-500 dark:text-gray-400">Team</dt>
-              <dd class="text-gray-700 dark:text-gray-200">Justice Journey</dd>
-              <dt class="font-semibold text-gray-500 dark:text-gray-400">Location</dt>
-              <dd class="text-gray-700 dark:text-gray-200">Dhaka, Bangladesh</dd>
+              {featured.organizers && (<><dt class="font-semibold text-gray-500 dark:text-gray-400">Organizers</dt><dd class="text-gray-700 dark:text-gray-200">{featured.organizers}</dd></>)}
+              {featured.team && (<><dt class="font-semibold text-gray-500 dark:text-gray-400">Team</dt><dd class="text-gray-700 dark:text-gray-200">{featured.team}</dd></>)}
+              {featured.location && (<><dt class="font-semibold text-gray-500 dark:text-gray-400">Location</dt><dd class="text-gray-700 dark:text-gray-200">{featured.location}</dd></>)}
             </dl>
           </div>
         </div>
       </article>
+      )}
 
       <section aria-labelledby="awards-heading" class="space-y-4">
         <h2 id="awards-heading" class="text-xl font-bold text-gray-900 dark:text-gray-100">Awards &amp; scholarships</h2>
@@ -80,7 +48,7 @@ const awards = [
               <span class="absolute -start-[1.65rem] top-1.5 h-3 w-3 rounded-full border-2 border-white bg-primary-600 dark:border-gray-950" aria-hidden="true"></span>
               <p class="text-xs font-semibold uppercase tracking-wide text-primary-700 dark:text-primary-300">{award.date}</p>
               <h3 class="mt-1 text-base font-semibold text-gray-900 dark:text-gray-100">{award.title}</h3>
-              <p class="mt-1 text-sm leading-5 text-gray-600 dark:text-gray-400">{award.description}</p>
+              {award.description && <p class="mt-1 text-sm leading-5 text-gray-600 dark:text-gray-400">{award.description}</p>}
             </li>
           ))}
         </ol>

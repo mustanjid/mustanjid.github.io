@@ -78,4 +78,19 @@ const research = defineCollection({
     }),
 });
 
-export const collections = {blog, authors, tags, research};
+const projects = defineCollection({
+    type: 'data',
+    schema: z.object({
+        title: z.string(),
+        order: z.number().default(100),      // lower number = shown first
+        draft: z.boolean().default(false),
+        description: z.string(),
+        imgSrc: z.string().optional(),
+        projectdesc: z.string().optional(),  // README / notes link
+        srccode: z.string().optional(),      // source code link
+        url: z.string().optional(),          // live demo link
+        stack: z.array(z.string()).default([]),
+    }),
+});
+
+export const collections = {blog, authors, tags, research, projects};
