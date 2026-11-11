@@ -6,6 +6,6 @@
   "education": [],
   "skills": [],
   "showPublications": true,
-  "showAwards": true,
-  "showCertificates": true
+  "showAwards": false,
+  "showCertificates": false
 }
