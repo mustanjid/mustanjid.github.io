@@ -1,63 +1,24 @@
 ---
+import { pagesData } from "@/data/content";
 import RootLayout from "@/layouts/RootLayout.astro";
+import { momentsData } from "@/data/content";
 
-const galleryItems = [
-  {
-    src: "/static/images/grafiti.jpg",
-    alt: "A painted Bangla mural with the Bangladesh flag",
-    caption: "Street art and a message of identity",
-    writeup: "A hand-painted mural brings language, identity, and public art together on a city wall.",
-    motif: "art",
-    accent: "text-rose-500/40 dark:text-rose-300/30",
-  },
-  {
-    src: "/static/images/time-machine.jpg",
-    alt: "A close-up of interlocking mechanical gears",
-    caption: "Time, motion, and the details in between",
-    writeup: "An intricate mechanism is a reminder of how small moving parts work together.",
-    motif: "gears",
-    accent: "text-amber-600/40 dark:text-amber-300/30",
-  },
-  {
-    src: "/static/images/canada/toronto.jpg",
-    alt: "A view of Toronto",
-    caption: "A city view",
-    writeup: "A glimpse of the city, where architecture and everyday movement shape the view.",
-    motif: "city",
-    accent: "text-sky-500/40 dark:text-sky-300/30",
-  },
-  {
-    src: "/static/images/canada/maple.jpg",
-    alt: "A maple leaf",
-    caption: "A small sign of autumn",
-    writeup: "The shape and color of a maple leaf make a simple marker of the changing season.",
-    motif: "leaf",
-    accent: "text-orange-500/40 dark:text-orange-300/30",
-  },
-  {
-    src: "/static/images/canada/lake.jpg",
-    alt: "A lake landscape",
-    caption: "A quiet moment by the water",
-    writeup: "Still water and open scenery offer a quiet pause in the middle of a busy day.",
-    motif: "lake",
-    accent: "text-cyan-600/40 dark:text-cyan-300/30",
-  },
-  {
-    src: "/static/images/canada/mountains.jpg",
-    alt: "A mountain landscape",
-    caption: "Looking toward the mountains",
-    writeup: "The distant peaks bring a sense of scale and calm to the landscape.",
-    motif: "mountains",
-    accent: "text-indigo-500/40 dark:text-indigo-300/30",
-  },
-];
+const accents: Record<string, string> = {
+  art: "text-rose-500/40 dark:text-rose-300/30",
+  gears: "text-amber-600/40 dark:text-amber-300/30",
+  city: "text-sky-500/40 dark:text-sky-300/30",
+  leaf: "text-orange-500/40 dark:text-orange-300/30",
+  lake: "text-cyan-600/40 dark:text-cyan-300/30",
+  mountains: "text-indigo-500/40 dark:text-indigo-300/30",
+};
+const galleryItems = momentsData.items.map((item) => ({ ...item, accent: accents[item.motif] }));
 ---
 
-<RootLayout title="MB-Moments" description="A gallery of photos and moments." wide>
+<RootLayout title={pagesData.moments.seoTitle} description={pagesData.moments.seoDescription} wide>
   <header class="mb-6 border-b border-gray-200 pb-4 dark:border-gray-800">
-    <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100">Moments</h1>
+    <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100">{pagesData.moments.title}</h1>
     <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-600 dark:text-gray-300">
-      A gallery of places, details, and moments.
+      {momentsData.intro}
     </p>
   </header>
 
@@ -120,7 +81,7 @@ const galleryItems = [
             </svg>
             <div class="relative z-10">
               <h2 class="text-2xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-3xl">{item.caption}</h2>
-              <p class="mt-4 text-base leading-7 text-gray-600 dark:text-gray-300 sm:text-lg sm:leading-8">{item.writeup}</p>
+              {item.writeup && <p class="mt-4 text-base leading-7 text-gray-600 dark:text-gray-300 sm:text-lg sm:leading-8">{item.writeup}</p>}
             </div>
           </div>
         </article>

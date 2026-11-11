@@ -78,4 +78,26 @@ const research = defineCollection({
     }),
 });
 
-export const collections = {blog, authors, tags, research};
+const projects = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        // research = shown under Projects > Research; everything else under Development & DevOps
+        kind: z.enum(['research', 'development', 'devops', 'ml', 'other']).default('development'),
+        stage: z.enum(['idea', 'plan', 'in-progress', 'demo', 'shipped']).optional(),
+        order: z.number().default(100),      // lower number = shown first ("latest")
+        draft: z.boolean().default(false),
+        featured: z.boolean().default(false), // the featured project is the homepage "current project" card
+        date: z.coerce.date().optional(),
+        description: z.string(),
+        imgSrc: z.string().optional(),
+        projectdesc: z.string().optional(),  // README / notes link
+        srccode: z.string().optional(),      // source code / repository link
+        url: z.string().optional(),          // live demo link
+        paper: reference('research').optional(), // related publication
+        areas: z.array(z.string()).default([]),
+        stack: z.array(z.string()).default([]),
+    }),
+});
+
+export const collections = {blog, authors, tags, research, projects};

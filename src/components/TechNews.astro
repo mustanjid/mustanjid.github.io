@@ -1,4 +1,5 @@
 ---
+import { pagesData } from "@/data/content";
 import { settings } from "@/data/settings";
 
 const enabled = settings.news.enabled;
@@ -6,7 +7,7 @@ const enabled = settings.news.enabled;
 
 {enabled && (
     <section aria-label="Latest in tech" class="flex min-w-0 items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-amber-950 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-100">
-      <span class="shrink-0 text-xs font-semibold">Latest in tech</span>
+      <span class="shrink-0 text-xs font-semibold">{pagesData.home.techNewsLabel}</span>
       <span class="shrink-0 text-amber-500" aria-hidden="true">-</span>
       <div data-tech-news class="min-w-0 flex-1" aria-live="off">
         <div class="news-window">

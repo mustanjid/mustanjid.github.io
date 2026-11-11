@@ -5,6 +5,7 @@ backend:
 
 # Saves commit straight to main and trigger a deploy (about a minute or two).
 publish_mode: simple
+local_backend: true   # only used when you open /admin on localhost (npm run dev)
 media_folder: public/static/uploads
 public_folder: /static/uploads
 site_url: https://mustanjid.github.io/
@@ -66,39 +67,400 @@ collections:
 
           - { label: "Google Scholar profile or search URL", name: scholarUrl, widget: string, required: false }
 
-          - label: "Project spotlight"
-            name: spotlight
+
+  # ---------------------------------------------------------------- Site content (was hardcoded)
+  - name: site
+    label: "Site content"
+    files:
+      - name: site
+        label: "Site identity & social links"
+        file: src/data/site.json
+        format: json
+        fields:
+          - { label: "Site title", name: title, widget: string, hint: "Browser tab title and RSS title." }
+          - { label: "Header title", name: headerTitle, widget: string, hint: "Text shown next to the logo in the header." }
+          - { label: "Site description", name: description, widget: text, hint: "Used for SEO and link previews." }
+          - { label: "Author name", name: author, widget: string, hint: "Shown in the footer copyright." }
+          - { label: "SEO keywords", name: keywords, widget: list, required: false }
+          - { label: "Link preview image", name: ogImage, widget: image, media_folder: public/static, public_folder: /static, hint: "Shown when the site is shared on social media. Recommended 1200x630." }
+          - label: "Navigation menu"
+            name: navigation
+            widget: list
+            required: false
+            summary: "{{fields.title}} → {{fields.href}}"
+            hint: "Order here is the order in the header. Untick Visible to hide an item without deleting it."
+            fields:
+              - { label: "Label", name: title, widget: string }
+              - label: "Page"
+                name: href
+                widget: select
+                options:
+                  - { label: "Home", value: "/" }
+                  - { label: "Thoughts (blog)", value: "/blog" }
+                  - { label: "Research", value: "/research" }
+                  - { label: "Projects", value: "/projects" }
+                  - { label: "Achievements", value: "/award" }
+                  - { label: "Moments", value: "/moments" }
+                  - { label: "CV", value: "/cv" }
+                  - { label: "About", value: "/about" }
+              - { label: "Visible", name: visible, widget: boolean, default: true }
+          - label: "Social links"
+            name: social
+            widget: object
+            fields:
+              - { label: "GitHub", name: github, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+              - { label: "LinkedIn", name: linkedin, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+              - { label: "HackerRank (footer icon)", name: hackerrank, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+
+      - name: home
+        label: "Home page intro"
+        file: src/data/home.json
+        format: json
+        fields:
+          - { label: "Tagline words", name: tagline, widget: list, required: false, hint: "Shown under your photo, separated by |. Example: Support Eng, Researcher, Bio Enthusiast" }
+          - label: "Intro paragraphs"
+            name: intro
+            widget: list
+            required: false
+            field: { label: "Paragraph", name: paragraph, widget: text }
+          - { label: "Closing line", name: closing, widget: string, required: false, hint: "Appears before the CV and moments links." }
+          - { label: "CV link", name: cvUrl, widget: string, required: false, hint: "Use /cv for the CV page, or paste any other link. Leave empty to hide the CV link." }
+          - { label: "CV link text", name: cvLabel, widget: string, default: "CV" }
+          - { label: "Show link to Moments", name: showMomentsLink, widget: boolean, default: true }
+
+      - name: research-page
+        label: "Research page"
+        file: src/data/research-page.json
+        format: json
+        fields:
+          - { label: "Research interests", name: interests, widget: list, required: false }
+
+      - name: achievements
+        label: "Achievements & certificates"
+        file: src/data/achievements.json
+        format: json
+        fields:
+          - label: "Featured achievement"
+            name: featured
+            widget: object
+            collapsed: false
+            fields:
+              - { label: "Show", name: enabled, widget: boolean, default: true }
+              - { label: "Eyebrow line", name: eyebrow, widget: string, required: false, hint: "Example: Featured achievement · October 2023" }
+              - { label: "Title", name: title, widget: string, required: false }
+              - { label: "Description", name: description, widget: text, required: false }
+              - { label: "Photo", name: image, widget: image, required: false, media_folder: public/static/images, public_folder: /static/images }
+              - { label: "Photo description (alt text)", name: imageAlt, widget: string, required: false }
+              - { label: "Organizers", name: organizers, widget: string, required: false }
+              - { label: "Team", name: team, widget: string, required: false }
+              - { label: "Location", name: location, widget: string, required: false }
+          - label: "Awards & scholarships"
+            name: awards
+            widget: list
+            required: false
+            summary: "{{fields.date}} — {{fields.title}}"
+            fields:
+              - { label: "Date or range", name: date, widget: string, hint: "Example: 2020–2022" }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Description", name: description, widget: text, required: false }
+          - label: "Certificates"
+            name: certificates
+            widget: list
+            required: false
+            summary: "{{fields.title}} — {{fields.provider}}"
+            fields:
+              - { label: "Title", name: title, widget: string }
+              - { label: "Provider", name: provider, widget: string }
+              - { label: "Certificate image", name: image, widget: image, media_folder: public/static/images/certificates, public_folder: /static/images/certificates }
+
+      - name: moments
+        label: "Moments gallery"
+        file: src/data/moments.json
+        format: json
+        fields:
+          - { label: "Intro line", name: intro, widget: string, required: false }
+          - label: "Moments"
+            name: items
+            widget: list
+            required: false
+            summary: "{{fields.caption}}"
+            fields:
+              - { label: "Photo", name: src, widget: image, media_folder: public/static/images, public_folder: /static/images }
+              - { label: "Photo description (alt text)", name: alt, widget: string, required: false }
+              - { label: "Caption", name: caption, widget: string }
+              - { label: "Write-up", name: writeup, widget: text, required: false }
+              - label: "Background sketch"
+                name: motif
+                widget: select
+                default: art
+                options:
+                  - { label: "Art / mural", value: art }
+                  - { label: "Gears", value: gears }
+                  - { label: "City", value: city }
+                  - { label: "Leaf", value: leaf }
+                  - { label: "Lake", value: lake }
+                  - { label: "Mountains", value: mountains }
+
+      - name: cv
+        label: "CV page"
+        file: src/data/cv.json
+        format: json
+        fields:
+          - { label: "Headline", name: headline, widget: string, required: false, hint: "One line under your name. Example: Support Engineer (NetOps) · Researcher" }
+          - { label: "Summary", name: summary, widget: text, required: false, hint: "Blank line = new paragraph." }
+          - { label: "Downloadable CV (PDF)", name: pdf, widget: file, required: false, media_folder: public/static, public_folder: /static, hint: "Optional. Adds a Download button to the CV page." }
+          - label: "Experience"
+            name: experience
+            widget: list
+            required: false
+            summary: "{{fields.role}} · {{fields.organization}}"
+            fields:
+              - { label: "Role", name: role, widget: string }
+              - { label: "Organization", name: organization, widget: string, required: false }
+              - { label: "Location", name: location, widget: string, required: false }
+              - { label: "Start", name: start, widget: string, required: false, hint: "Example: Jan 2022" }
+              - { label: "End", name: end, widget: string, required: false, hint: "Example: Present" }
+              - { label: "Highlights", name: bullets, widget: list, required: false, hint: "One bullet each, starting with an action verb. Only add numbers you can back up." }
+          - label: "Education"
+            name: education
+            widget: list
+            required: false
+            summary: "{{fields.degree}} · {{fields.institution}}"
+            fields:
+              - { label: "Degree", name: degree, widget: string }
+              - { label: "Institution", name: institution, widget: string, required: false }
+              - { label: "Period", name: period, widget: string, required: false }
+              - { label: "Details", name: details, widget: text, required: false }
+          - label: "Skills"
+            name: skills
+            widget: list
+            required: false
+            summary: "{{fields.group}}"
+            fields:
+              - { label: "Group", name: group, widget: string, hint: "Example: Networking" }
+              - { label: "Skills", name: items, widget: list, required: false }
+          - { label: "Show publications (from Research)", name: showPublications, widget: boolean, default: true }
+          - { label: "Show awards (from Achievements)", name: showAwards, widget: boolean, default: true }
+          - { label: "Show certificates (from Achievements)", name: showCertificates, widget: boolean, default: true }
+
+      - name: pages
+        label: "Page text, labels & SEO"
+        file: src/data/pages.json
+        format: json
+        fields:
+          - label: "Home page"
+            name: home
             widget: object
             collapsed: true
-            hint: "Shown as the latest research project on the homepage when Research project is selected."
             fields:
-              - label: "Kind"
-                name: kind
-                widget: select
-                default: other
-                options:
-                  - { label: "Research project", value: research }
-                  - { label: "ML project", value: ml }
-                  - { label: "DevOps / Cloud", value: devops }
-                  - { label: "Other", value: other }
-              - label: "Stage"
-                name: stage
-                widget: select
-                default: idea
-                options:
-                  - { label: "Idea", value: idea }
-                  - { label: "Plan", value: plan }
-                  - { label: "In progress", value: in-progress }
-                  - { label: "Demo", value: demo }
-                  - { label: "Shipped", value: shipped }
-              - { label: "Title", name: title, widget: string, required: false }
-              - { label: "Summary", name: summary, widget: text, required: false }
-              - { label: "Project image", name: image, widget: string, required: false }
-              - { label: "Research areas", name: areas, widget: list, required: false }
-              - { label: "Tools / methods", name: tools, widget: list, required: false }
-              - { label: "Tags", name: tags, widget: list, required: false }
-              - { label: "Repository link", name: repoUrl, widget: string, required: false }
-              - { label: "Demo link", name: demoUrl, widget: string, required: false }
+              - { label: "Latest publications eyebrow", name: latestPublicationsEyebrow, widget: string }
+              - { label: "Latest publications title", name: latestPublicationsTitle, widget: string }
+              - { label: "Publications empty", name: publicationsEmpty, widget: string }
+              - { label: "All research button", name: allResearchButton, widget: string }
+              - { label: "Latest thoughts title", name: latestThoughtsTitle, widget: string }
+              - { label: "Thoughts empty", name: thoughtsEmpty, widget: string }
+              - { label: "All thoughts button", name: allThoughtsButton, widget: string }
+              - { label: "Read label", name: readLabel, widget: string }
+              - { label: "Updates title", name: updatesTitle, widget: string }
+              - { label: "Updates link label", name: updatesLinkLabel, widget: string }
+              - { label: "Now label", name: nowLabel, widget: string }
+              - { label: "Tech news label", name: techNewsLabel, widget: string }
+              - { label: "Current project eyebrow", name: currentProjectEyebrow, widget: string }
+              - { label: "Areas label", name: areasLabel, widget: string }
+              - { label: "Tools label", name: toolsLabel, widget: string }
+              - { label: "Project details label", name: projectDetailsLabel, widget: string }
+              - { label: "Repository label", name: repositoryLabel, widget: string }
+              - { label: "Implementation label", name: implementationLabel, widget: string }
+          - label: "Thoughts (blog) list"
+            name: thoughts
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Search description (SEO)", name: seoDescription, widget: text, required: false }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Subtitle", name: subtitle, widget: string }
+              - { label: "Filter label", name: filterLabel, widget: string }
+              - { label: "All topics label", name: allTopicsLabel, widget: string }
+              - { label: "Read more label", name: readMoreLabel, widget: string }
+          - label: "Research page"
+            name: research
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Search description (SEO)", name: seoDescription, widget: text, required: false }
+              - { label: "Interests title", name: interestsTitle, widget: string }
+              - { label: "Publications title", name: publicationsTitle, widget: string }
+              - { label: "Scholar link label", name: scholarLinkLabel, widget: string }
+              - { label: "Group under review", name: groupUnderReview, widget: string }
+              - { label: "Group journal", name: groupJournal, widget: string }
+              - { label: "Group conference", name: groupConference, widget: string }
+              - { label: "Group thesis", name: groupThesis, widget: string }
+              - { label: "Empty", name: empty, widget: string }
+          - label: "Projects (list and detail pages)"
+            name: projects
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Search description (SEO)", name: seoDescription, widget: text, required: false }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Subtitle", name: subtitle, widget: string }
+              - { label: "Tab latest", name: tabLatest, widget: string }
+              - { label: "Tab research", name: tabResearch, widget: string }
+              - { label: "Tab development", name: tabDevelopment, widget: string }
+              - { label: "Details label", name: detailsLabel, widget: string }
+              - { label: "Empty research", name: emptyResearch, widget: string }
+              - { label: "Empty development", name: emptyDevelopment, widget: string }
+              - { label: "Coming soon research", name: comingSoonResearch, widget: string }
+              - { label: "Coming soon development", name: comingSoonDevelopment, widget: string }
+              - { label: "Back label", name: backLabel, widget: string }
+              - { label: "Research kind label", name: researchKindLabel, widget: string }
+              - { label: "Development kind label", name: developmentKindLabel, widget: string }
+              - { label: "Overview label", name: overviewLabel, widget: string }
+              - { label: "Areas label", name: areasLabel, widget: string }
+              - { label: "Tools label", name: toolsLabel, widget: string }
+              - { label: "Live label", name: liveLabel, widget: string }
+              - { label: "Source label", name: sourceLabel, widget: string }
+              - { label: "Notes label", name: notesLabel, widget: string }
+              - { label: "Paper label", name: paperLabel, widget: string }
+          - label: "Achievements page"
+            name: achievements
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Search description (SEO)", name: seoDescription, widget: text, required: false }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Subtitle", name: subtitle, widget: string }
+              - { label: "Filter all", name: filterAll, widget: string }
+              - { label: "Filter awards", name: filterAwards, widget: string }
+              - { label: "Filter certificates", name: filterCertificates, widget: string }
+              - { label: "Awards heading", name: awardsHeading, widget: string }
+              - { label: "Certificates heading", name: certificatesHeading, widget: string }
+              - { label: "Certificates hint", name: certificatesHint, widget: string }
+              - { label: "Close label", name: closeLabel, widget: string }
+          - label: "Moments page"
+            name: moments
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Search description (SEO)", name: seoDescription, widget: text, required: false }
+              - { label: "Title", name: title, widget: string }
+          - label: "About page"
+            name: about
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Search description (SEO)", name: seoDescription, widget: text, required: false }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Subtitle", name: subtitle, widget: string }
+              - { label: "Latest posts title", name: latestPostsTitle, widget: string }
+          - label: "CV page"
+            name: cv
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Search description (SEO)", name: seoDescription, widget: text, required: false }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Download label", name: downloadLabel, widget: string }
+              - { label: "Summary title", name: summaryTitle, widget: string }
+              - { label: "Experience title", name: experienceTitle, widget: string }
+              - { label: "Education title", name: educationTitle, widget: string }
+              - { label: "Skills title", name: skillsTitle, widget: string }
+              - { label: "Publications title", name: publicationsTitle, widget: string }
+              - { label: "Awards title", name: awardsTitle, widget: string }
+              - { label: "Certificates title", name: certificatesTitle, widget: string }
+          - label: "404 page"
+            name: notFound
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Heading", name: heading, widget: string }
+              - { label: "Message", name: message, widget: string }
+              - { label: "Hint", name: hint, widget: string }
+              - { label: "Button", name: button, widget: string }
+          - label: "Blog post page"
+            name: post
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Breadcrumb label", name: breadcrumbLabel, widget: string }
+              - { label: "Published on", name: publishedOn, widget: string }
+              - { label: "Last updated on", name: lastUpdatedOn, widget: string }
+              - { label: "Related title", name: relatedTitle, widget: string }
+              - { label: "Related hint", name: relatedHint, widget: string }
+              - { label: "Previous", name: previous, widget: string }
+              - { label: "Next", name: next, widget: string }
+              - { label: "On this page", name: onThisPage, widget: string }
+          - label: "Tags page"
+            name: tags
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Empty", name: empty, widget: string }
+
+  # ---------------------------------------------------------------- Projects (research, development, devops)
+  - name: projects
+    label: "Projects"
+    folder: src/content/projects
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{order}}. [{{kind}}] {{title}}"
+    sortable_fields: [order, title, kind]
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - label: "Type"
+        name: kind
+        widget: select
+        default: development
+        hint: "Research projects appear under Projects > Research; everything else under Development & DevOps."
+        options:
+          - { label: "Research", value: research }
+          - { label: "Development", value: development }
+          - { label: "DevOps / Infrastructure", value: devops }
+          - { label: "Machine learning", value: ml }
+          - { label: "Other", value: other }
+      - label: "Stage"
+        name: stage
+        widget: select
+        required: false
+        options:
+          - { label: "Idea", value: idea }
+          - { label: "Planned", value: plan }
+          - { label: "In progress", value: in-progress }
+          - { label: "Demo", value: demo }
+          - { label: "Shipped", value: shipped }
+      - { label: "Order", name: order, widget: number, value_type: int, min: 1, default: 100, hint: "Lower numbers come first. Number 1 of each type is its \"Latest\" project." }
+      - { label: "Show on homepage as current project", name: featured, widget: boolean, default: false, hint: "Turn on for ONE project. If none is on, the latest project is shown." }
+      - { label: "Draft (hidden on the live site)", name: draft, widget: boolean, default: false }
+      - { label: "Date", name: date, widget: datetime, required: false, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Short description", name: description, widget: text }
+      - { label: "Project image", name: imgSrc, widget: image, required: false, hint: "Upload an image or paste a full image URL." }
+      - { label: "Research areas", name: areas, widget: list, required: false, hint: "Mostly for research projects." }
+      - { label: "Tools, methods or tech stack", name: stack, widget: list, required: false }
+      - { label: "Live demo link", name: url, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Source code / repository link", name: srccode, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Project notes link (README)", name: projectdesc, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - label: "Related publication"
+        name: paper
+        widget: relation
+        collection: research
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+        required: false
+      - { label: "Write-up (optional, shown on the project page)", name: body, widget: markdown, required: false }
 
   # ---------------------------------------------------------------- Thoughts (blog)
   - name: blog
@@ -131,7 +493,26 @@ collections:
         multiple: true
         default: [sparrowhawk]
       - { label: "Summary", name: summary, widget: text, required: false }
-      - { label: "Cover image", name: images, widget: string, required: false }
+      - { label: "Cover image", name: images, widget: image, required: false }
+      - label: "Layout"
+        name: layout
+        widget: select
+        required: false
+        default: list
+        options:
+          - { label: "List", value: list }
+          - { label: "Tags and list", value: tags-and-list }
+      - { label: "Canonical URL", name: canonicalUrl, widget: string, required: false, hint: "Only if this post was first published somewhere else." }
+      - { label: "Bibliography", name: bibliography, widget: string, required: false }
+      - label: "Related posts"
+        name: related
+        widget: relation
+        collection: blog
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+        multiple: true
+        required: false
       - { label: "Draft (hidden on the live site)", name: draft, widget: boolean, default: true }
       - { label: "Share on LinkedIn after deploy", name: linkedin, widget: boolean, default: false, required: false }
       - { label: "LinkedIn caption", name: linkedinText, widget: text, required: false }
@@ -170,14 +551,16 @@ collections:
       - { label: "Citation text shown in the list", name: citation, widget: text, required: false, hint: "Optional. Set the exact formatted citation displayed on the Publications page and homepage." }
       - { label: "Authors", name: authors, widget: string, hint: "Comma-separated, in published order" }
       - { label: "Venue (journal or conference)", name: venue, widget: string, required: false, hint: "Leave empty while under review if the journal should stay private." }
+      - { label: "Publisher", name: publisher, widget: string, required: false, hint: "Example: IEEE, Springer" }
+      - { label: "Citation details", name: citationDetails, widget: string, required: false, hint: "Volume, issue, pages. Example: 22(5), bbab115" }
       - { label: "Date (published, or submitted)", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
       - { label: "DOI", name: doi, widget: string, required: false }
-      - { label: "PDF link", name: pdfUrl, widget: string, required: false }
-      - { label: "Publisher link", name: url, widget: string, required: false }
-      - { label: "Preprint link", name: preprintUrl, widget: string, required: false }
-      - { label: "Code link", name: codeUrl, widget: string, required: false }
-      - { label: "Dataset link", name: datasetUrl, widget: string, required: false }
-      - { label: "Project link", name: projectUrl, widget: string, required: false }
+      - { label: "PDF link", name: pdfUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Publisher link", name: url, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Preprint link", name: preprintUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Code link", name: codeUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Dataset link", name: datasetUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+      - { label: "Project link", name: projectUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
       - { label: "Cover image", name: image, widget: image, required: false }
       - { label: "Plain-language summary", name: summary, widget: text, required: false }
       - { label: "Tags", name: tags, widget: list, required: false }

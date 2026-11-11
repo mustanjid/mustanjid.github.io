@@ -1,0 +1,16 @@
+---
+title: QuoteGen
+kind: development
+order: 4
+draft: false
+featured: false
+description: This a simple random quote generator apps with a great user interface, also sharing options available for twitter only.
+imgSrc: https://github.com/mustanjid/QuoteGen/raw/main/public/promogen.png
+projectdesc: https://github.com/mustanjid/QuoteGen
+srccode: https://github.com/mustanjid/QuoteGen
+url: https://randomquotegen.onrender.com/
+stack:
+- Js
+- React
+- Quote API
+---

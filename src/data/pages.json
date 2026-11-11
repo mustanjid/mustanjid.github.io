@@ -1,0 +1,127 @@
+{
+  "home": {
+    "latestPublicationsEyebrow": "Research",
+    "latestPublicationsTitle": "Latest publications",
+    "publicationsEmpty": "Publications will appear here as they are added.",
+    "allResearchButton": "All research",
+    "latestThoughtsTitle": "Latest thoughts",
+    "thoughtsEmpty": "Thoughts will appear here as they are published.",
+    "allThoughtsButton": "View all thoughts",
+    "readLabel": "Read",
+    "updatesTitle": "Current Focus & Updates",
+    "updatesLinkLabel": "Learn more",
+    "nowLabel": "Now",
+    "techNewsLabel": "Latest in tech",
+    "currentProjectEyebrow": "Current research / implementation",
+    "areasLabel": "Areas",
+    "toolsLabel": "Tools / methods",
+    "projectDetailsLabel": "Project details",
+    "repositoryLabel": "Repository",
+    "implementationLabel": "View implementation"
+  },
+  "thoughts": {
+    "seoTitle": "MB-Thoughts",
+    "seoDescription": "Notes, experiments and lessons from software, networks and research.",
+    "title": "Thoughts",
+    "subtitle": "Learning never stops, and the best way to grow is to share.",
+    "filterLabel": "Filter by topic",
+    "allTopicsLabel": "All thoughts",
+    "readMoreLabel": "Read more"
+  },
+  "research": {
+    "seoTitle": "MB-Research",
+    "seoDescription": "Research papers, preprints and work in progress.",
+    "interestsTitle": "Research Interests",
+    "publicationsTitle": "Publications",
+    "scholarLinkLabel": "200+ citations on Google Scholar",
+    "groupUnderReview": "Under Review",
+    "groupJournal": "Journal",
+    "groupConference": "Conference",
+    "groupThesis": "Thesis",
+    "empty": "No publications yet."
+  },
+  "projects": {
+    "seoTitle": "MB-Projects",
+    "seoDescription": "Research and development projects.",
+    "title": "Projects",
+    "subtitle": "Research and development projects, all in one place.",
+    "tabLatest": "Latest",
+    "tabResearch": "Research",
+    "tabDevelopment": "Development & DevOps",
+    "detailsLabel": "Project details",
+    "emptyResearch": "No research projects are available yet.",
+    "emptyDevelopment": "No development projects are available yet.",
+    "comingSoonResearch": "Research projects coming soon.",
+    "comingSoonDevelopment": "Development projects coming soon.",
+    "backLabel": "All projects",
+    "researchKindLabel": "Research project",
+    "developmentKindLabel": "Development project",
+    "overviewLabel": "Overview",
+    "areasLabel": "Research areas",
+    "toolsLabel": "Tools & technologies",
+    "liveLabel": "Live project",
+    "sourceLabel": "Source code",
+    "notesLabel": "Project notes",
+    "paperLabel": "Related publication"
+  },
+  "achievements": {
+    "seoTitle": "Achievements & Certificates",
+    "seoDescription": "Selected achievements, awards, scholarships, and professional certificates.",
+    "title": "Achievements & Certificates",
+    "subtitle": "A selection of milestones, recognitions, and professional learning.",
+    "filterAll": "All",
+    "filterAwards": "Awards",
+    "filterCertificates": "Certificates",
+    "awardsHeading": "Awards & scholarships",
+    "certificatesHeading": "Certificates",
+    "certificatesHint": "Select a certificate to view it at a larger size.",
+    "closeLabel": "Close"
+  },
+  "moments": {
+    "seoTitle": "MB-Moments",
+    "seoDescription": "A gallery of photos and moments.",
+    "title": "Moments"
+  },
+  "about": {
+    "seoTitle": "MB-About",
+    "seoDescription": "About Md Al Mustanjid: background, work and interests.",
+    "title": "About",
+    "subtitle": "Unpacking My Identity, Motivations, and Direction",
+    "latestPostsTitle": "Latest posts"
+  },
+  "cv": {
+    "seoTitle": "MB-CV",
+    "seoDescription": "Curriculum vitae: experience, education, skills, publications and awards.",
+    "title": "Curriculum Vitae",
+    "downloadLabel": "Download PDF",
+    "summaryTitle": "Summary",
+    "experienceTitle": "Experience",
+    "educationTitle": "Education",
+    "skillsTitle": "Skills",
+    "publicationsTitle": "Publications",
+    "awardsTitle": "Awards & scholarships",
+    "certificatesTitle": "Certificates"
+  },
+  "notFound": {
+    "seoTitle": "Not Found",
+    "heading": "404",
+    "message": "Sorry we couldn't find this page.",
+    "hint": "But dont worry, you can find plenty of other things on our homepage.",
+    "button": "Back to homepage"
+  },
+  "post": {
+    "breadcrumbLabel": "Thoughts",
+    "publishedOn": "Published on",
+    "lastUpdatedOn": "Last updated on",
+    "relatedTitle": "Related thoughts",
+    "relatedHint": "More posts connected by these topics.",
+    "previous": "Previous",
+    "next": "Next",
+    "onThisPage": "On this page"
+  },
+  "tags": {
+    "seoTitle": "Tags",
+    "title": "Tags",
+    "empty": "No tags found."
+  }
+}

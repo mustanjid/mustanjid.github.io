@@ -3,10 +3,12 @@
  *
  * A few of these are not used yet, and are subject to change, example of this is Author.
  */
+import {siteData} from './data/content';
+
 export const SITE_METADATA = {
-    title: 'Mustanjid\'s Basket (MB)',
-    headerTitle: 'Mustanjid\'s Basket (MB)',
-    description: 'Md Al Mustanjid is a Support Engineer (NetOps), researcher, and bioinformatics enthusiast.',
+    title: siteData.title,
+    headerTitle: siteData.headerTitle,
+    description: siteData.description,
     language: 'en-us',
     theme: 'system', // Options: system, light, dark, Does not work yet
     siteUrl: 'https://mustanjid.github.io/',
@@ -17,15 +19,15 @@ export const SITE_METADATA = {
 
     // The following are subject to change. They are placeholders for now.
     // This project provide a default author content see src/content/authors/default.mdx, so these details are better to be inserted there.
-    author: 'Md Al Mustanjid',
+    author: siteData.author,
     mastodon: 'https://mastodon.social/@mastodonuser',
     email: '',
-    github: 'https://github.com/mustanjid',
-    twitter: 'https://www.hackerrank.com/profile/mustanjid',
+    github: siteData.social.github,
+    twitter: siteData.social.hackerrank,
     facebook: 'https://facebook.com',
     youtube: 'https://youtube.com',
-    linkedin: 'https://www.linkedin.com/in/mustanjid/',
-    keywords: ["Software Engineer", "Portfolio", "JavaScript", "Laravel", "React", "Md Al Mustanjid", "Web development"],
+    linkedin: siteData.social.linkedin,
+    keywords: siteData.keywords,
 
     // These are not supported yet
     // analytics: {
@@ -103,11 +105,6 @@ export const SITE_METADATA = {
  */
 export const ITEMS_PER_PAGE = 6;
 
-export const NAVIGATION = [
-    {href: '/', title: 'Home'},
-    {href: '/blog', title: 'Thoughts'},
-    {href: '/research', title: 'Research'},
-    {href: '/projects', title: 'Projects'},
-    {href: '/award', title: 'Achievement'},
-    {href: '/moments', title: 'Moments'},
-]
+export const NAVIGATION = siteData.navigation
+    .filter(({visible}) => visible)
+    .map(({href, title}) => ({href, title}))

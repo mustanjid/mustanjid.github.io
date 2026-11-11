@@ -27,25 +27,5 @@
     "url": "",
     "expires": ""
   },
-  "scholarUrl": "https://scholar.google.com/scholar?q=%22Md+Al+Mustanjid%22",
-  "spotlight": {
-    "kind": "research",
-    "stage": "in-progress",
-    "title": "COVID-19 and Physiological Disorders",
-    "summary": "This work combines bioinformatics and systems-biology analyses to study how COVID-19 may interact with physiological disorders and identify potential therapeutic targets.",
-    "image": "",
-    "areas": [
-      "Bioinformatics",
-      "Systems biology",
-      "Disease pathways"
-    ],
-    "tools": [
-      "Transcriptomic analysis",
-      "Pathway analysis",
-      "Network biology"
-    ],
-    "tags": [],
-    "repoUrl": "",
-    "demoUrl": ""
-  }
+  "scholarUrl": "https://scholar.google.com/scholar?q=%22Md+Al+Mustanjid%22"
 }

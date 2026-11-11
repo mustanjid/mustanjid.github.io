@@ -1,47 +1,71 @@
 ---
 import RootLayout from "@/layouts/RootLayout.astro";
-import { PROJECTS } from "@/projects";
+import { getProjects, isResearchProject, STAGE_LABEL } from "@/functions";
+import { getEntry } from "astro:content";
+import { pagesData } from "@/data/content";
 
-export function getStaticPaths() {
-    return PROJECTS.map((project) => ({
-        params: { slug: project.slug },
-        props: { project },
+export async function getStaticPaths() {
+    const projects = await getProjects();
+    return projects.map((entry) => ({
+        params: { slug: entry.slug },
+        props: { entry },
     }));
 }
 
-interface Props {
-    project: (typeof PROJECTS)[number];
-}
-
-const { project } = Astro.props;
+const t = pagesData.projects;
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await entry.render();
+const hasBody = entry.body.trim().length > 0;
+const research = isResearchProject(entry);
+const paper = data.paper ? await getEntry(data.paper) : undefined;
+const stage = data.stage ? STAGE_LABEL[data.stage] : undefined;
+const btnPrimary = "rounded-md bg-primary-700 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-800";
+const btn = "rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800";
+const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-800 dark:bg-primary-950 dark:text-primary-200";
 ---
 
-<RootLayout title={`${project.title} | Projects`} description={project.description}>
+<RootLayout title={`${data.title} | ${t.title}`} description={data.description}>
     <article class="mx-auto max-w-4xl py-8">
-        <a href="/projects" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; All projects</a>
-        {project.imgSrc && <img src={project.imgSrc} alt="" class="mt-6 max-h-64 w-full rounded-xl object-cover" />}
+        <a href="/projects" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
+        {data.imgSrc && <img src={data.imgSrc} alt="" class="mt-6 max-h-64 w-full rounded-xl object-cover" />}
 
         <header class="mt-8 border-b border-gray-200 pb-6 dark:border-gray-700">
-            <p class="text-sm font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">Development project</p>
-            <h1 class="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">{project.title}</h1>
+            <p class="text-sm font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">{research ? t.researchKindLabel : t.developmentKindLabel}</p>
+            <h1 class="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">{data.title}</h1>
+            {(stage || data.date) && (
+                <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
+                    {stage && <span class="rounded-full bg-primary-50 px-3 py-1 font-medium text-primary-700 dark:bg-primary-950 dark:text-primary-300">{stage}</span>}
+                    {data.date && <time datetime={data.date.toISOString()}>{data.date.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</time>}
+                </div>
+            )}
         </header>
 
         <section class="prose prose-lg mt-8 max-w-none dark:prose-invert" aria-labelledby="project-overview">
-            <h2 id="project-overview">Overview</h2>
-            <p>{project.description}</p>
+            <h2 id="project-overview">{t.overviewLabel}</h2>
+            <p>{data.description}</p>
+            {hasBody && <Content />}
         </section>
 
-        <section class="mt-8" aria-labelledby="project-tools">
-            <h2 id="project-tools" class="text-xl font-bold text-gray-900 dark:text-gray-100">Tools &amp; technologies</h2>
-            <ul class="mt-3 flex flex-wrap gap-2">
-                {project.stack.map((item) => <li class="rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-800 dark:bg-primary-950 dark:text-primary-200">{item}</li>)}
-            </ul>
-        </section>
+        {data.areas.length > 0 && (
+            <section class="mt-8" aria-labelledby="project-areas">
+                <h2 id="project-areas" class="text-xl font-bold text-gray-900 dark:text-gray-100">{t.areasLabel}</h2>
+                <ul class="mt-3 flex flex-wrap gap-2">{data.areas.map((item) => <li class={chip}>{item}</li>)}</ul>
+            </section>
+        )}
+
+        {data.stack.length > 0 && (
+            <section class="mt-8" aria-labelledby="project-tools">
+                <h2 id="project-tools" class="text-xl font-bold text-gray-900 dark:text-gray-100">{t.toolsLabel}</h2>
+                <ul class="mt-3 flex flex-wrap gap-2">{data.stack.map((item) => <li class={chip}>{item}</li>)}</ul>
+            </section>
+        )}
 
         <nav class="mt-8 flex flex-wrap gap-3" aria-label="Project links">
-            {project.url && <a class="rounded-md bg-primary-700 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-800" href={project.url} target="_blank" rel="noopener noreferrer">Live project</a>}
-            {project.srccode && <a class="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={project.srccode} target="_blank" rel="noopener noreferrer">Source code</a>}
-            {project.projectdesc && <a class="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={project.projectdesc} target="_blank" rel="noopener noreferrer">Project notes</a>}
+            {data.url && <a class={btnPrimary} href={data.url} target="_blank" rel="noopener noreferrer">{t.liveLabel}</a>}
+            {data.srccode && <a class={btn} href={data.srccode} target="_blank" rel="noopener noreferrer">{t.sourceLabel}</a>}
+            {data.projectdesc && <a class={btn} href={data.projectdesc} target="_blank" rel="noopener noreferrer">{t.notesLabel}</a>}
+            {paper && <a class={btn} href={`/research#${paper.slug}`}>{t.paperLabel}</a>}
         </nav>
     </article>
 </RootLayout>

@@ -1,0 +1,63 @@
+{
+  "title": "Mustanjid's Basket (MB)",
+  "headerTitle": "Mustanjid's Basket (MB)",
+  "description": "Md Al Mustanjid is a Support Engineer (NetOps), researcher, and bioinformatics enthusiast.",
+  "author": "Md Al Mustanjid",
+  "keywords": [
+    "Software Engineer",
+    "Portfolio",
+    "JavaScript",
+    "Laravel",
+    "React",
+    "Md Al Mustanjid",
+    "Web development"
+  ],
+  "social": {
+    "github": "https://github.com/mustanjid",
+    "linkedin": "https://www.linkedin.com/in/mustanjid/",
+    "hackerrank": "https://www.hackerrank.com/profile/mustanjid"
+  },
+  "ogImage": "/static/logo.png",
+  "navigation": [
+    {
+      "title": "Home",
+      "href": "/",
+      "visible": true
+    },
+    {
+      "title": "Thoughts",
+      "href": "/blog",
+      "visible": true
+    },
+    {
+      "title": "Research",
+      "href": "/research",
+      "visible": true
+    },
+    {
+      "title": "Projects",
+      "href": "/projects",
+      "visible": true
+    },
+    {
+      "title": "Achievement",
+      "href": "/award",
+      "visible": true
+    },
+    {
+      "title": "Moments",
+      "href": "/moments",
+      "visible": true
+    },
+    {
+      "title": "CV",
+      "href": "/cv",
+      "visible": false
+    },
+    {
+      "title": "About",
+      "href": "/about",
+      "visible": false
+    }
+  ]
+}
