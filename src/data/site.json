@@ -4,19 +4,18 @@
   "description": "Md Al Mustanjid is a Support Engineer (NetOps), researcher, and bioinformatics enthusiast.",
   "author": "Md Al Mustanjid",
   "keywords": [
-    "Software Engineer",
-    "Portfolio",
-    "JavaScript",
-    "Laravel",
-    "React",
     "Md Al Mustanjid",
-    "Web development"
+    "Portfolio",
+    "Data center",
+    "Support Engineer",
+    "NetOps",
+    "Systems and Network",
+    "Research",
+    "Bioinformatics",
+    "Systems Biology",
+    "Machine Learning",
+    "Pattern Recognition"
   ],
-  "social": {
-    "github": "https://github.com/mustanjid",
-    "linkedin": "https://www.linkedin.com/in/mustanjid/",
-    "hackerrank": "https://www.hackerrank.com/profile/mustanjid"
-  },
   "ogImage": "/static/logo.png",
   "navigation": [
     {
@@ -59,5 +58,10 @@
       "href": "/about",
       "visible": false
     }
-  ]
+  ],
+  "social": {
+    "github": "https://github.com/mustanjid",
+    "linkedin": "https://www.linkedin.com/in/mustanjid/",
+    "hackerrank": "https://www.hackerrank.com/profile/mustanjid"
+  }
 }
