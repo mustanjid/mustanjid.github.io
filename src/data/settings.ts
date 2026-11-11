@@ -18,6 +18,15 @@ const schema = z.object({
   news: z.object({
     enabled: z.boolean().default(false),
   }).default({}),
+  announcements: z.object({
+    enabled: z.boolean().default(false),
+    items: z.array(z.object({
+      title: z.string().min(1, "Announcement title is required"),
+      description: text,
+      date,
+      url,
+    })).default([]),
+  }).default({}),
   achievement: z.object({
     enabled: z.boolean().default(false),
     title: text,
@@ -26,15 +35,15 @@ const schema = z.object({
     url,
     expires: date,
   }).default({}),
-  latestCard: z.object({
-    showResearch: z.boolean().default(false),
-  }).default({}),
   scholarUrl: url,
   spotlight: z.object({
     kind: z.enum(["research", "ml", "devops", "other"]).default("other"),
     stage: z.enum(["idea", "plan", "in-progress", "demo", "shipped"]).default("idea"),
     title: text,
     summary: text,
+    image: text,
+    areas: z.array(z.string()).default([]),
+    tools: z.array(z.string()).default([]),
     tags: z.array(z.string()).default([]),
     repoUrl: url,
     demoUrl: url,

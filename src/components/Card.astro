@@ -3,6 +3,7 @@ import {Image} from "astro:assets";
 import Link from "./Link.astro";
 
 interface Astro {
+    slug: string;
     title: string;
     description: string;
     imgSrc?: string;
@@ -12,7 +13,7 @@ interface Astro {
     stack: string;
 }
 
-const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.props;
+const {slug, title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.props;
 ---
 <!-- <div class="md max-w-[544px] p-4 md:w-1/2">
     <div class:list={`${imgSrc && 'h-full'} overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}>
@@ -96,12 +97,12 @@ const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.pro
     </div>
 </div> -->
 
-<div class="md max-w-[544px] p-4 md:w-1/2">
-    <div class="group relative h-full overflow-hidden rounded-xl border-2 border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/30">
+<div class="h-full w-full">
+    <div class="group relative flex h-full flex-col overflow-hidden rounded-xl border-2 border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/30">
         {imgSrc && (
-            <div class="aspect-[3/2] w-full overflow-hidden border-b border-gray-200 dark:border-gray-700">
+            <div class="h-40 w-full overflow-hidden border-b border-gray-200 dark:border-gray-700 sm:h-44">
                 {url ? (
-                    <Link href={url} class="block h-full" aria-label={`Link to ${title}`}>
+                    <Link href={`/projects/${slug}`} class="block h-full" aria-label={`Details for ${title}`}>
                         <Image
                             alt={title}
                             src={imgSrc}
@@ -115,34 +116,30 @@ const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.pro
                         />
                     </Link>
                 ) : (
-                    <Image
-                        alt={title}
-                        src={imgSrc}
-                        class="h-full w-full object-cover object-center"
-                        width={500}
-                        height={382}
-                        loading="lazy"
-                        onError={(e) => {
-                            e.target.style.display = 'none';
-                        }}
-                    />
+                    <Link href={`/projects/${slug}`} class="block h-full" aria-label={`Details for ${title}`}>
+                        <Image
+                            alt={title}
+                            src={imgSrc}
+                            class="h-full w-full object-cover object-center"
+                            width={500}
+                            height={382}
+                            loading="lazy"
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                            }}
+                        />
+                    </Link>
                 )}
             </div>
         )}
 
-        <div class="flex flex-col p-6">
-            <h2 class="mb-2 text-2xl font-bold leading-7 tracking-tight text-gray-800 dark:text-gray-100">
-                {url ? (
-                    <Link href={url} class="hover:text-primary-500 dark:hover:text-primary-400">
-                        {title}
-                    </Link>
-                ) : (
-                    title
-                )}
+        <div class="flex flex-1 flex-col p-5">
+            <h2 class="mb-2 text-xl font-bold leading-7 tracking-tight text-gray-800 dark:text-gray-100">
+                <Link href={`/projects/${slug}`} class="hover:text-primary-500 dark:hover:text-primary-400">{title}</Link>
             </h2>
 
             <div class="mb-3 flex-1">
-                <p class="line-clamp-10 text-lg leading-relaxed text-gray-500 dark:text-gray-400">
+                <p class="line-clamp-4 text-base leading-6 text-gray-500 dark:text-gray-400">
                     {description}
                 </p>
             </div>
@@ -165,7 +162,7 @@ const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.pro
                             href={projectdesc}
                             class="text-sm font-medium text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                         >
-                            Details →
+                            Project notes →
                         </Link>
                     )}
                     {url && (
@@ -179,7 +176,7 @@ const {title, description, imgSrc, projectdesc, srccode, url, stack} = Astro.pro
                 </div>
                 {srccode && (
                     <Link
-                        href={`${srccode}/source`}
+                        href={srccode}
                         class="text-sm font-medium text-blue-500 hover:text-gray-600 dark:text-blue-400 dark:hover:text-gray-300"
                     >
                         Source Code

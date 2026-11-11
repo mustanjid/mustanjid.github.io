@@ -36,6 +36,22 @@ collections:
             fields:
               - { label: "Show daily tech and research news", name: enabled, widget: boolean, default: false }
 
+          - label: "News & announcements"
+            name: announcements
+            widget: object
+            collapsed: false
+            fields:
+              - { label: "Show announcements", name: enabled, widget: boolean, default: false }
+              - label: "Announcements"
+                name: items
+                widget: list
+                required: false
+                fields:
+                  - { label: "Title", name: title, widget: string }
+                  - { label: "Description", name: description, widget: text, required: false }
+                  - { label: "Date", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+                  - { label: "Link", name: url, widget: string, required: false }
+
           - label: "Achievement highlight"
             name: achievement
             widget: object
@@ -48,19 +64,13 @@ collections:
               - { label: "Link", name: url, widget: string, required: false }
               - { label: "Hide automatically after", name: expires, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false, hint: "Optional. Leave empty to keep showing until you switch it off." }
 
-          - label: "Latest card (right side of the two-card section)"
-            name: latestCard
-            widget: object
-            fields:
-              - { label: "Show latest research paper (off = show the project spotlight)", name: showResearch, widget: boolean, default: false }
-
-              - { label: "Google Scholar profile or search URL", name: scholarUrl, widget: string, required: false }
+          - { label: "Google Scholar profile or search URL", name: scholarUrl, widget: string, required: false }
 
           - label: "Project spotlight"
             name: spotlight
             widget: object
             collapsed: true
-            hint: "Shown on the right card when the research switch is off."
+            hint: "Shown as the latest research project on the homepage when Research project is selected."
             fields:
               - label: "Kind"
                 name: kind
@@ -83,6 +93,9 @@ collections:
                   - { label: "Shipped", value: shipped }
               - { label: "Title", name: title, widget: string, required: false }
               - { label: "Summary", name: summary, widget: text, required: false }
+              - { label: "Project image", name: image, widget: string, required: false }
+              - { label: "Research areas", name: areas, widget: list, required: false }
+              - { label: "Tools / methods", name: tools, widget: list, required: false }
               - { label: "Tags", name: tags, widget: list, required: false }
               - { label: "Repository link", name: repoUrl, widget: string, required: false }
               - { label: "Demo link", name: demoUrl, widget: string, required: false }
@@ -159,9 +172,13 @@ collections:
       - { label: "Venue (journal or conference)", name: venue, widget: string, required: false, hint: "Leave empty while under review if the journal should stay private." }
       - { label: "Date (published, or submitted)", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
       - { label: "DOI", name: doi, widget: string, required: false }
+      - { label: "PDF link", name: pdfUrl, widget: string, required: false }
       - { label: "Publisher link", name: url, widget: string, required: false }
       - { label: "Preprint link", name: preprintUrl, widget: string, required: false }
       - { label: "Code link", name: codeUrl, widget: string, required: false }
+      - { label: "Dataset link", name: datasetUrl, widget: string, required: false }
+      - { label: "Project link", name: projectUrl, widget: string, required: false }
+      - { label: "Cover image", name: image, widget: image, required: false }
       - { label: "Plain-language summary", name: summary, widget: text, required: false }
       - { label: "Tags", name: tags, widget: list, required: false }
       - { label: "Featured", name: featured, widget: boolean, default: false, required: false }

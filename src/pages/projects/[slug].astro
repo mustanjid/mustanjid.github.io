@@ -1,0 +1,47 @@
+---
+import RootLayout from "@/layouts/RootLayout.astro";
+import { PROJECTS } from "@/projects";
+
+export function getStaticPaths() {
+    return PROJECTS.map((project) => ({
+        params: { slug: project.slug },
+        props: { project },
+    }));
+}
+
+interface Props {
+    project: (typeof PROJECTS)[number];
+}
+
+const { project } = Astro.props;
+---
+
+<RootLayout title={`${project.title} | Projects`} description={project.description}>
+    <article class="mx-auto max-w-4xl py-8">
+        <a href="/projects" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; All projects</a>
+        {project.imgSrc && <img src={project.imgSrc} alt="" class="mt-6 max-h-64 w-full rounded-xl object-cover" />}
+
+        <header class="mt-8 border-b border-gray-200 pb-6 dark:border-gray-700">
+            <p class="text-sm font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">Development project</p>
+            <h1 class="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">{project.title}</h1>
+        </header>
+
+        <section class="prose prose-lg mt-8 max-w-none dark:prose-invert" aria-labelledby="project-overview">
+            <h2 id="project-overview">Overview</h2>
+            <p>{project.description}</p>
+        </section>
+
+        <section class="mt-8" aria-labelledby="project-tools">
+            <h2 id="project-tools" class="text-xl font-bold text-gray-900 dark:text-gray-100">Tools &amp; technologies</h2>
+            <ul class="mt-3 flex flex-wrap gap-2">
+                {project.stack.map((item) => <li class="rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-800 dark:bg-primary-950 dark:text-primary-200">{item}</li>)}
+            </ul>
+        </section>
+
+        <nav class="mt-8 flex flex-wrap gap-3" aria-label="Project links">
+            {project.url && <a class="rounded-md bg-primary-700 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-800" href={project.url} target="_blank" rel="noopener noreferrer">Live project</a>}
+            {project.srccode && <a class="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={project.srccode} target="_blank" rel="noopener noreferrer">Source code</a>}
+            {project.projectdesc && <a class="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800" href={project.projectdesc} target="_blank" rel="noopener noreferrer">Project notes</a>}
+        </nav>
+    </article>
+</RootLayout>

@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+  selectedTag?: string;
+}
+
+const { selectedTag: selectedTagProp } = Astro.props;
+const tags = await getCollection("tags");
+const routeTag = tags.find(({ slug }) => Astro.url.pathname.startsWith(`/tags/${slug}`))?.slug;
+const selectedTag = selectedTagProp ?? routeTag;
+---
+
+<div class="sticky top-16 z-40 -mx-4 flex justify-end border-b border-gray-200 bg-white/90 px-4 py-3 backdrop-blur dark:border-gray-800 dark:bg-gray-950/90 sm:-mx-6 sm:px-6 xl:mx-0 xl:px-0">
+  <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+    <span>Filter by topic</span>
+    <select
+      data-thoughts-filter
+      aria-label="Filter thoughts by topic"
+      class="rounded-lg border-gray-300 bg-white py-2 pl-3 pr-9 text-sm text-gray-900 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+    >
+      <option value="/blog" selected={!selectedTag}>All thoughts</option>
+      {tags.map(({ slug, data }) => (
+        <option value={`/tags/${slug}`} selected={selectedTag === slug}>{data.name}</option>
+      ))}
+    </select>
+  </label>
+</div>
+
+<script>
+  const topicFilter = document.querySelector<HTMLSelectElement>("[data-thoughts-filter]");
+  topicFilter?.addEventListener("change", () => {
+    if (topicFilter.value) window.location.assign(topicFilter.value);
+  });
+</script>

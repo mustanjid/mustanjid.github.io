@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import { type CollectionEntry } from "astro:content";
 
 import SocialIcon from "@/components/social-icons/index.astro";
@@ -6,40 +7,71 @@ import { settings } from "@/data/settings";
 
 interface Props {
   content: CollectionEntry<"authors">["data"];
-  slug: string;
 }
 
-const { name, avatar, occupation, company, email, github, linkedin, twitter } =
-  Astro.props.content;
+const { name, avatar, github, linkedin } = Astro.props.content;
 ---
 
-<section class="border-b border-gray-200 pb-6 dark:border-gray-700">
-  <div class="items-start space-y-2 xl:grid xl:grid-cols-3 xl:gap-x-8 xl:space-y-0">
-    <div class="flex flex-col items-center space-x-2 pt-0">
-      <h2 class="text-xl leading-8 tracking-tight">Welcome to my digital basket</h2>
-      <h2 class="pb-2 pt-2 text-3xl leading-8 tracking-tight">I'm {name}</h2>
-      <div class="text-gray-500 dark:text-gray-400">{company}</div>
-      <div class="flex space-x-3 pt-4">
-        {github && <SocialIcon kind="github" href={github} size={5} />}
-        {linkedin && <SocialIcon kind="linkedin" href={linkedin} size={5} />}
-        {settings.scholarUrl && <SocialIcon kind="scholar" href={settings.scholarUrl} size={5} />}
-        {twitter && <SocialIcon kind="twitter" href="https://www.hackerrank.com/profile/mustanjid" size={5} />}
-      </div>
-      <div class="text-gray-500 dark:text-gray-400"><h2 class="pt-3 text-2xl">Let’s grow as we go.</h2></div>
-    </div>
+<section aria-labelledby="home-title" class="relative isolate pb-8">
+  <svg aria-hidden="true" viewBox="0 0 180 360" fill="none" class="pointer-events-none absolute -right-3 top-1/2 z-0 hidden h-72 w-36 -translate-y-1/2 text-sky-500/20 dark:text-cyan-300/15 md:block">
+    <path d="M20 20C155 75 20 125 155 180S20 285 155 340M155 20C20 75 155 125 20 180S155 285 20 340" stroke="currentColor" stroke-width="2" />
+    <path d="M52 39 124 39M38 79 139 79M38 119 139 119M38 159 139 159M38 199 139 199M38 239 139 239M52 279 124 279M38 319 139 319" stroke="currentColor" stroke-width="1.5" />
+    <circle cx="20" cy="20" r="6" fill="currentColor" /><circle cx="155" cy="180" r="7" fill="currentColor" /><circle cx="20" cy="340" r="6" fill="currentColor" />
+  </svg>
+  <svg aria-hidden="true" viewBox="0 0 220 220" fill="none" class="pointer-events-none absolute -left-2 bottom-0 z-0 hidden h-52 w-52 text-emerald-500/20 dark:text-teal-300/15 md:block">
+    <path d="M34 52h18m116 0h18M34 110h18m116 0h18M34 168h18m116 0h18M43 198h134" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    <rect x="52" y="29" width="116" height="46" rx="8" stroke="currentColor" stroke-width="2" />
+    <rect x="52" y="87" width="116" height="46" rx="8" stroke="currentColor" stroke-width="2" />
+    <rect x="52" y="145" width="116" height="46" rx="8" stroke="currentColor" stroke-width="2" />
+    <path d="M91 46h58m-58 10h42m-42 48h58m-58 10h42m-42 48h58m-58 10h42" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    <circle cx="69" cy="52" r="4" fill="currentColor" />
+    <circle cx="80" cy="52" r="4" fill="currentColor" />
+    <circle cx="69" cy="110" r="4" fill="currentColor" />
+    <circle cx="80" cy="110" r="4" fill="currentColor" />
+    <circle cx="69" cy="168" r="4" fill="currentColor" />
+    <circle cx="80" cy="168" r="4" fill="currentColor" />
+  </svg>
 
-    <div class="max-w-none xl:col-span-2">
-      <h2 class="pb-2 text-lg">
-        Currently, a network & infrastructure engineer at a nationwide ISP. This is my basket where I put everything I'm figuring out — networks that shouldn't break, research that keeps me curious, and the slow grind of learning cloud and DevOps one piece at a time. Just notes from my messy middle. If you're curious, peek inside — maybe you'll find something useful for your own path.
-      </h2>
-      <div class="mt-2 grid grid-cols-2 gap-1">
-        <a href="/about" class="flex items-center space-x-1"><span>🕵️‍♂️</span><span>More about me</span></a>
-        <a href="#" class="flex items-center space-x-1"><span>📃</span><span>View resume</span></a>
-      </div>
-      <div class="mt-4 grid grid-cols-2 gap-1">
-        <a href="/blog" class="flex items-center space-x-1"><span>📝</span><span>My Thoughts</span></a>
-        <a href="/projects" class="flex items-center space-x-1"><span>🧑‍💻</span><span>What I have built?</span></a>
-      </div>
+  <div class="relative z-10 grid items-center gap-2 md:grid-cols-2">
+  <div class="flex flex-col items-center justify-center text-center">
+    <h1 id="home-title" class="text-xl font-semibold leading-tight text-gray-900 dark:text-gray-100 sm:text-2xl">{name}</h1>
+    {avatar && (
+      <Image
+        src={avatar}
+        alt={`Portrait of ${name}`}
+        width={128}
+        height={128}
+        class="mt-3 h-24 w-24 rounded-full object-cover sm:h-28 sm:w-28"
+        loading="eager"
+      />
+    )}
+    <p class="mt-2 text-sm font-medium text-gray-600 dark:text-gray-300">
+      Support Eng <span class="px-1 text-primary-500" aria-hidden="true">|</span>
+      Researcher <span class="px-1 text-primary-500" aria-hidden="true">|</span>
+      Bio Enthusiast
+    </p>
+    <nav aria-label="Social profiles" class="mt-3 flex justify-center gap-3">
+      {linkedin && <SocialIcon kind="linkedin" href={linkedin} size={4} />}
+      {settings.scholarUrl && <SocialIcon kind="scholar" href={settings.scholarUrl} size={4} />}
+      {github && <SocialIcon kind="github" href={github} size={4} />}
+    </nav>
+  </div>
+
+  <div class="flex min-w-0 flex-col justify-center md:-ml-12 xl:-ml-28">
+    <div class="space-y-2 text-sm leading-6 text-gray-600 dark:text-gray-300 sm:text-base">
+      <p>
+        I&rsquo;m a Support Engineer (NetOps), helping keep network services and infrastructure reliable at a nationwide ISP.
+        I work across networking and infrastructure, with a focus on practical, dependable systems.
+      </p>
+      <p>
+        Alongside engineering, I work as a research assistant in computational biology, exploring how bioinformatics and systems biology can reveal disease mechanisms, connected pathways, and potential therapeutic targets.
+      </p>
+      <p>
+        This site brings together my engineering work, research, and what I&rsquo;m learning along the way.
+        You can find my <a href="/static/cv.pdf" class="font-medium text-primary-700 underline decoration-primary-300 underline-offset-2 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">CV</a>
+        and browse my <a href="/moments" class="font-medium text-primary-700 underline decoration-primary-300 underline-offset-2 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">moments</a>.
+      </p>
     </div>
+  </div>
   </div>
 </section>

@@ -1,123 +1,75 @@
 ---
 import { getCollection } from "astro:content";
-import { settings } from "@/data/settings";
-import RightNow from "@/components/RightNow.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
-import { excludeDrafts, sortBlogPosts, getResearchEntries } from "@/functions";
-import { STATUS_LABEL, STATUS_BADGE, doiUrl, paperPdfUrl } from "@/research-ui";
+import { excludeDrafts, getResearchEntries, sortBlogPosts } from "@/functions";
+import PublicationCard from "@/components/PublicationCard.astro";
 
+interface Props {
+  view?: "both" | "publications" | "thoughts";
+}
+
+const { view = "both" } = Astro.props;
+const both = view === "both";
 const posts = sortBlogPosts((await getCollection("blog", excludeDrafts)) ?? []).slice(0, 4);
-const latestPost = posts[0];
-const olderPosts = posts.slice(1);
-const papers = await getResearchEntries();
-const ongoingStatuses = new Set(["accepted", "under-review", "submitted", "preprint", "in-preparation"]);
-const ongoingPaper = papers.find(({ data }) => ongoingStatuses.has(data.status));
-const paper = settings.latestCard.showResearch ? ongoingPaper ?? papers[0] : undefined;
-const project = !paper && settings.spotlight.title ? settings.spotlight : undefined;
-const paperLabel = paper && paper === ongoingPaper ? "Latest ongoing research" : "Latest research";
-const kindLabel: Record<string, string> = { research: "Research project", ml: "ML project", devops: "DevOps / Cloud", other: "Project" };
-const stageLabel: Record<string, string> = { idea: "Idea", plan: "Planned", "in-progress": "In progress", demo: "Demo", shipped: "Shipped" };
-const accent = "h-1 w-12 rounded-full bg-primary-500";
-const textLink = "font-medium text-primary-600 hover:underline dark:text-primary-400";
+const recentPosts = posts.map((post) => ({
+  ...post,
+  hasBengali: /[\u0980-\u09FF]/.test(`${post.data.title} ${post.data.summary ?? ""}`),
+}));
+const researchEntries = await getResearchEntries();
+const underReview = researchEntries.filter(({ data }) => data.status === "under-review" || data.status === "submitted");
+const published = researchEntries.filter(({ data }) => data.status === "published" || data.status === "accepted");
+const publications = [...underReview, ...published].slice(0, 4);
+const linkClass = "font-semibold text-primary-700 hover:underline dark:text-primary-300";
 ---
 
-<section aria-label="Latest updates and current focus" class="mt-8 grid gap-10 md:grid-cols-2 md:items-start">
-  <div class="min-w-0 space-y-5">
-    <header class="space-y-3">
-      <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Latest thoughts</h2>
-      <div class={accent} aria-hidden="true"></div>
+<section aria-label={view === "both" ? "Recent publications and thoughts" : view === "publications" ? "Recent publications" : "Latest thoughts"} class:list={[both && "mt-8 grid gap-8 md:grid-cols-2"]}>
+  {view !== "thoughts" && (
+  <section aria-labelledby="latest-publications-title" class="min-w-0">
+    <header class="mb-4 flex items-end justify-between gap-3 border-b border-gray-200 pb-3 dark:border-gray-700">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">Research</p>
+        <h2 id="latest-publications-title" class="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100">Latest publications</h2>
+      </div>
     </header>
 
-    <RightNow />
-
-    {latestPost && (
-      <article class="rounded border border-gray-200 border-l-4 border-l-emerald-500 bg-gray-50 p-4 dark:border-gray-700 dark:border-l-emerald-400 dark:bg-gray-900/50">
-        <p class="text-xs text-gray-500 dark:text-gray-400"><FormattedDate date={latestPost.data.date} /></p>
-        <h3 class="mt-1 text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">{latestPost.data.title}</h3>
-        {latestPost.data.summary && <p class="mt-2 text-sm leading-5 text-gray-600 dark:text-gray-300">{latestPost.data.summary}</p>}
-        <a class="mt-3 inline-flex min-h-9 items-center rounded border border-emerald-600 px-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 dark:border-emerald-400 dark:text-emerald-200 dark:hover:bg-gray-800" href={`/blog/${latestPost.slug}`}>Read now <span class="ml-2" aria-hidden="true">&rarr;</span></a>
-      </article>
+    {publications.length > 0 ? (
+      <ul class="space-y-3">
+        {publications.map((entry) => <li><PublicationCard entry={entry} /></li>)}
+      </ul>
+    ) : (
+      <p class="rounded-xl border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">Publications will appear here as they are added.</p>
     )}
 
-    <div>
-      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-        {olderPosts.map((post) => (
-          <li>
-            <a href={`/blog/${post.slug}`} class="group flex items-start justify-between gap-4 py-3">
-              <span class="min-w-0">
-                <span class="block text-sm font-semibold leading-5 text-gray-900 group-hover:text-primary-600 dark:text-gray-100 dark:group-hover:text-primary-400">{post.data.title}</span>
-                <span class="mt-1 block text-xs text-gray-500 dark:text-gray-400"><FormattedDate date={post.data.date} /></span>
-              </span>
-              <span aria-hidden="true" class="shrink-0 text-primary-600 dark:text-primary-400">&rarr;</span>
+    <a href="/research" class={`${linkClass} mt-4 inline-flex items-center gap-1 rounded-lg border border-primary-700 px-4 py-2 text-sm dark:border-primary-300`}>
+      All research <span aria-hidden="true">&rarr;</span>
+    </a>
+  </section>
+  )}
+
+  {view !== "publications" && (
+  <section aria-labelledby="latest-thoughts-title" class="min-w-0">
+    <header class="mb-1.5 border-b border-gray-200 pb-1.5 dark:border-gray-700">
+      <h2 id="latest-thoughts-title" class="text-base font-bold text-gray-900 dark:text-gray-100">Latest thoughts</h2>
+    </header>
+
+    {posts.length > 0 ? (
+      <ul class="divide-y divide-gray-200 dark:divide-gray-800">
+        {recentPosts.map((post) => (
+          <li class="py-1 first:pt-0 last:pb-0">
+            <time class="block text-[10px] leading-4 text-gray-500 dark:text-gray-400" datetime={post.data.date.toISOString()}><FormattedDate date={post.data.date} /></time>
+            <a href={`/blog/${post.slug}`} title={post.data.title} class:list={["line-clamp-2 text-[11px] leading-4 font-semibold text-gray-900 hover:text-primary-700 dark:text-gray-100 dark:hover:text-primary-300", post.hasBengali && "font-bengali"]}>
+              {post.data.title} <span class="ml-1.5 inline-flex whitespace-nowrap rounded-full border border-primary-700/40 px-1.5 py-0.5 align-middle text-[9px] font-semibold leading-none text-primary-700 dark:border-primary-300/40 dark:text-primary-300">Read <span aria-hidden="true">&rarr;</span></span>
             </a>
           </li>
         ))}
       </ul>
-      <a href="/blog" class={`${textLink} mt-3 inline-block text-sm`}>All thoughts</a>
-    </div>
-  </div>
-
-  <div class="min-w-0 space-y-5">
-    <header class="space-y-3">
-      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Current focus</h2>
-      <div class="flex items-center gap-1.5" aria-hidden="true">
-        <span class="h-1 w-7 bg-amber-500"></span>
-        <span class="h-2 w-2 rotate-45 bg-emerald-500"></span>
-        <span class="h-1 w-4 bg-gray-300 dark:bg-gray-600"></span>
-      </div>
-    </header>
-
-    {paper && (
-      <article class="rounded border border-gray-200 border-l-4 border-l-primary-500 bg-gray-50 p-4 dark:border-gray-700 dark:border-l-primary-400 dark:bg-gray-900/50 sm:p-5">
-        <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{paperLabel}</p>
-        <div class="flex flex-wrap items-center gap-2">
-          <span class={`rounded px-2 py-0.5 text-xs font-medium ${STATUS_BADGE[paper.data.status]}`}>{STATUS_LABEL[paper.data.status]}</span>
-          {paper.data.date && <span class="text-xs text-gray-500 dark:text-gray-400"><FormattedDate date={paper.data.date} /></span>}
-        </div>
-        <h3 class="mt-3 text-lg font-bold leading-6 text-gray-900 dark:text-gray-100">{paper.data.title}</h3>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">{paper.data.authors}</p>
-        {paper.data.venue && <p class="mt-1 text-sm italic text-gray-500 dark:text-gray-400">{paper.data.venue}</p>}
-        {paper.data.summary && (
-          <details class="mt-3">
-            <summary class="cursor-pointer text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">Read description</summary>
-            <p class="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-300">{paper.data.summary}</p>
-          </details>
-        )}
-        <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-          {paperPdfUrl(paper.data.url, paper.data.preprintUrl, paper.data.doi) && <a class={textLink} href={paperPdfUrl(paper.data.url, paper.data.preprintUrl, paper.data.doi)} target="_blank" rel="noopener noreferrer">Read PDF</a>}
-          {doiUrl(paper.data.doi) && <a class={textLink} href={doiUrl(paper.data.doi)} target="_blank" rel="noopener noreferrer">DOI</a>}
-          {paper.data.url && <a class={textLink} href={paper.data.url} target="_blank" rel="noopener noreferrer">Publisher</a>}
-          {paper.data.preprintUrl && <a class={textLink} href={paper.data.preprintUrl} target="_blank" rel="noopener noreferrer">Preprint</a>}
-          {paper.data.codeUrl && <a class={textLink} href={paper.data.codeUrl} target="_blank" rel="noopener noreferrer">Code</a>}
-          <a class={textLink} href={`/research#${paper.slug}`}>Research details</a>
-        </div>
-      </article>
+    ) : (
+      <p class="text-sm text-gray-500 dark:text-gray-400">Thoughts will appear here as they are published.</p>
     )}
 
-    {project && (
-      <article class="rounded border border-gray-200 border-l-4 border-l-emerald-500 bg-gray-50 p-4 dark:border-gray-700 dark:border-l-emerald-400 dark:bg-gray-900/50 sm:p-5">
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">{kindLabel[project.kind]}</span>
-          <span class="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">{stageLabel[project.stage]}</span>
-        </div>
-        <h3 class="mt-3 text-lg font-bold leading-6 text-gray-900 dark:text-gray-100">{project.title}</h3>
-        {project.summary && (
-          <details class="mt-3">
-            <summary class="cursor-pointer text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">Project details</summary>
-            <p class="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-300">{project.summary}</p>
-          </details>
-        )}
-        {project.tags.length > 0 && <ul class="mt-3 flex flex-wrap gap-2">{project.tags.map((tag) => <li class="rounded bg-white px-2 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">{tag}</li>)}</ul>}
-        <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-          {project.repoUrl && <a class={textLink} href={project.repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>}
-          {project.demoUrl && <a class={textLink} href={project.demoUrl} target="_blank" rel="noopener noreferrer">Live demo</a>}
-          <a class={textLink} href="/projects">Projects</a>
-        </div>
-      </article>
-    )}
-
-    {!paper && !project && <p class="rounded border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">Choose a research paper or project in Homepage settings to feature here.</p>}
-
-    {settings.scholarUrl && <a class={`${textLink} inline-block text-sm`} href={settings.scholarUrl} target="_blank" rel="noopener noreferrer">Google Scholar &rarr;</a>}
-  </div>
+    <a href="/blog" class={`${linkClass} mt-2 inline-flex items-center gap-1 rounded-lg border border-primary-700 px-3 py-1 text-xs dark:border-primary-300`}>
+      View all thoughts <span aria-hidden="true">&rarr;</span>
+    </a>
+  </section>
+  )}
 </section>

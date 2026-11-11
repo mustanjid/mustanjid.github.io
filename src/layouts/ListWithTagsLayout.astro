@@ -1,11 +1,12 @@
 ---
-import {type Page, type CollectionEntry, getCollection} from "astro:content";
+import {type Page, type CollectionEntry} from "astro:content";
 
 import Link from "../components/Link.astro";
 import Pagination from "../components/Pagination.astro";
 import RootLayout from "./RootLayout.astro";
 import Tag from "../components/Tag.astro";
 import FormattedDate from "../components/FormattedDate.astro";
+import ThoughtsTopicFilter from "../components/ThoughtsTopicFilter.astro";
 
 interface Props {
     title: string;
@@ -13,20 +14,13 @@ interface Props {
     page: Page<CollectionEntry<'blog'>[]>;
 }
 
-const tags = await getCollection('tags');
-const posts = await getCollection('blog');
-
-function tagCount(slug: typeof CollectionEntry<'tags'>['slug']) {
-    return posts.filter((post) => post.data.tags.some(tag => tag.slug === slug)).length;
-}
-
-function isSamePath(path: string) {
-    return Astro.url.pathname === path;
-}
-
 const {title, description, page} = Astro.props;
 const hasDefaultSlot = Astro.slots.has('default');
 const isBlogPage = Astro.url.pathname.startsWith('/blog');
+const posts = page.data.map((post) => ({
+    ...post,
+    hasBengali: /[\u0980-\u09FF]/.test(`${post.data.title} ${post.data.summary ?? ""}`),
+}));
 ---
 <RootLayout title="MB-Thoughts" {description}>
     <div class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -41,91 +35,55 @@ const isBlogPage = Astro.url.pathname.startsWith('/blog');
             )}
         </div> -->
 
-        <div class="space-y-2 pb-2 pt-2 md:space-y-2">
-            <h1
-              class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-4xl md:leading-14"
-            >
-              {title}
-            </h1>
-            <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">
-              {("Learning never stops, and the best way to grow is to share.")}
-            </p>
+        <div class="flex flex-wrap items-end justify-between gap-4 space-y-1 pb-4 pt-1">
+            <div>
+                <h1 class="text-2xl font-extrabold leading-8 tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl sm:leading-9 md:text-3xl">
+                    {isBlogPage ? "Thoughts" : title}
+                </h1>
+                <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">
+                    Learning never stops, and the best way to grow is to share.
+                </p>
+            </div>
         </div>
 
-        <div class="flex sm:space-x-24 pt-4">
-
-            <div class="hidden max-h-screen h-full sm:flex flex-wrap bg-gray-50 dark:bg-gray-900/70 shadow-md pt-5 dark:shadow-gray-800/40 rounded min-w-[280px] max-w-[280px] overflow-auto">
-                <div class="py-4 px-6">
-                    {isBlogPage ? (
-                            <h3 class="text-primary-500 font-bold uppercase">Topics</h3>
-                    ) : (
-                            <Link href="/blog"
-                                    class="font-bold uppercase text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-500"
-                            >
-                                All Tags
-                            </Link>
-                    )}
-                    <ul>
-                        {tags.map(({slug, data}) => (
-                                <li class="my-3">
-                                    {isSamePath(`/tag/${slug}`) ? (
-                                            <h3 class="inline py-2 px-3 uppercase text-sm font-bold text-primary-500">
-                                                {`${data.name} (${tagCount(slug)})`}
-                                            </h3>
-                                    ) : (
-                                            <Link
-                                                    href={`/tags/${slug}`}
-                                                    class="py-2 px-3 uppercase text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-500"
-                                                    aria-label={`View posts tagged ${data.name}`}
-                                            >
-                                                {`${data.name} (${tagCount(slug)})`}
-                                            </Link>
-                                    )}
-                                </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-            
+        <ThoughtsTopicFilter />
+        <div class="pt-4">
             <div>
-                <ul>
-                    {page.data.map(({slug, data: {date, title, summary, tags}}: CollectionEntry<'blog'>) => (
-                            <li class="py-5">
-                                <article class="space-y-2 flex flex-col xl:space-y-0">
+                <ul class="grid gap-5 sm:grid-cols-2">
+                    {posts.map(({slug, data: {date, title, summary, tags, images}, hasBengali}) => (
+                        <li class="min-w-0">
+                            <article class="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition hover:border-primary-300 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-primary-800">
+                                {images && (
+                                    <Link href={`/blog/${slug}`} aria-label={`Read "${title}"`}>
+                                        <img src={images} alt="" class="aspect-[16/9] w-full object-cover" loading="lazy" />
+                                    </Link>
+                                )}
+                                <div class="flex flex-1 flex-col p-5">
                                     <dl>
                                         <dt class="sr-only">Published on</dt>
-                                        <dd class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                                        <dd class="text-sm font-medium leading-5 text-gray-500 dark:text-gray-400">
                                             <FormattedDate date={date}/>
                                         </dd>
                                     </dl>
-                                    <div class="">
-                                        <div>
-                                            <h3 class="text-2xl font-bold leading-8 tracking-tight">
-                                                <Link href={`/blog/${slug}`} class="text-gray-900 dark:text-gray-100">
-                                                    {title}
-                                                </Link>
-                                            </h3>
-                                            <div class="flex flex-wrap py-2">
-                                                {tags.map(({slug}) =>
-                                                        <Tag slug={slug}/>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div class="prose max-w-none text-gray-500 dark:text-gray-400">
-                                            {summary}
-                                        </div>
-                                        <div class="text-base font-medium leading-2 flex justify-center">
-                                            <Link
-                                                    href={`/blog/${slug}`}
-                                                    class="text-primary-500 text-base hover:text-primary-600 dark:hover:text-primary-400"
-                                                    aria-label={`Read "${title}"`}
-                                            >
-                                                Read more &rarr;
-                                            </Link>
-                                        </div>
+                                    <h3 class="mt-2 text-xl font-bold leading-7 tracking-tight">
+                                        <Link href={`/blog/${slug}`} class:list={["text-gray-900 hover:text-primary-700 dark:text-gray-100 dark:hover:text-primary-300", hasBengali && "font-bengali"]}>
+                                            {title}
+                                        </Link>
+                                    </h3>
+                                    <div class="flex flex-wrap gap-y-2 pt-3">
+                                        {tags.map(({slug}) => <Tag slug={slug}/>)}
                                     </div>
-                                </article>
-                            </li>
+                                    {summary && <p class:list={["mt-3 line-clamp-3 text-sm leading-6 text-gray-600 dark:text-gray-300", hasBengali && "font-bengali"]}>{summary}</p>}
+                                    <Link
+                                        href={`/blog/${slug}`}
+                                        class="mt-auto inline-flex pt-4 text-sm font-semibold text-primary-700 hover:underline dark:text-primary-300"
+                                        aria-label={`Read "${title}"`}
+                                    >
+                                        Read more <span class="ml-1" aria-hidden="true">&rarr;</span>
+                                    </Link>
+                                </div>
+                            </article>
+                        </li>
                     ))}
                 </ul>
                 {(page.url.next || page.url.prev) && (

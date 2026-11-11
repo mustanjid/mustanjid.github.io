@@ -2,13 +2,21 @@
 import { SITE_METADATA } from "@/consts";
 import RootLayout from "@/layouts/RootLayout.astro";
 import AuthorLayoutHome from "@/pages/aboutHero.astro";
+import CurrentResearch from "@/components/CurrentResearch.astro";
 import HomeCards from "@/components/HomeCards.astro";
-import TechNews from "@/components/TechNews.astro";
 ---
 
-<RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description}>
+<RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description} wide>
   <AuthorLayoutHome />
-
-  <HomeCards />
-  <TechNews />
+  <section aria-label="Current research and latest thoughts" class="mt-2 grid items-center gap-4 md:grid-cols-4">
+    <div class="min-w-0 md:col-span-3">
+      <CurrentResearch />
+    </div>
+    <div class="min-w-0 md:col-span-1">
+      <HomeCards view="thoughts" />
+    </div>
+  </section>
+  <div class="mt-8">
+    <HomeCards view="publications" />
+  </div>
 </RootLayout>

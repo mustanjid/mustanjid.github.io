@@ -1,12 +1,23 @@
 {
   "rightNow": {
-    "enabled": true,
+    "enabled": false,
     "text": "Learning Sveltia CMS for managing my own portfolio",
     "updatedAt": "2026-11-09",
     "url": ""
   },
   "news": {
     "enabled": true
+  },
+  "announcements": {
+    "enabled": true,
+    "items": [
+      {
+        "title": "Bringing my research and engineering work together",
+        "description": "I’m learning Sveltia CMS while updating this portfolio to share my network and infrastructure work, research interests, and what I’m learning and building.",
+        "date": "2026-11-10",
+        "url": ""
+      }
+    ]
   },
   "achievement": {
     "enabled": false,
@@ -16,15 +27,23 @@
     "url": "",
     "expires": ""
   },
-  "latestCard": {
-    "showResearch": true
-  },
   "scholarUrl": "https://scholar.google.com/scholar?q=%22Md+Al+Mustanjid%22",
   "spotlight": {
     "kind": "research",
-    "stage": "idea",
-    "title": "A paper on drug desingn",
-    "summary": "",
+    "stage": "in-progress",
+    "title": "COVID-19 and Physiological Disorders",
+    "summary": "This work combines bioinformatics and systems-biology analyses to study how COVID-19 may interact with physiological disorders and identify potential therapeutic targets.",
+    "image": "",
+    "areas": [
+      "Bioinformatics",
+      "Systems biology",
+      "Disease pathways"
+    ],
+    "tools": [
+      "Transcriptomic analysis",
+      "Pathway analysis",
+      "Network biology"
+    ],
     "tags": [],
     "repoUrl": "",
     "demoUrl": ""

@@ -1,3 +1,11 @@
-<section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0">
-    <slot/>
+---
+interface Props {
+    wide?: boolean;
+}
+
+const {wide = false} = Astro.props;
+---
+
+<section class:list={["mx-auto max-w-3xl px-4 sm:px-6 xl:px-0", wide ? "xl:max-w-6xl" : "xl:max-w-5xl"]}>
+    <slot />
 </section>

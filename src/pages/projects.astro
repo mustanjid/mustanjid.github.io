@@ -1,29 +1,125 @@
 ---
 import Card from "@/components/Card.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
+import { getResearchEntries } from "@/functions";
 import { PROJECTS } from "../projects";
 
+const researchProjects = await getResearchEntries();
+const latestResearch = researchProjects[0];
+const latestDevelopment = PROJECTS[0];
 ---
 
 <RootLayout title="MB-Projects">
     <div class="divide-y divide-gray-200 dark:divide-gray-700">
-        <div class="space-y-2 pb-2 pt-2 md:space-y-2">
-            <h1
-              class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-4xl md:leading-14"
-            >
-              {("Projects")}
+        <div class="space-y-1 pb-1 pt-1 md:space-y-1">
+            <h1 class="text-2xl font-extrabold leading-8 tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl sm:leading-9 md:text-3xl">
+                Projects
             </h1>
             <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">
-              {("Showcasing personal projects and tools crafted through independent development")}
+                Research and development projects, all in one place.
             </p>
         </div>
 
-        <div class="container py-4">
-            <div class="-m-4 flex flex-wrap">
-                {PROJECTS.map((d) => (
-                        <Card title={d.title} description={d.description} imgSrc={d.imgSrc} projectdesc={d.projectdesc} srccode={d.srccode} url={d.url} stack={d.stack}/>
-                ))}
-            </div>
+        <div class="space-y-6 py-8">
+            <nav class="flex flex-wrap gap-2" aria-label="Filter projects">
+                <button type="button" data-project-filter="latest" aria-pressed="true" class="rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white">Latest</button>
+                <button type="button" data-project-filter="research" aria-pressed="false" class="rounded-md px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Research</button>
+                <button type="button" data-project-filter="development" aria-pressed="false" class="rounded-md px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Development &amp; DevOps</button>
+            </nav>
+
+            <section data-project-panel="latest" aria-label="Latest projects" class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                {latestResearch ? (
+                    <article class="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/50">
+                        {latestResearch.data.image ? (
+                            <img src={latestResearch.data.image} alt="" class="h-40 w-full object-cover sm:h-44" loading="lazy" />
+                        ) : (
+                            <div class="flex h-40 items-end bg-gradient-to-br from-blue-100 via-indigo-100 to-emerald-100 p-5 dark:from-blue-950 dark:via-indigo-950 dark:to-emerald-950 sm:h-44">
+                                <span class="text-sm font-bold uppercase tracking-[0.2em] text-primary-800 dark:text-primary-200">Research</span>
+                            </div>
+                        )}
+                        <div class="flex flex-1 flex-col items-start p-5">
+                            <div class="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                <span class="rounded-full bg-primary-50 px-3 py-1 font-medium capitalize text-primary-700 dark:bg-primary-950 dark:text-primary-300">{latestResearch.data.status.replace("-", " ")}</span>
+                                {latestResearch.data.date && <time datetime={latestResearch.data.date.toISOString()}>{latestResearch.data.date.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</time>}
+                            </div>
+                            <h2 class="mt-3 text-xl font-bold leading-6 text-gray-900 dark:text-gray-100">{latestResearch.data.title}</h2>
+                            {latestResearch.data.summary && <p class="mt-3 line-clamp-4 text-sm leading-6 text-gray-600 dark:text-gray-300">{latestResearch.data.summary}</p>}
+                            <a class="mt-auto pt-4 font-semibold text-primary-600 hover:underline dark:text-primary-400" href={`/projects/research/${latestResearch.slug}`}>Project details <span aria-hidden="true">&rarr;</span></a>
+                        </div>
+                    </article>
+                ) : (
+                    <article class="rounded-xl border border-gray-200 p-6 text-gray-500 dark:border-gray-800 dark:text-gray-400">Research projects coming soon.</article>
+                )}
+
+                {latestDevelopment ? (
+                    <Card slug={latestDevelopment.slug} title={latestDevelopment.title} description={latestDevelopment.description} imgSrc={latestDevelopment.imgSrc} projectdesc={latestDevelopment.projectdesc} srccode={latestDevelopment.srccode} url={latestDevelopment.url} stack={latestDevelopment.stack} />
+                ) : (
+                    <article class="rounded-xl border border-gray-200 p-6 text-gray-500 dark:border-gray-800 dark:text-gray-400">Development projects coming soon.</article>
+                )}
+            </section>
+
+            <section data-project-panel="research" aria-label="All research projects" class="hidden">
+                {researchProjects.length > 0 ? (
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        {researchProjects.map(({ data, slug }) => (
+                            <article class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50">
+                                {data.image && <img src={data.image} alt="" class="aspect-[3/2] w-full object-cover" loading="lazy" />}
+                                <div class="p-5">
+                                    <div class="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                        <span class="rounded-full bg-primary-50 px-3 py-1 font-medium capitalize text-primary-700 dark:bg-primary-950 dark:text-primary-300">{data.status.replace("-", " ")}</span>
+                                        {data.date && <time datetime={data.date.toISOString()}>{data.date.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</time>}
+                                    </div>
+                                    <h2 class="mt-3 text-xl font-bold leading-6 text-gray-900 dark:text-gray-100">{data.title}</h2>
+                                    {data.summary && <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">{data.summary}</p>}
+                                    {data.tags.length > 0 && (
+                                        <ul class="mt-4 flex flex-wrap gap-1.5">
+                                            {data.tags.map((tag) => <li class="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">{tag}</li>)}
+                                        </ul>
+                                    )}
+                                    <a class="mt-4 inline-block text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400" href={`/projects/research/${slug}`}>Project details <span aria-hidden="true">&rarr;</span></a>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                ) : (
+                    <p class="text-gray-500 dark:text-gray-400">No research projects are available yet.</p>
+                )}
+            </section>
+
+            <section data-project-panel="development" aria-label="All development projects" class="hidden">
+                {PROJECTS.length > 0 ? (
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        {PROJECTS.map((project) => (
+                            <Card slug={project.slug} title={project.title} description={project.description} imgSrc={project.imgSrc} projectdesc={project.projectdesc} srccode={project.srccode} url={project.url} stack={project.stack}/>
+                        ))}
+                    </div>
+                ) : (
+                    <p class="text-gray-500 dark:text-gray-400">No development projects are available yet.</p>
+                )}
+            </section>
         </div>
     </div>
 </RootLayout>
+
+<script>
+    const filterButtons = document.querySelectorAll<HTMLButtonElement>("[data-project-filter]");
+    const projectPanels = document.querySelectorAll<HTMLElement>("[data-project-panel]");
+    const selectedButtonClass = "rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white";
+    const unselectedButtonClass = "rounded-md px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800";
+
+    filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const selectedFilter = button.dataset.projectFilter;
+
+            filterButtons.forEach((item) => {
+                const isSelected = item === button;
+                item.setAttribute("aria-pressed", String(isSelected));
+                item.className = isSelected ? selectedButtonClass : unselectedButtonClass;
+            });
+
+            projectPanels.forEach((panel) => {
+                panel.classList.toggle("hidden", panel.dataset.projectPanel !== selectedFilter);
+            });
+        });
+    });
+</script>

@@ -15,6 +15,7 @@ module.exports = {
             },
             fontFamily: {
                 sans: ['Space Grotesk', ...fontFamily.sans],
+                display: ['Space Grotesk', ...fontFamily.sans],
             },
             colors: {
                 primary: colors.blue,

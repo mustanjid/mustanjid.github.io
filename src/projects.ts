@@ -1,5 +1,6 @@
 export const PROJECTS = [
     {
+        slug: 'job-space',
         title: 'Job Space',
         description: `A modern job board platform where employers post opportunities and job seekers find out jobs in real-time. Features include role-based access control, live notifications, and an admin dashboard for analytics. Users can search jobs, and employers manage postings.`,
         imgSrc: 'https://picsum.photos/1000/1000',
@@ -9,6 +10,7 @@ export const PROJECTS = [
         stack: ['Laravel 11', 'Livewire', 'MySQL', 'Tailwind', 'Pusher'],
     },
     {
+        slug: 'travo',
         title: 'Travo',
         description: `A basic online blog where travellers can share their adventures. Adventures would be shared by stories including images, and places. One traveller can comment on other travellers' posts & rate them, as well as share. 
         All of you need to do is just sign up for all the activities.`,
@@ -28,6 +30,7 @@ export const PROJECTS = [
     //     stack: ['Node', 'Express', 'MongoDB'],
     // },
     {
+        slug: 'github-user-search',
         title: 'Github User Search',
         description: `A simple app to search GitHub users with their username or email. Just put the username in the textbox, hit the search button and the result will be shown below.`,
         imgSrc: 'https://github.com/mustanjid/githubProfileSearch/raw/main/public/promo.png',
@@ -37,6 +40,7 @@ export const PROJECTS = [
         stack: ['Js', 'React', 'Github API'],
     },
     {
+        slug: 'quote-gen',
         title: 'QuoteGen',
         description: `This a simple random quote generator apps with a great user interface, also sharing options available for twitter only.`,
         imgSrc: 'https://github.com/mustanjid/QuoteGen/raw/main/public/promogen.png',

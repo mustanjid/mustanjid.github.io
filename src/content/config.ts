@@ -64,9 +64,13 @@ const research = defineCollection({
         citationDetails: z.string().optional(),
         date: z.coerce.date().optional(),     // publication date, or submission date for pending work
         doi: z.string().optional(),
+        pdfUrl: z.string().url().optional(),
         url: z.string().url().optional(),    // publisher page
         preprintUrl: z.string().url().optional(), // arXiv / bioRxiv / SSRN
         codeUrl: z.string().url().optional(),
+        datasetUrl: z.string().url().optional(),
+        projectUrl: z.string().url().optional(),
+        image: z.string().optional(),
         summary: z.string().optional(),      // 1-2 plain-language sentences
         tags: z.array(z.string()).default([]),
         featured: z.boolean().default(false),

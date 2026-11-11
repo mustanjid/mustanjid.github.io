@@ -3,9 +3,6 @@ import {getEntry} from "astro:content"
 import AuthorLayoutHome from "@/layouts/AuthorLayoutHome.astro";
 
 const author = await getEntry('authors', 'default')
-const {Content} = await author.render();
 ---
 
-<AuthorLayoutHome content={author.data}>
-	<Content />
-</AuthorLayoutHome>
+<AuthorLayoutHome content={author.data} />

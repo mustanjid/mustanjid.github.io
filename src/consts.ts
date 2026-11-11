@@ -6,7 +6,7 @@
 export const SITE_METADATA = {
     title: 'Mustanjid\'s Basket (MB)',
     headerTitle: 'Mustanjid\'s Basket (MB)',
-    description: 'Md Al Mustanjid portfolio showcasing expertise in React, Laravel, and full-stack development.',
+    description: 'Md Al Mustanjid is a Support Engineer (NetOps), researcher, and bioinformatics enthusiast.',
     language: 'en-us',
     theme: 'system', // Options: system, light, dark, Does not work yet
     siteUrl: 'https://mustanjid.github.io/',
@@ -106,9 +106,8 @@ export const ITEMS_PER_PAGE = 6;
 export const NAVIGATION = [
     {href: '/', title: 'Home'},
     {href: '/blog', title: 'Thoughts'},
-    {href: '/tags', title: 'Tags'},
     {href: '/research', title: 'Research'},
     {href: '/projects', title: 'Projects'},
     {href: '/award', title: 'Achievement'},
-    {href: '/about', title: 'About'},
+    {href: '/moments', title: 'Moments'},
 ]

@@ -1,148 +1,171 @@
 ---
-import {Image} from "astro:assets";
-import SectionContainer from "../components/SectionContainer.astro";
-import PageTitle from "../components/PageTitle.astro";
-import Link from "../components/Link.astro";
-import RootLayout from "./RootLayout.astro";
-import {type CollectionEntry, getEntries} from "astro:content";
+import { getCollection, type CollectionEntry, getEntries } from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
-import Tag from "../components/Tag.astro";
-import ScrollTopAndComments from "../components/ScrollTopAndComments.astro";
-import SocialShare from "./share/SocialShare.astro";
+import Link from "../components/Link.astro";
 import PostComments from "./PostComments.astro";
+import SocialShare from "./share/SocialShare.astro";
+import ScrollTopAndComments from "../components/ScrollTopAndComments.astro";
+import RootLayout from "./RootLayout.astro";
+import { excludeDrafts, sortBlogPosts } from "../functions";
 
 interface Props {
-    post: CollectionEntry<'blog'>;
-    next?: CollectionEntry<'blog'>;
-    prev?: CollectionEntry<'blog'>;
+  post: CollectionEntry<"blog">;
+  next?: CollectionEntry<"blog">;
+  prev?: CollectionEntry<"blog">;
 }
 
-const {post, next, prev} = Astro.props as Props;
-const authors: CollectionEntry<'authors'>[] = await getEntries(post.data.authors);
-const tags: CollectionEntry<'tags'> = await getEntries(post.data.tags);
-const related: CollectionEntry<'blog'>[] = await getEntries(post.data.related);
-
-// TODO: Later add support for headings and remarkPluginFrontmatter
-const {Content, headings, remarkPluginFrontmatter} = await post.render();
+const { post, next, prev } = Astro.props as Props;
+const authors: CollectionEntry<"authors">[] = await getEntries(post.data.authors);
+const tags: CollectionEntry<"tags">[] = await getEntries(post.data.tags);
+const explicitRelated: CollectionEntry<"blog">[] = await getEntries(post.data.related);
+const postTagSlugs = new Set(post.data.tags.map(({ slug }) => slug));
+const relatedByTag = sortBlogPosts(await getCollection("blog", excludeDrafts))
+  .filter(({ slug, data }) => slug !== post.slug && data.tags.some(({ slug: tagSlug }) => postTagSlugs.has(tagSlug)))
+  .slice(0, 4);
+const related = [...explicitRelated, ...relatedByTag]
+  .filter((entry, index, entries) => entry.slug !== post.slug && entries.findIndex(({ slug }) => slug === entry.slug) === index)
+  .slice(0, 4);
+const authorNames = authors.map(({ data }) => data.name).join(", ");
+const { Content, headings } = await post.render();
+const hasBengali = /[\u0980-\u09FF]/.test(`${post.data.title} ${post.body}`);
+const readableBody = post.body
+  .replace(/```[\s\S]*?```/g, " ")
+  .replace(/`[^`]*`/g, " ")
+  .replace(/<[^>]*>/g, " ")
+  .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+const readingTime = Math.max(1, Math.ceil(readableBody.trim().split(/\s+/).filter(Boolean).length / 220));
 ---
-<RootLayout title={post.data.title} description={post.data.summary}>
-    <SectionContainer>
-        <ScrollTopAndComments />
-        <article>
-            <div class="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
-                <header class="pt-6 xl:pb-6">
-                    <div class="space-y-1 text-center">
-                        <dl class="space-y-10">
-                            <div>
-                                <dt class="sr-only">Published on</dt>
-                                <dd class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                                    <FormattedDate date={post.data.date}/>
-                                </dd>
-                            </div>
-                        </dl>
-                        <div>
-                            <PageTitle>{post.data.title}</PageTitle>
-                        </div>
-                    </div>
-                </header>
-                
-                <div class="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
-                    <dl class="pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
-                        <dt class="sr-only">Authors</dt>
-                        <dd>
-                            <ul class="flex flex-wrap justify-center items-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
-                                <!--TODO: Add support for multiple authors-->
-                                {authors.map(({data, slug}) => (
-                                        <li class="flex items-center space-x-2">
-                                            {data.avatar && (
-                                                    <Image src={data.avatar} width={38} height={38} alt="avatar"
-                                                           class="h-10 w-10 rounded-full"/>
-                                            )}
-                                            <dl class="whitespace-nowrap text-sm font-medium leading-5">
-                                                <dt class="sr-only">Name</dt>
-                                                <dd class="text-gray-900 dark:text-gray-100">{data.name}</dd>
-                                            </dl>
-                                        </li>
-                                ))}
-                            </ul>
-                        </dd>
-                    </dl>
-                    
-                    <div class="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
-                        <div class="prose max-w-none pb-8 pt-10 dark:prose-invert">
-                            <slot/>
-                            <SocialShare></SocialShare>
-                            <Content/>
-                            <SocialShare></SocialShare>
-                            <PostComments/>
-                        </div>
-                    </div>
 
-                    <footer>
-                        <div class="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
-                            {tags && (
-                                    <div class="py-4 xl:py-8">
-                                        <h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                                            Tags
-                                        </h2>
-                                        <div class="flex flex-wrap">
-                                            {tags.map((tag) => (
-                                                    <Tag tag={tag}/>
-                                            ))}
-                                        </div>
-                                    </div>
-                            )}
-                            {(next || prev) && (
-                                    <div class="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
-                                        {prev && (
-                                                <div>
-                                                    <h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                                                        Previous Article
-                                                    </h2>
-                                                    <div class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                                                        <Link href={`/blog/${prev.slug}`}>{prev.data.title}</Link>
-                                                    </div>
-                                                </div>
-                                        )}
-                                        {next && (
-                                                <div>
-                                                    <h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                                                        Next Article
-                                                    </h2>
-                                                    <div class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                                                        <Link href={`/blog/${next.slug}`}>{next.data.title}</Link>
-                                                    </div>
-                                                </div>
-                                        )}
-                                    </div>
-                            )}
-                            {related.length > 0 && (
-                                    <div class="py-4 xl:pb-8">
-                                        <h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                                            Related Articles
-                                        </h2>
-                                        <ul class="flex flex-wrap gap-2 xl:space-x-0 xl:space-y-0">
-                                            {related.map((post) => (
-                                                    <li class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                                                        <Link href={`/blog/${post.slug}`}>{post.data.title}</Link>
-                                                    </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                            )}
-                        </div>
-                        <div class="pt-4 xl:pt-8">
-                            <Link
-                                    href="/blog"
-                                    class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                                    aria-label="Back to the blog"
-                            >
-                                &larr; Back to the blog
-                            </Link>
-                        </div>
-                    </footer>
-                </div>
-            </div>
-        </article>
-    </SectionContainer>
+<RootLayout title={post.data.title} description={post.data.summary} wide>
+  <ScrollTopAndComments />
+
+  <nav aria-label="Breadcrumb" class="py-4 text-sm">
+    <ol class="flex flex-wrap items-center gap-2 text-gray-500 dark:text-gray-400">
+      <li><Link href="/blog" class="hover:text-primary-700 dark:hover:text-primary-300">Thoughts</Link></li>
+      <li aria-hidden="true">/</li>
+      <li class="line-clamp-1 font-medium text-gray-800 dark:text-gray-200" aria-current="page">{post.data.title}</li>
+    </ol>
+  </nav>
+
+  <article>
+    <header class="max-w-3xl py-6 sm:py-8">
+      <h1 class:list={["text-3xl font-bold leading-tight tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl", hasBengali && "font-bengali"]}>
+        {post.data.title}
+      </h1>
+      <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
+        <span>{post.data.lastmod ? "Last updated on" : "Published on"}</span>
+        <time datetime={(post.data.lastmod ?? post.data.date).toISOString()}>
+          <FormattedDate date={post.data.lastmod ?? post.data.date} />
+        </time>
+        <span aria-hidden="true">·</span>
+        <span>{readingTime} min read</span>
+        {authorNames && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>{authorNames}</span>
+          </>
+        )}
+      </div>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <Link
+            href={`/tags/${tag.slug}`}
+            class="rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700 dark:bg-primary-950 dark:text-primary-300"
+          >
+            {tag.data.name}
+          </Link>
+        ))}
+      </div>
+    </header>
+
+    <div class="mx-auto grid max-w-6xl gap-10 xl:grid-cols-[minmax(0,1fr)_16rem] xl:gap-14">
+      <div class="min-w-0">
+        {post.data.images && (
+          <figure class="mb-8 overflow-hidden rounded-2xl">
+            <img
+              src={post.data.images}
+              alt=""
+              class="aspect-[16/9] w-full object-cover"
+              loading="eager"
+            />
+          </figure>
+        )}
+
+        <div class:list={["post-content prose max-w-none pb-10 dark:prose-invert", hasBengali && "font-bengali"]}>
+          <slot />
+          <Content />
+        </div>
+
+        <footer class="space-y-8 border-t border-gray-200 py-8 dark:border-gray-800">
+          <SocialShare />
+
+          {related.length > 0 && (
+            <section aria-labelledby="related-thoughts-title">
+              <h2 id="related-thoughts-title" class="text-lg font-bold text-gray-900 dark:text-gray-100">
+                Related thoughts
+              </h2>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">More posts connected by these topics.</p>
+              <ul class="mt-3 grid gap-3 sm:grid-cols-2">
+                {related.map((relatedPost) => (
+                  <li>
+                    <Link
+                      href={`/blog/${relatedPost.slug}`}
+                      class="block rounded-xl border border-gray-200 p-4 font-medium text-gray-800 transition hover:border-primary-400 hover:text-primary-700 dark:border-gray-800 dark:text-gray-200 dark:hover:border-primary-700 dark:hover:text-primary-300"
+                    >
+                      {relatedPost.data.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {(prev || next) && (
+            <nav aria-label="More thoughts" class="grid gap-4 sm:grid-cols-2">
+              {prev ? (
+                <Link
+                  href={`/blog/${prev.slug}`}
+                  class="rounded-xl border border-gray-200 p-4 transition hover:border-primary-400 dark:border-gray-800 dark:hover:border-primary-700"
+                >
+                  <span class="block text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Previous</span>
+                  <span class="mt-1 block font-semibold text-gray-900 dark:text-gray-100">{prev.data.title}</span>
+                </Link>
+              ) : <span />}
+              {next && (
+                <Link
+                  href={`/blog/${next.slug}`}
+                  class="rounded-xl border border-gray-200 p-4 text-left transition hover:border-primary-400 sm:text-right dark:border-gray-800 dark:hover:border-primary-700"
+                >
+                  <span class="block text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Next</span>
+                  <span class="mt-1 block font-semibold text-gray-900 dark:text-gray-100">{next.data.title}</span>
+                </Link>
+              )}
+            </nav>
+          )}
+
+          <PostComments />
+        </footer>
+      </div>
+
+      {headings.length > 0 && (
+        <aside class="order-first xl:order-last">
+          <nav aria-labelledby="on-this-page-title" class="rounded-lg bg-gray-50 p-5 dark:bg-gray-900/60 xl:sticky xl:top-32">
+            <h2 id="on-this-page-title" class="text-sm font-bold text-gray-900 dark:text-gray-100">On this page</h2>
+            <ol class="mt-3 space-y-2 border-l border-gray-200 pl-3 text-sm dark:border-gray-700">
+              {headings.map((heading) => (
+                <li class:list={[heading.depth === 3 && "pl-3", heading.depth >= 4 && "pl-6"]}>
+                  <a
+                    href={`#${heading.slug}`}
+                    class="text-gray-600 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-300"
+                  >
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </aside>
+      )}
+    </div>
+  </article>
 </RootLayout>

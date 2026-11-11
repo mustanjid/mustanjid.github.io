@@ -1,0 +1,37 @@
+---
+import { settings } from "@/data/settings";
+import FormattedDate from "@/components/FormattedDate.astro";
+import RightNow from "@/components/RightNow.astro";
+
+const showRightNow = settings.rightNow.enabled && settings.rightNow.text.trim().length > 0;
+const announcements = settings.announcements.enabled
+  ? [...settings.announcements.items]
+      .sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0))
+      .slice(0, 4)
+  : [];
+---
+
+{(showRightNow || announcements.length > 0) && (
+  <section aria-labelledby="announcements-heading" class="mt-8">
+    <header class="mb-4 border-b border-gray-200 pb-3 dark:border-gray-700">
+      <h2 id="announcements-heading" class="home-section-heading text-xl font-bold text-blue-700 dark:text-blue-300">Current Focus &amp; Updates</h2>
+    </header>
+    <div class="space-y-4">
+      {showRightNow && <RightNow />}
+      {announcements.length > 0 && (
+        <ul class:list={["divide-y divide-gray-200 dark:divide-gray-700", showRightNow && "border-t border-gray-200 dark:border-gray-700"]}>
+          {announcements.map((announcement) => (
+            <li class="py-4 first:pt-0 last:pb-0">
+              <article>
+                {announcement.date && <p class="text-sm text-gray-500 dark:text-gray-400"><FormattedDate date={announcement.date} /></p>}
+                <h3 class="mt-1 text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">{announcement.title}</h3>
+                {announcement.description && <p class="mt-2 text-base leading-6 text-gray-600 dark:text-gray-300">{announcement.description}</p>}
+                {announcement.url && <a class="mt-2 inline-flex items-center gap-1 font-medium text-primary-600 hover:underline dark:text-primary-400" href={announcement.url} target={announcement.url.startsWith("http") ? "_blank" : undefined} rel={announcement.url.startsWith("http") ? "noopener noreferrer" : undefined}>Learn more <span aria-hidden="true">&rarr;</span></a>}
+              </article>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+)}

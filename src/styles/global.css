@@ -18,6 +18,59 @@
     @apply my-5;
 }
 
+.prose {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.post-content.prose p,
+.post-content.prose li {
+    font-size: 1.125rem;
+    line-height: 1.8;
+}
+
+.font-bengali {
+    font-family: "Noto Sans Bengali", "Space Grotesk", sans-serif;
+}
+
+.home-section-heading {
+    animation: section-heading-appear 500ms ease-out both;
+    text-shadow: 0 2px 8px rgb(59 130 246 / 22%);
+}
+
+.dark .home-section-heading {
+    text-shadow: 0 2px 8px rgb(147 197 253 / 24%);
+}
+
+@keyframes section-heading-appear {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-section-heading {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
 /* https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied */
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
