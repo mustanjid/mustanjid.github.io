@@ -18,8 +18,6 @@ export const SOCIAL_LABELS: Record<(typeof SOCIAL_KINDS)[number], string> = {
   twitter: "X / Twitter", facebook: "Facebook", youtube: "YouTube", mastodon: "Mastodon", mendely: "Mendeley", mail: "Email",
 };
 
-export const MOTIFS = ["art", "gears", "city", "leaf", "lake", "mountains"] as const;
-
 const site = z.object({
   title: z.string().min(1),
   headerTitle: z.string().min(1),
@@ -78,7 +76,6 @@ const moments = z.object({
     caption: z.string().min(1),
     writeup: text,
     category: z.string().min(1),
-    motif: z.enum(MOTIFS).default("art"),
   })).default([]),
 });
 

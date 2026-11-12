@@ -4,15 +4,6 @@ import { pagesData, momentsData } from "@/data/content";
 import MomentMotif from "@/components/MomentMotif.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
 
-const accents: Record<string, string> = {
-  art: "text-rose-500/40 dark:text-rose-300/30",
-  gears: "text-amber-600/40 dark:text-amber-300/30",
-  city: "text-sky-500/40 dark:text-sky-300/30",
-  leaf: "text-orange-500/40 dark:text-orange-300/30",
-  lake: "text-cyan-600/40 dark:text-cyan-300/30",
-  mountains: "text-indigo-500/40 dark:text-indigo-300/30",
-};
-
 const categories = (await getCollection("moment-categories"))
   .map(({ id, data }) => ({ id: id.replace(/\.mdx?$/, ""), data }))
   .sort((a, b) => a.data.name.localeCompare(b.data.name));
@@ -22,7 +13,7 @@ const galleryItems = momentsData.items.map((item) => {
   if (!categoryLabel) {
     throw new Error(`Unknown Moments category "${item.category}" for "${item.caption}".`);
   }
-  return { ...item, categoryLabel, accent: accents[item.motif] };
+  return { ...item, categoryLabel };
 });
 const usedCategories = categories.filter(({ id }) =>
   momentsData.items.some((item) => item.category === id),
@@ -86,7 +77,7 @@ const usedCategories = categories.filter(({ id }) =>
               ))}
             </div>
             <div class="relative isolate min-h-32 max-w-[36rem] py-2">
-              <MomentMotif motif={item.motif} class={item.accent} />
+              <MomentMotif category={item.category} />
               <div class="relative z-10">
                 <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{item.categoryLabel}</p>
                 <h2 class="mt-2 text-xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-2xl">{item.caption}</h2>

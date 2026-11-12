@@ -229,17 +229,7 @@ collections:
                 search_fields: [name]
                 value_field: "{{slug}}"
                 display_fields: [name]
-              - label: "Background sketch"
-                name: motif
-                widget: select
-                default: art
-                options:
-                  - { label: "Art / mural", value: art }
-                  - { label: "Gears", value: gears }
-                  - { label: "City", value: city }
-                  - { label: "Leaf", value: leaf }
-                  - { label: "Lake", value: lake }
-                  - { label: "Mountains", value: mountains }
+
 
       - name: cv
         label: "CV page"
