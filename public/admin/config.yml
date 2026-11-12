@@ -192,7 +192,7 @@ collections:
         label: "Moments gallery"
         file: src/data/moments.json
         format: json
-        media_folder: public/static/images
+        media_folder: /public/static/images
         public_folder: /static/images
         fields:
           - { label: "Intro line", name: intro, widget: string, required: false }
@@ -202,10 +202,33 @@ collections:
             required: false
             summary: "{{fields.caption}}"
             fields:
-              - { label: "Photo", name: src, widget: image }
+              - label: "Photos"
+                name: images
+                widget: image
+                multiple: true
+                max: 2
+                required: true
+                hint: "Add up to two photos for this moment. Each is converted to high-quality WebP, resized to at most 2560px, and limited to 1 MB."
+                media_libraries:
+                  default:
+                    config:
+                      max_file_size: 1000000
+                      transformations:
+                        raster_image:
+                          format: webp
+                          quality: 90
+                          width: 2560
+                          height: 2560
               - { label: "Photo description (alt text)", name: alt, widget: string, required: false }
               - { label: "Caption", name: caption, widget: string }
               - { label: "Write-up", name: writeup, widget: text, required: false }
+              - label: "Category"
+                name: category
+                widget: relation
+                collection: moment-categories
+                search_fields: [name]
+                value_field: "{{slug}}"
+                display_fields: [name]
               - label: "Background sketch"
                 name: motif
                 widget: select
@@ -425,6 +448,17 @@ collections:
               - { label: "Empty", name: empty, widget: string }
 
   # ---------------------------------------------------------------- Projects (research, development, devops)
+  - name: moment-categories
+    label: "Moment categories"
+    folder: src/content/moment-categories
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: [name]
+    fields:
+      - { label: "Name", name: name, widget: string }
+
   - name: projects
     label: "Projects"
     folder: src/content/projects

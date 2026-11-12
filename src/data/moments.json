@@ -2,17 +2,19 @@
   "intro": "Time never holds us but moment does... what we cherish in our heart forever",
   "items": [
     {
-      "src": "static/images/convo.png",
+      "images": ["/static/images/convo.webp"],
       "alt": "Convocation Day",
       "caption": "The day I realized learning like a free bird never ends",
       "writeup": "",
+      "category": "events",
       "motif": "lake"
     },
     {
-      "src": "/static/images/1794513697037.jpg",
+      "images": ["/static/images/1794513697037.webp"],
       "alt": "",
       "caption": "china clay heal",
       "writeup": "",
+      "category": "places",
       "motif": "mountains"
     }
   ]

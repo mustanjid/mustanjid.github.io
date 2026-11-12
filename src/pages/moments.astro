@@ -1,7 +1,8 @@
 ---
-import { pagesData } from "@/data/content";
+import { getCollection } from "astro:content";
+import { pagesData, momentsData } from "@/data/content";
+import MomentMotif from "@/components/MomentMotif.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
-import { momentsData } from "@/data/content";
 
 const accents: Record<string, string> = {
   art: "text-rose-500/40 dark:text-rose-300/30",
@@ -11,7 +12,21 @@ const accents: Record<string, string> = {
   lake: "text-cyan-600/40 dark:text-cyan-300/30",
   mountains: "text-indigo-500/40 dark:text-indigo-300/30",
 };
-const galleryItems = momentsData.items.map((item) => ({ ...item, accent: accents[item.motif] }));
+
+const categories = (await getCollection("moment-categories"))
+  .map(({ id, data }) => ({ id: id.replace(/\.mdx?$/, ""), data }))
+  .sort((a, b) => a.data.name.localeCompare(b.data.name));
+const categoryNames = new Map(categories.map(({ id, data }) => [id, data.name]));
+const galleryItems = momentsData.items.map((item) => {
+  const categoryLabel = categoryNames.get(item.category);
+  if (!categoryLabel) {
+    throw new Error(`Unknown Moments category "${item.category}" for "${item.caption}".`);
+  }
+  return { ...item, categoryLabel, accent: accents[item.motif] };
+});
+const usedCategories = categories.filter(({ id }) =>
+  momentsData.items.some((item) => item.category === id),
+);
 ---
 
 <RootLayout title={pagesData.moments.seoTitle} description={pagesData.moments.seoDescription} wide>
@@ -22,70 +37,132 @@ const galleryItems = momentsData.items.map((item) => ({ ...item, accent: accents
     </p>
   </header>
 
-  <ul class="mt-10 space-y-14 md:space-y-24">
-    {galleryItems.map((item, index) => (
-      <li>
-        <article class="grid items-center gap-6 md:grid-cols-[1.15fr_0.85fr] md:gap-14">
-          <div class:list={["order-1 overflow-hidden", index % 2 === 1 && "md:order-2"]}>
-            <img
-              src={item.src}
-              alt={item.alt}
-              class="aspect-[4/3] h-auto w-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div class:list={["relative isolate order-2 flex min-h-40 flex-col justify-center py-5", index % 2 === 1 && "md:order-1"]}>
-            <svg aria-hidden="true" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" fill="none" class:list={["pointer-events-none absolute inset-0 z-0 h-full w-full opacity-30", item.accent]}>
-              {item.motif === "art" && (
-                <g stroke="currentColor" stroke-width="3" stroke-linecap="round">
-                  <path d="M-20 180C55 120 90 205 155 140S265 55 420 125M-15 205C65 155 90 225 175 165S305 95 420 165" />
-                  <path d="M32 68c28-22 49 18 77-4s45-28 66-10m61 118c22-20 43-18 65-42" stroke-width="2" />
-                  <circle cx="90" cy="53" r="5" fill="currentColor" /><circle cx="260" cy="55" r="7" fill="currentColor" /><circle cx="340" cy="190" r="5" fill="currentColor" />
-                </g>
-              )}
-              {item.motif === "gears" && (
-                <g stroke="currentColor" stroke-width="3">
-                  <circle cx="285" cy="108" r="66" /><circle cx="285" cy="108" r="24" />
-                  <circle cx="365" cy="166" r="38" /><circle cx="365" cy="166" r="13" />
-                  <path d="M285 22v20m0 132v20m-86-86h20m132 0h20m-147-61 15 15m93 93 15 15m0-123-15 15m-93 93-15 15M365 116v12m0 76v12m-50-50h12m76 0h12m-85-35 9 9m54 54 9 9" stroke-linecap="round" />
-                  <path d="M10 190h120m16 0h52" stroke-width="2" stroke-linecap="round" />
-                </g>
-              )}
-              {item.motif === "city" && (
-                <g stroke="currentColor" stroke-width="3" stroke-linejoin="round">
-                  <path d="M138 206V108l48-33v131m0 0V45l64-25v186m0 0V96l64 25v85m0 0v-72l48 22v50Z" />
-                  <path d="M155 125h12m-12 19h12m-12 19h12m-12 19h12m28-116h15m-15 22h15m-15 22h15m-15 22h15m-15 22h15m-15 22h15m30-130h15m-15 22h15m-15 22h15m-15 22h15m15 19h14m-14 19h14m-14 19h14M108 206h282" stroke-width="2" />
-                </g>
-              )}
-              {item.motif === "leaf" && (
-                <g stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M338 27C247 22 185 72 197 141c9 52 60 75 104 44 43-31 45-99 37-158Z" />
-                  <path d="M210 197c36-57 77-102 128-157m-88 99-5-48m43 12 38 3m-74 47-8 36m48-86 30-28" />
-                  <path d="M18 183c40-25 67-24 97-2" stroke-width="2" />
-                </g>
-              )}
-              {item.motif === "lake" && (
-                <g stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="320" cy="62" r="27" />
-                  <path d="M-15 115c43-30 86-30 129 0s86 30 129 0 86-30 129 0 43 30 58 22M-15 153c43-30 86-30 129 0s86 30 129 0 86-30 129 0 43 30 58 22M24 190h350" />
-                  <path d="M286 62h-37m179 0h-37m-71-35V-5m0 134V99" stroke-width="2" />
-                </g>
-              )}
-              {item.motif === "mountains" && (
-                <g stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="326" cy="56" r="24" />
-                  <path d="m24 198 88-127 59 82 66-105 118 150H24Z" />
-                  <path d="m87 107 25-36 25 35m76-10 24-48 28 45m-174 91h206" stroke-width="2" />
-                </g>
-              )}
-            </svg>
-            <div class="relative z-10">
-              <h2 class="text-2xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-3xl">{item.caption}</h2>
-              {item.writeup && <p class="mt-4 text-base leading-7 text-gray-600 dark:text-gray-300 sm:text-lg sm:leading-8">{item.writeup}</p>}
-            </div>
-          </div>
-        </article>
-      </li>
+  <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter moments by category">
+    <button
+      type="button"
+      data-moments-filter="all"
+      aria-pressed="true"
+      class="rounded-full bg-primary-700 px-4 py-2 text-sm font-semibold text-white"
+    >
+      All
+    </button>
+    {usedCategories.map(({ id, data }) => (
+      <button
+        type="button"
+        data-moments-filter={id}
+        aria-pressed="false"
+        class="rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+      >
+        {data.name}
+      </button>
     ))}
-  </ul>
+  </nav>
+
+  {galleryItems.length > 0 ? (
+    <ul class="mt-4 grid grid-cols-1 gap-x-8 lg:grid-cols-2">
+      {galleryItems.map((item) => (
+        <li data-moment-card data-moment-category={item.category} class="py-4">
+          <article class="space-y-3">
+            <div class="grid w-full max-w-[36rem] grid-cols-2 gap-3 sm:gap-4">
+              {item.images.map((image, index) => (
+                <button
+                  type="button"
+                  data-moment-open
+                  data-image-src={image}
+                  data-image-alt={item.alt || item.caption}
+                  data-image-caption={item.caption}
+                  data-image-category={item.categoryLabel}
+                  aria-label={`View photo ${index + 1} for ${item.caption}`}
+                  class:list={["group block w-full overflow-hidden rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-gray-800 dark:focus:ring-offset-gray-950", item.images.length === 1 && "col-span-2"]}
+                >
+                  <img
+                    src={image}
+                    alt={item.alt}
+                    class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+              ))}
+            </div>
+            <div class="relative isolate min-h-32 max-w-[36rem] py-2">
+              <MomentMotif motif={item.motif} class={item.accent} />
+              <div class="relative z-10">
+                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{item.categoryLabel}</p>
+                <h2 class="mt-2 text-xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-2xl">{item.caption}</h2>
+                {item.writeup && <p class="mt-3 max-w-xl text-sm leading-6 text-gray-600 dark:text-gray-300">{item.writeup}</p>}
+              </div>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="mt-8 py-8 text-center text-sm text-gray-600 dark:text-gray-300">
+      No moments have been added yet.
+    </p>
+  )}
+
+  <dialog
+    id="moment-lightbox"
+    aria-labelledby="moment-lightbox-caption"
+    class="m-auto max-h-[92vh] w-[calc(100%-2rem)] max-w-6xl overflow-hidden rounded-2xl border border-gray-200 bg-white p-0 text-gray-900 shadow-2xl backdrop:bg-black/80 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+  >
+    <div class="flex items-center justify-between gap-4 border-b border-gray-200 p-3 dark:border-gray-700">
+      <div>
+        <p data-lightbox-category class="text-xs font-semibold uppercase tracking-wide text-primary-700 dark:text-primary-300"></p>
+        <h2 id="moment-lightbox-caption" data-lightbox-caption class="mt-1 text-sm font-semibold"></h2>
+      </div>
+      <button
+        type="button"
+        data-lightbox-close
+        class="shrink-0 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:hover:bg-gray-800"
+      >
+        Close
+      </button>
+    </div>
+    <img data-lightbox-image src="" alt="" class="max-h-[82vh] w-full bg-black object-contain" />
+  </dialog>
 </RootLayout>
+
+<script>
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>("[data-moments-filter]");
+  const entries = document.querySelectorAll<HTMLElement>("[data-moment-card]");
+  const activeClass = "rounded-full bg-primary-700 px-4 py-2 text-sm font-semibold text-white";
+  const inactiveClass = "rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800";
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.momentsFilter;
+      filterButtons.forEach((item) => {
+        const selected = item === button;
+        item.setAttribute("aria-pressed", String(selected));
+        item.className = selected ? activeClass : inactiveClass;
+      });
+      entries.forEach((entry) => {
+        entry.classList.toggle("hidden", filter !== "all" && entry.dataset.momentCategory !== filter);
+      });
+    });
+  });
+
+  const dialog = document.querySelector<HTMLDialogElement>("#moment-lightbox");
+  const dialogImage = dialog?.querySelector<HTMLImageElement>("[data-lightbox-image]");
+  const dialogCaption = dialog?.querySelector<HTMLElement>("[data-lightbox-caption]");
+  const dialogCategory = dialog?.querySelector<HTMLElement>("[data-lightbox-category]");
+
+  document.querySelectorAll<HTMLButtonElement>("[data-moment-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!dialog || !dialogImage || !dialogCaption || !dialogCategory) return;
+      dialogImage.src = button.dataset.imageSrc ?? "";
+      dialogImage.alt = button.dataset.imageAlt ?? "";
+      dialogCaption.textContent = button.dataset.imageCaption ?? "";
+      dialogCategory.textContent = button.dataset.imageCategory ?? "";
+      dialog.showModal();
+    });
+  });
+
+  dialog?.querySelector<HTMLButtonElement>("[data-lightbox-close]")?.addEventListener("click", () => dialog.close());
+  dialog?.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+</script>

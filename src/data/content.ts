@@ -70,10 +70,14 @@ const achievements = z.object({
 const moments = z.object({
   intro: text,
   items: z.array(z.object({
-    src: z.string().min(1).transform((src) => src.replace(/^\/?public\//, "/")),
+    images: z.array(z.string().min(1).transform((src) => {
+      const path = src.replace(/^\/?public\//, "");
+      return path.startsWith("static/") ? `/${path}` : path;
+    })).min(1).max(2),
     alt: z.string().default(""),
     caption: z.string().min(1),
     writeup: text,
+    category: z.string().min(1),
     motif: z.enum(MOTIFS).default("art"),
   })).default([]),
 });

@@ -55,6 +55,13 @@ const tags = defineCollection({
     }),
 });
 
+const momentCategories = defineCollection({
+      type: 'content',
+      schema: z.object({
+          name: z.string().min(1),
+      }),
+});
+
 const research = defineCollection({
     type: 'content',
     schema: z.object({
@@ -112,4 +119,4 @@ const home = defineCollection({
     }),
 });
 
-export const collections = {blog, authors, tags, research, projects, home};
+export const collections = {blog, authors, tags, research, projects, home, 'moment-categories': momentCategories};
