@@ -6,10 +6,10 @@
     "url": ""
   },
   "news": {
-    "enabled": true
+    "enabled": false
   },
   "announcements": {
-    "enabled": true,
+    "enabled": false,
     "items": [
       {
         "title": "Bringing my research and engineering work together",
@@ -27,5 +27,5 @@
     "url": "",
     "expires": ""
   },
-  "scholarUrl": "https://scholar.google.com/scholar?q=%22Md+Al+Mustanjid%22"
+  "scholarUrl": "https://scholar.google.com/citations?user=MPlz5dQAAAAJ&hl=en&authuser=1"
 }
