@@ -70,7 +70,7 @@ const achievements = z.object({
 const moments = z.object({
   intro: text,
   items: z.array(z.object({
-    src: z.string().min(1),
+    src: z.string().min(1).transform((src) => src.replace(/^\/?public\//, "/")),
     alt: z.string().default(""),
     caption: z.string().min(1),
     writeup: text,

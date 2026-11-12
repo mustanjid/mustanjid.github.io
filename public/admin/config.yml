@@ -192,6 +192,8 @@ collections:
         label: "Moments gallery"
         file: src/data/moments.json
         format: json
+        media_folder: public/static/images
+        public_folder: /static/images
         fields:
           - { label: "Intro line", name: intro, widget: string, required: false }
           - label: "Moments"
@@ -200,7 +202,7 @@ collections:
             required: false
             summary: "{{fields.caption}}"
             fields:
-              - { label: "Photo", name: src, widget: image, media_folder: public/static/images, public_folder: /static/images }
+              - { label: "Photo", name: src, widget: image }
               - { label: "Photo description (alt text)", name: alt, widget: string, required: false }
               - { label: "Caption", name: caption, widget: string }
               - { label: "Write-up", name: writeup, widget: text, required: false }
