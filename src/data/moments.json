@@ -1,12 +1,19 @@
 {
-  "intro": "A gallery of places, details, and moments.",
+  "intro": "Time never holds us but moment does... what we cherish in our heart forever",
   "items": [
     {
-      "src": "/static/images/grafiti.jpg",
-      "alt": "A painted Bangla mural with the Bangladesh flag",
+      "src": "https://drive.google.com/file/d/1qfZpVRxLWloon2hIpNP_FgnBa_c0MtWt/view?usp=drive_link",
+      "alt": "The china",
       "caption": "Street art and a message of identity",
       "writeup": "A hand-painted mural brings language, identity, and public art together on a city wall.",
-      "motif": "art"
+      "motif": "mountains"
+    },
+    {
+      "src": "https://drive.google.com/file/d/1qfZpVRxLWloon2hIpNP_FgnBa_c0MtWt/view?usp=sharing",
+      "alt": "",
+      "caption": "china clay heal",
+      "writeup": "",
+      "motif": "mountains"
     }
   ]
 }
