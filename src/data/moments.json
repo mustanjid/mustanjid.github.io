@@ -2,18 +2,22 @@
   "intro": "Time never holds us but moment does... what we cherish in our heart forever",
   "items": [
     {
-      "images": ["/static/images/convo.webp"],
+      "images": [
+        "/static/images/convo.webp"
+      ],
       "alt": "Convocation Day",
-      "caption": "The day I realized learning like a free bird never ends",
+      "caption": "Learning like endless sky never ends",
       "writeup": "",
       "category": "events",
-      "motif": "lake"
+      "motif": "art"
     },
     {
-      "images": ["/static/images/1794513697037.webp"],
-      "alt": "",
-      "caption": "china clay heal",
-      "writeup": "",
+      "images": [
+        "/static/images/1794513697037.webp"
+      ],
+      "alt": "A sunset on the Padma River, Rajshahi",
+      "caption": "Before dark on the vast Padma river, Rajshahi",
+      "writeup": "I was preparing for my university admission in Rajshahi in 2014. Me and my friends hired a boat and was floating on the vast Padma river. It was at the end of the day, before dark i captured the moment.",
       "category": "places",
       "motif": "mountains"
     }
