@@ -1,5 +1,6 @@
 ---
-import { pagesData, siteData } from "@/data/content";
+import { pagesData } from "@/data/content";
+import SocialLinks from "@/components/SocialLinks.astro";
 import { Image } from "astro:assets";
 import { type CollectionEntry, getCollection } from "astro:content";
 
@@ -71,11 +72,7 @@ const authorPosts = await getCollection(
         </h2>
         <div class="text-gray-500 dark:text-gray-400 text-xl">{occupation}</div>
         <div class="text-gray-500 dark:text-gray-400 text-xl">{company}</div>
-        <div class="flex space-x-3 pt-6">
-          {github && <SocialIcon kind="github" href={github} />}
-          {linkedin && <SocialIcon kind="linkedin" href={linkedin} />}
-          {twitter && <SocialIcon kind="twitter" href={siteData.social.hackerrank} />}
-        </div>
+        <SocialLinks class="flex space-x-3 pt-6" size={8} />
       </div>
 
       <div class="xl:col-span-2 max-w-none d-flex">

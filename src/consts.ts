@@ -22,11 +22,8 @@ export const SITE_METADATA = {
     author: siteData.author,
     mastodon: 'https://mastodon.social/@mastodonuser',
     email: '',
-    github: siteData.social.github,
-    twitter: siteData.social.hackerrank,
     facebook: 'https://facebook.com',
     youtube: 'https://youtube.com',
-    linkedin: siteData.social.linkedin,
     keywords: siteData.keywords,
 
     // These are not supported yet

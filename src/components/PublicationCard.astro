@@ -30,9 +30,11 @@ const buttonClass = "inline-flex min-h-9 items-center rounded-md border border-p
 ---
 
 <article id={slug} class="scroll-mt-24 overflow-hidden rounded-xl border border-gray-200 bg-white transition hover:border-primary-300 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-primary-800">
-  <div class="grid sm:grid-cols-[minmax(33.333%,1fr)_minmax(0,2fr)]">
+  <div class="grid items-stretch sm:grid-cols-[minmax(33.333%,1fr)_minmax(0,2fr)]">
     {data.image ? (
-      <img src={data.image} alt="" class="h-28 min-h-28 w-full object-cover sm:h-full" loading="lazy" />
+      <div class="relative min-h-28 self-stretch sm:min-h-full">
+        <img src={data.image} alt="" class="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" />
+      </div>
     ) : (
       <div role="img" aria-label={`${publicationType} publication`} class="flex min-h-28 items-center justify-center bg-gradient-to-br from-blue-100 to-emerald-100 p-3 dark:from-blue-950 dark:to-emerald-950">
         <svg viewBox="0 0 24 24" class="h-7 w-7 text-primary-700 dark:text-primary-300" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">

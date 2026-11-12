@@ -59,9 +59,18 @@
       "visible": false
     }
   ],
-  "social": {
-    "github": "https://github.com/mustanjid",
-    "linkedin": "https://www.linkedin.com/in/mustanjid/",
-    "hackerrank": "https://www.hackerrank.com/profile/mustanjid"
-  }
+  "socialLinks": [
+    {
+      "kind": "github",
+      "url": "https://github.com/mustanjid"
+    },
+    {
+      "kind": "linkedin",
+      "url": "https://www.linkedin.com/in/mustanjid/"
+    },
+    {
+      "kind": "hacker",
+      "url": "https://www.hackerrank.com/profile/mustanjid"
+    }
+  ]
 }

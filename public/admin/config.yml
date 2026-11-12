@@ -105,28 +105,43 @@ collections:
                   - { label: "About", value: "/about" }
               - { label: "Visible", name: visible, widget: boolean, default: true }
           - label: "Social links"
-            name: social
-            widget: object
+            name: socialLinks
+            widget: list
+            required: false
+            summary: "{{fields.kind}} — {{fields.url}}"
+            hint: "Shown in the footer, home page, About page and CV. Use Add to create one and the bin icon to delete one. Drag to reorder."
             fields:
-              - { label: "GitHub", name: github, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
-              - { label: "LinkedIn", name: linkedin, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
-              - { label: "HackerRank (footer icon)", name: hackerrank, widget: string, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
+              - label: "Icon"
+                name: kind
+                widget: select
+                default: github
+                options:
+                  - { label: "GitHub", value: github }
+                  - { label: "LinkedIn", value: linkedin }
+                  - { label: "HackerRank", value: hacker }
+                  - { label: "Google Scholar", value: scholar }
+                  - { label: "LeetCode", value: leetcode }
+                  - { label: "X / Twitter", value: twitter }
+                  - { label: "Facebook", value: facebook }
+                  - { label: "YouTube", value: youtube }
+                  - { label: "Mastodon", value: mastodon }
+                  - { label: "Mendeley", value: mendely }
+                  - { label: "Email", value: mail }
+              - { label: "Link", name: url, widget: string, pattern: ['^(https?://|mailto:)\S+$', "Enter a full URL starting with https://, or mailto:you@example.com for email"] }
 
       - name: home
         label: "Home page intro"
-        file: src/data/home.json
-        format: json
+        file: src/content/home/intro.md
+        format: frontmatter
         fields:
-          - { label: "Tagline words", name: tagline, widget: list, required: false, hint: "Shown under your photo, separated by |. Example: Support Eng, Researcher, Bio Enthusiast" }
-          - label: "Intro paragraphs"
-            name: intro
-            widget: list
-            required: false
-            field: { label: "Paragraph", name: paragraph, widget: text }
-          - { label: "Closing line", name: closing, widget: string, required: false, hint: "Appears before the CV and moments links." }
-          - { label: "CV link", name: cvUrl, widget: string, required: false, hint: "Use /cv for the CV page, or paste any other link. Leave empty to hide the CV link." }
-          - { label: "CV link text", name: cvLabel, widget: string, default: "CV" }
-          - { label: "Show link to Moments", name: showMomentsLink, widget: boolean, default: true }
+          - { label: "Tagline words", name: tagline, widget: list, required: false, hint: "Shown under your photo, separated by |. Example: Support Engineer, Researcher, Bio Enthusiast" }
+          - label: "Intro text"
+            name: body
+            widget: markdown
+            modes: [rich_text, raw]
+            buttons: [bold, italic, link, bulleted-list, numbered-list]
+            editor_components: []
+            hint: 'One text area. Select text and use the toolbar for bold, italic and links. To colour a link, put a style name in the link title, like this: [software development](/projects "indigo"). If the link dialog has no title box, switch to the Markdown view with the toggle and type it there. Styles: indigo, brand, success, danger, sky, amber, rose, bold. Link to your CV with /cv and to your photos with /moments.'
 
       - name: research-page
         label: "Research page"

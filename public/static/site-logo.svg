@@ -1,0 +1,60 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGlow" x1="86" y1="80" x2="420" y2="430" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF7E9"/>
+      <stop offset="1" stop-color="#F2E1C6"/>
+    </linearGradient>
+    <linearGradient id="basketBody" x1="118" y1="150" x2="396" y2="364" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7C988"/>
+      <stop offset="0.5" stop-color="#E3A05F"/>
+      <stop offset="1" stop-color="#B66630"/>
+    </linearGradient>
+    <linearGradient id="basketInner" x1="146" y1="184" x2="366" y2="332" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#84502D"/>
+      <stop offset="1" stop-color="#4E2A15"/>
+    </linearGradient>
+    <linearGradient id="nodeGlow" x1="170" y1="120" x2="350" y2="262" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9AE6FF"/>
+      <stop offset="1" stop-color="#5EEAD4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="110" fill="url(#bgGlow)"/>
+
+  <g opacity="0.8">
+    <circle cx="154" cy="150" r="10" fill="#5EEAD4"/>
+    <circle cx="362" cy="150" r="10" fill="#5EEAD4"/>
+    <path d="M154 150H200M312 150H362" stroke="#5EEAD4" stroke-width="6" stroke-linecap="round"/>
+    <path d="M178 126V96H206V126" stroke="#5EEAD4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M306 126V96H334V126" stroke="#5EEAD4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <path d="M128 208C128 168.235 160.235 136 200 136H312C351.765 136 384 168.235 384 208V220H128V208Z" fill="#7B4320"/>
+  <path d="M152 214C152 181.967 177.967 156 210 156H302C334.033 156 360 181.967 360 214V224H152V214Z" stroke="#8E4F28" stroke-width="10" stroke-linecap="round"/>
+
+  <path d="M146 219C116.177 219 92 243.177 92 273C92 306.137 118.863 333 152 333H360C393.137 333 420 306.137 420 273C420 243.177 395.823 219 366 219H146Z" fill="url(#basketBody)"/>
+  <path d="M164 220C136.386 220 114 242.386 114 270C114 301.48 139.52 327 171 327H341C372.48 327 398 301.48 398 270C398 242.386 375.614 220 348 220H164Z" fill="url(#basketInner)" opacity="0.92"/>
+
+  <g stroke="#F8E4C0" stroke-width="7" stroke-linecap="round">
+    <path d="M184 220V329"/>
+    <path d="M256 220V329"/>
+    <path d="M328 220V329"/>
+    <path d="M124 253H388"/>
+    <path d="M124 288H388"/>
+    <path d="M124 323H388"/>
+  </g>
+
+  <path d="M172 215C194 187 222 170 256 170C290 170 318 187 340 215" stroke="#F8E4C0" stroke-width="12" stroke-linecap="round"/>
+
+  <path d="M172 244L214 322L256 268L298 322L340 244" stroke="#F5F0E6" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g opacity="0.9">
+    <circle cx="146" cy="260" r="7" fill="url(#nodeGlow)"/>
+    <circle cx="366" cy="260" r="7" fill="url(#nodeGlow)"/>
+    <circle cx="256" cy="228" r="7" fill="url(#nodeGlow)"/>
+    <path d="M146 260H124V228H106M366 260H388V228H406" stroke="#5EEAD4" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <path d="M114 112C146 84 186 70 256 70C326 70 366 84 398 112" stroke="#884926" stroke-width="16" stroke-linecap="round"/>
+  <path d="M122 112C154 96 190 90 256 90C322 90 358 96 390 112" stroke="#F8D59C" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+</svg>

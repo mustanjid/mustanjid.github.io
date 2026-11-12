@@ -2,7 +2,6 @@
 // Empty strings from the CMS are treated as "not set"; a malformed file fails the build with a readable error.
 import { z } from "astro/zod";
 import siteRaw from "./site.json";
-import homeRaw from "./home.json";
 import researchPageRaw from "./research-page.json";
 import achievementsRaw from "./achievements.json";
 import momentsRaw from "./moments.json";
@@ -11,6 +10,13 @@ import cvRaw from "./cv.json";
 
 const blank = (v: unknown) => (v === "" || v === null ? undefined : v);
 const text = z.preprocess(blank, z.string().optional());
+
+// Icon names must exist in src/components/social-icons/index.astro
+export const SOCIAL_KINDS = ["github", "linkedin", "hacker", "scholar", "leetcode", "twitter", "facebook", "youtube", "mastodon", "mendely", "mail"] as const;
+export const SOCIAL_LABELS: Record<(typeof SOCIAL_KINDS)[number], string> = {
+  github: "GitHub", linkedin: "LinkedIn", hacker: "HackerRank", scholar: "Google Scholar", leetcode: "LeetCode",
+  twitter: "X / Twitter", facebook: "Facebook", youtube: "YouTube", mastodon: "Mastodon", mendely: "Mendeley", mail: "Email",
+};
 
 export const MOTIFS = ["art", "gears", "city", "leaf", "lake", "mountains"] as const;
 
@@ -21,25 +27,16 @@ const site = z.object({
   author: z.string().min(1),
   keywords: z.array(z.string()).default([]),
   ogImage: z.string().min(1).default("/static/logo.png"),
-  social: z.object({
-    github: z.string().url(),
-    linkedin: z.string().url(),
-    hackerrank: z.string().url(),
-  }),
+  // Footer, home hero, About page and CV all render this list; add or delete entries in the CMS.
+  socialLinks: z.array(z.object({
+    kind: z.enum(SOCIAL_KINDS),
+    url: z.string().min(1),
+  })).default([]),
   navigation: z.array(z.object({
     title: z.string().min(1),
     href: z.string().min(1),
     visible: z.boolean().default(true),
   })).default([]),
-});
-
-const home = z.object({
-  tagline: z.array(z.string()).default([]),
-  intro: z.array(z.string()).default([]),
-  closing: text,
-  cvUrl: text,
-  cvLabel: z.string().default("CV"),
-  showMomentsLink: z.boolean().default(true),
 });
 
 const researchPage = z.object({
@@ -82,7 +79,6 @@ const moments = z.object({
 });
 
 export const siteData = site.parse(siteRaw);
-export const homeData = home.parse(homeRaw);
 export const researchPageData = researchPage.parse(researchPageRaw);
 export const achievementsData = achievements.parse(achievementsRaw);
 export const momentsData = moments.parse(momentsRaw);

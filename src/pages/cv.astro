@@ -3,7 +3,7 @@
 // Publications, awards and certificates are pulled from the Research collection and Achievements data.
 import RootLayout from "@/layouts/RootLayout.astro";
 import { getResearchEntries } from "@/functions";
-import { achievementsData, cvData, pagesData, siteData } from "@/data/content";
+import { achievementsData, cvData, pagesData, siteData, SOCIAL_LABELS } from "@/data/content";
 
 const t = pagesData.cv;
 const entries = cvData.showPublications ? await getResearchEntries() : [];
@@ -14,10 +14,7 @@ const citationOf = ({ data }: (typeof entries)[number]) =>
     .join(" ");
 const summaryParagraphs = (cvData.summary ?? "").split("\n\n").map((part) => part.trim()).filter(Boolean);
 const h2 = "border-b border-gray-200 pb-2 text-xl font-bold text-gray-900 dark:border-gray-700 dark:text-gray-100";
-const links = [
-  { label: "GitHub", href: siteData.social.github },
-  { label: "LinkedIn", href: siteData.social.linkedin },
-];
+const links = siteData.socialLinks.map(({ kind, url }) => ({ label: SOCIAL_LABELS[kind], href: kind === "mail" && !url.startsWith("mailto:") ? `mailto:${url}` : url }));
 ---
 
 <RootLayout title={t.seoTitle} description={t.seoDescription}>
