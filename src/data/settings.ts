@@ -36,18 +36,6 @@ const schema = z.object({
     expires: date,
   }).default({}),
   scholarUrl: url,
-  spotlight: z.object({
-    kind: z.enum(["research", "ml", "devops", "other"]).default("other"),
-    stage: z.enum(["idea", "plan", "in-progress", "demo", "shipped"]).default("idea"),
-    title: text,
-    summary: text,
-    image: text,
-    areas: z.array(z.string()).default([]),
-    tools: z.array(z.string()).default([]),
-    tags: z.array(z.string()).default([]),
-    repoUrl: url,
-    demoUrl: url,
-  }).default({}),
 });
 
 export type SiteSettings = z.infer<typeof schema>;

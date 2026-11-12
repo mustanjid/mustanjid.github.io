@@ -1,0 +1,108 @@
+---
+// CV page. Summary, experience, education and skills are edited in /admin > Site content > CV.
+// Publications, awards and certificates are pulled from the Research collection and Achievements data.
+import RootLayout from "@/layouts/RootLayout.astro";
+import { getResearchEntries } from "@/functions";
+import { achievementsData, cvData, pagesData, siteData, SOCIAL_LABELS } from "@/data/content";
+
+const t = pagesData.cv;
+const entries = cvData.showPublications ? await getResearchEntries() : [];
+const citationOf = ({ data }: (typeof entries)[number]) =>
+  data.citation?.trim() ||
+  [`${data.authors}${data.date ? ` (${data.date.getFullYear()})` : ""}.`, `${data.title}.`, data.venue, data.citationDetails]
+    .filter(Boolean)
+    .join(" ");
+const summaryParagraphs = (cvData.summary ?? "").split("\n\n").map((part) => part.trim()).filter(Boolean);
+const h2 = "border-b border-gray-200 pb-2 text-xl font-bold text-gray-900 dark:border-gray-700 dark:text-gray-100";
+const links = siteData.socialLinks.map(({ kind, url }) => ({ label: SOCIAL_LABELS[kind], href: kind === "mail" && !url.startsWith("mailto:") ? `mailto:${url}` : url }));
+---
+
+<RootLayout title={t.seoTitle} description={t.seoDescription}>
+  <article class="mx-auto max-w-3xl space-y-10 py-8">
+    <header class="space-y-3">
+      <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">{siteData.author}</h1>
+      {cvData.headline && <p class="text-lg text-gray-600 dark:text-gray-300">{cvData.headline}</p>}
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+        {links.map((link) => <a class="font-medium text-primary-700 hover:underline dark:text-primary-300" href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>)}
+        {cvData.pdf && <a class="rounded-md border border-primary-700 px-3 py-1.5 font-semibold text-primary-700 hover:bg-primary-50 dark:border-primary-300 dark:text-primary-300 dark:hover:bg-gray-800" href={cvData.pdf} target="_blank" rel="noopener noreferrer">{t.downloadLabel}</a>}
+      </div>
+    </header>
+
+    {cvData.summary && (
+      <section aria-labelledby="cv-summary" class="space-y-3">
+        <h2 id="cv-summary" class={h2}>{t.summaryTitle}</h2>
+        {summaryParagraphs.map((paragraph) => <p class="leading-7 text-gray-700 dark:text-gray-300">{paragraph}</p>)}
+      </section>
+    )}
+
+    {cvData.experience.length > 0 && (
+      <section aria-labelledby="cv-experience" class="space-y-5">
+        <h2 id="cv-experience" class={h2}>{t.experienceTitle}</h2>
+        {cvData.experience.map((job) => (
+          <div>
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+              <h3 class="font-semibold text-gray-900 dark:text-gray-100">{job.role}{job.organization && <span class="font-normal text-gray-600 dark:text-gray-300"> · {job.organization}</span>}</h3>
+              {(job.start || job.end) && <p class="text-sm text-gray-500 dark:text-gray-400">{[job.start, job.end].filter(Boolean).join(" – ")}</p>}
+            </div>
+            {job.location && <p class="text-sm text-gray-500 dark:text-gray-400">{job.location}</p>}
+            {job.bullets.length > 0 && <ul class="mt-2 list-disc space-y-1 pl-5 text-gray-700 dark:text-gray-300">{job.bullets.map((bullet) => <li>{bullet}</li>)}</ul>}
+          </div>
+        ))}
+      </section>
+    )}
+
+    {cvData.education.length > 0 && (
+      <section aria-labelledby="cv-education" class="space-y-4">
+        <h2 id="cv-education" class={h2}>{t.educationTitle}</h2>
+        {cvData.education.map((item) => (
+          <div>
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+              <h3 class="font-semibold text-gray-900 dark:text-gray-100">{item.degree}{item.institution && <span class="font-normal text-gray-600 dark:text-gray-300"> · {item.institution}</span>}</h3>
+              {item.period && <p class="text-sm text-gray-500 dark:text-gray-400">{item.period}</p>}
+            </div>
+            {item.details && <p class="mt-1 text-gray-700 dark:text-gray-300">{item.details}</p>}
+          </div>
+        ))}
+      </section>
+    )}
+
+    {cvData.skills.length > 0 && (
+      <section aria-labelledby="cv-skills" class="space-y-3">
+        <h2 id="cv-skills" class={h2}>{t.skillsTitle}</h2>
+        {cvData.skills.map((group) => (
+          <div class="sm:grid sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-4">
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100">{group.group}</h3>
+            <p class="text-gray-700 dark:text-gray-300">{group.items.join(", ")}</p>
+          </div>
+        ))}
+      </section>
+    )}
+
+    {entries.length > 0 && (
+      <section aria-labelledby="cv-publications" class="space-y-3">
+        <h2 id="cv-publications" class={h2}>{t.publicationsTitle}</h2>
+        <ol class="list-decimal space-y-2 pl-5 text-sm leading-6 text-gray-700 dark:text-gray-300">
+          {entries.map((entry) => <li>{citationOf(entry)}</li>)}
+        </ol>
+      </section>
+    )}
+
+    {cvData.showAwards && achievementsData.awards.length > 0 && (
+      <section aria-labelledby="cv-awards" class="space-y-3">
+        <h2 id="cv-awards" class={h2}>{t.awardsTitle}</h2>
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+          {achievementsData.awards.map((award) => <li><span class="font-semibold text-gray-900 dark:text-gray-100">{award.title}</span> <span class="text-sm text-gray-500 dark:text-gray-400">({award.date})</span></li>)}
+        </ul>
+      </section>
+    )}
+
+    {cvData.showCertificates && achievementsData.certificates.length > 0 && (
+      <section aria-labelledby="cv-certificates" class="space-y-3">
+        <h2 id="cv-certificates" class={h2}>{t.certificatesTitle}</h2>
+        <ul class="space-y-1 text-gray-700 dark:text-gray-300">
+          {achievementsData.certificates.map((cert) => <li>{cert.title} <span class="text-sm text-gray-500 dark:text-gray-400">— {cert.provider}</span></li>)}
+        </ul>
+      </section>
+    )}
+  </article>
+</RootLayout>

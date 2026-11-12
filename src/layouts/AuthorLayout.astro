@@ -1,4 +1,6 @@
 ---
+import { pagesData } from "@/data/content";
+import SocialLinks from "@/components/SocialLinks.astro";
 import { Image } from "astro:assets";
 import { type CollectionEntry, getCollection } from "astro:content";
 
@@ -39,16 +41,16 @@ const authorPosts = await getCollection(
   });
 ---
 
-<RootLayout title="MB-About" description="gh">
+<RootLayout title={pagesData.about.seoTitle} description={pagesData.about.seoDescription}>
   <div class="divide-y divide-gray-200 dark:divide-gray-700">
     <div class="space-y-1 pb-1 pt-1 md:space-y-1">
       <h1
         class="text-2xl font-extrabold leading-8 tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl sm:leading-9 md:text-3xl"
       >
-        {("About")}
+        {pagesData.about.title}
       </h1>
       <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">
-        {("Unpacking My Identity, Motivations, and Direction")}
+        {pagesData.about.subtitle}
       </p>
   </div>
 
@@ -70,11 +72,7 @@ const authorPosts = await getCollection(
         </h2>
         <div class="text-gray-500 dark:text-gray-400 text-xl">{occupation}</div>
         <div class="text-gray-500 dark:text-gray-400 text-xl">{company}</div>
-        <div class="flex space-x-3 pt-6">
-          {github && <SocialIcon kind="github" href={github} />}
-          {linkedin && <SocialIcon kind="linkedin" href={linkedin} />}
-          {twitter && <SocialIcon kind="twitter" href={"https://www.hackerrank.com/profile/mustanjid"} />}
-        </div>
+        <SocialLinks class="flex space-x-3 pt-6" size={8} />
       </div>
 
       <div class="xl:col-span-2 max-w-none d-flex">
@@ -86,7 +84,7 @@ const authorPosts = await getCollection(
           authorPosts.length > 0 && (
             <div class="pt-8">
               <h2 class="text-2xl font-bold leading-8 tracking-tight">
-                {("layouts.authorLayout.latestPosts")}
+                {pagesData.about.latestPostsTitle}
               </h2>
               <ul class="space-y-4 mt-4">
                 {authorPosts.map(({ slug, title }) => (

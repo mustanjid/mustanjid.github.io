@@ -1,25 +1,32 @@
 ---
-import { settings } from "@/data/settings";
+import { getFeaturedProject, STAGE_LABEL } from "@/functions";
+import { pagesData } from "@/data/content";
 
 interface Props {
   size?: "default" | "large";
+  /** Limit to research projects (Research page). The homepage shows the featured project of any kind. */
+  kind?: "research";
 }
 
-const { size = "default" } = Astro.props;
+const { size = "default", kind } = Astro.props;
 const isLarge = size === "large";
-const project = settings.spotlight;
-const stageLabel: Record<string, string> = {
-  idea: "Idea",
-  plan: "Planned",
-  "in-progress": "In progress",
-  demo: "Demo",
-  shipped: "Shipped",
+const entry = await getFeaturedProject(kind);
+const project = entry && {
+  slug: entry.slug,
+  title: entry.data.title,
+  stage: entry.data.stage,
+  summary: entry.data.description,
+  image: entry.data.imgSrc,
+  areas: entry.data.areas,
+  tools: entry.data.stack,
+  repoUrl: entry.data.srccode,
+  demoUrl: entry.data.url,
 };
-const areas = project.areas.length > 0 ? project.areas : project.tags;
+const t = pagesData.home;
 const chipClass = "rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-800 dark:bg-primary-950 dark:text-primary-200";
 ---
 
-{project.title && (
+{project && (
   <section id="current-project" aria-labelledby="current-project-title" class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50">
     <div class:list={["grid", isLarge ? "xl:grid-cols-[minmax(16rem,0.9fr)_minmax(0,1.1fr)]" : "xl:grid-cols-[minmax(12rem,0.65fr)_minmax(0,1.35fr)]"]}>
       <div class:list={[isLarge ? "min-h-48" : "min-h-40", "bg-gradient-to-br from-sky-100 via-indigo-100 to-emerald-100 dark:from-sky-950 dark:via-indigo-950 dark:to-emerald-950"]}>
@@ -42,30 +49,29 @@ const chipClass = "rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium te
       </div>
       <div class:list={[isLarge ? "p-5 sm:p-6" : "p-4 sm:p-5"]}>
         <div class:list={["flex flex-wrap items-center gap-1 font-bold uppercase tracking-wide text-primary-700 dark:text-primary-300", isLarge ? "text-sm" : "text-xs"]}>
-          <span>Current research / implementation</span>
-          <span aria-hidden="true">·</span>
-          <span>{stageLabel[project.stage]}</span>
+          <span>{t.currentProjectEyebrow}</span>
+          {project.stage && <><span aria-hidden="true">·</span><span>{STAGE_LABEL[project.stage]}</span></>}
         </div>
         <h2 id="current-project-title" class="mt-1 text-base font-extrabold leading-6 text-gray-900 dark:text-gray-100 sm:text-lg">{project.title}</h2>
         {project.summary && <p class="mt-2 text-xs leading-5 text-gray-600 dark:text-gray-300 sm:text-sm">{project.summary}</p>}
 
-        {areas.length > 0 && (
+        {project.areas.length > 0 && (
           <div class="mt-3 flex flex-wrap items-center gap-2">
-            <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Areas</h3>
-            <ul class="flex flex-wrap gap-1.5">{areas.map((item) => <li class={chipClass}>{item}</li>)}</ul>
+            <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{t.areasLabel}</h3>
+            <ul class="flex flex-wrap gap-1.5">{project.areas.map((item) => <li class={chipClass}>{item}</li>)}</ul>
           </div>
         )}
         {project.tools.length > 0 && (
           <div class="mt-2 flex flex-wrap items-center gap-2">
-            <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Tools / methods</h3>
+            <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{t.toolsLabel}</h3>
             <ul class="flex flex-wrap gap-1.5">{project.tools.map((item) => <li class={chipClass}>{item}</li>)}</ul>
           </div>
         )}
 
         <div class="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold">
-          <a class="text-primary-700 hover:underline dark:text-primary-300" href="/research#current-project">Project details <span aria-hidden="true">&rarr;</span></a>
-          {project.repoUrl && <a class="text-primary-700 hover:underline dark:text-primary-300" href={project.repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>}
-          {project.demoUrl && <a class="text-primary-700 hover:underline dark:text-primary-300" href={project.demoUrl} target="_blank" rel="noopener noreferrer">View implementation</a>}
+          <a class="text-primary-700 hover:underline dark:text-primary-300" href={`/projects/${project.slug}`}>{t.projectDetailsLabel} <span aria-hidden="true">&rarr;</span></a>
+          {project.repoUrl && <a class="text-primary-700 hover:underline dark:text-primary-300" href={project.repoUrl} target="_blank" rel="noopener noreferrer">{t.repositoryLabel}</a>}
+          {project.demoUrl && <a class="text-primary-700 hover:underline dark:text-primary-300" href={project.demoUrl} target="_blank" rel="noopener noreferrer">{t.implementationLabel}</a>}
         </div>
       </div>
     </div>

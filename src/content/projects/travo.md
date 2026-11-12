@@ -1,0 +1,16 @@
+---
+title: Travo
+kind: development
+order: 2
+draft: false
+featured: false
+description: A basic online blog where travellers can share their adventures. Adventures would be shared by stories including images, and places. One traveller can comment on other travellers' posts & rate them, as well as share. All of you need to do is just sign up for all the activities.
+imgSrc: https://github.com/mustanjid/QuoteGen/raw/main/public/promogen.png
+projectdesc: https://github.com/mustanjid/Travo
+srccode: https://github.com/mustanjid/Travo
+url: https://github.com/mustanjid/Travo
+stack:
+- Node
+- Express
+- MongoDB
+---

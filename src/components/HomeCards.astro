@@ -1,4 +1,5 @@
 ---
+import { pagesData } from "@/data/content";
 import { getCollection } from "astro:content";
 import FormattedDate from "@/components/FormattedDate.astro";
 import { excludeDrafts, getResearchEntries, sortBlogPosts } from "@/functions";
@@ -27,8 +28,8 @@ const linkClass = "font-semibold text-primary-700 hover:underline dark:text-prim
   <section aria-labelledby="latest-publications-title" class="min-w-0">
     <header class="mb-4 flex items-end justify-between gap-3 border-b border-gray-200 pb-3 dark:border-gray-700">
       <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">Research</p>
-        <h2 id="latest-publications-title" class="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100">Latest publications</h2>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{pagesData.home.latestPublicationsEyebrow}</p>
+        <h2 id="latest-publications-title" class="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100">{pagesData.home.latestPublicationsTitle}</h2>
       </div>
     </header>
 
@@ -37,11 +38,11 @@ const linkClass = "font-semibold text-primary-700 hover:underline dark:text-prim
         {publications.map((entry) => <li><PublicationCard entry={entry} /></li>)}
       </ul>
     ) : (
-      <p class="rounded-xl border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">Publications will appear here as they are added.</p>
+      <p class="rounded-xl border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">{pagesData.home.publicationsEmpty}</p>
     )}
 
     <a href="/research" class={`${linkClass} mt-4 inline-flex items-center gap-1 rounded-lg border border-primary-700 px-4 py-2 text-sm dark:border-primary-300`}>
-      All research <span aria-hidden="true">&rarr;</span>
+      {pagesData.home.allResearchButton} <span aria-hidden="true">&rarr;</span>
     </a>
   </section>
   )}
@@ -49,7 +50,7 @@ const linkClass = "font-semibold text-primary-700 hover:underline dark:text-prim
   {view !== "publications" && (
   <section aria-labelledby="latest-thoughts-title" class="min-w-0">
     <header class="mb-1.5 border-b border-gray-200 pb-1.5 dark:border-gray-700">
-      <h2 id="latest-thoughts-title" class="text-base font-bold text-gray-900 dark:text-gray-100">Latest thoughts</h2>
+      <h2 id="latest-thoughts-title" class="text-base font-bold text-gray-900 dark:text-gray-100">{pagesData.home.latestThoughtsTitle}</h2>
     </header>
 
     {posts.length > 0 ? (
@@ -58,17 +59,17 @@ const linkClass = "font-semibold text-primary-700 hover:underline dark:text-prim
           <li class="py-1 first:pt-0 last:pb-0">
             <time class="block text-[10px] leading-4 text-gray-500 dark:text-gray-400" datetime={post.data.date.toISOString()}><FormattedDate date={post.data.date} /></time>
             <a href={`/blog/${post.slug}`} title={post.data.title} class:list={["line-clamp-2 text-[11px] leading-4 font-semibold text-gray-900 hover:text-primary-700 dark:text-gray-100 dark:hover:text-primary-300", post.hasBengali && "font-bengali"]}>
-              {post.data.title} <span class="ml-1.5 inline-flex whitespace-nowrap rounded-full border border-primary-700/40 px-1.5 py-0.5 align-middle text-[9px] font-semibold leading-none text-primary-700 dark:border-primary-300/40 dark:text-primary-300">Read <span aria-hidden="true">&rarr;</span></span>
+              {post.data.title} <span class="ml-1.5 inline-flex whitespace-nowrap rounded-full border border-primary-700/40 px-1.5 py-0.5 align-middle text-[9px] font-semibold leading-none text-primary-700 dark:border-primary-300/40 dark:text-primary-300">{pagesData.home.readLabel} <span aria-hidden="true">&rarr;</span></span>
             </a>
           </li>
         ))}
       </ul>
     ) : (
-      <p class="text-sm text-gray-500 dark:text-gray-400">Thoughts will appear here as they are published.</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">{pagesData.home.thoughtsEmpty}</p>
     )}
 
     <a href="/blog" class={`${linkClass} mt-2 inline-flex items-center gap-1 rounded-lg border border-primary-700 px-3 py-1 text-xs dark:border-primary-300`}>
-      View all thoughts <span aria-hidden="true">&rarr;</span>
+      {pagesData.home.allThoughtsButton} <span aria-hidden="true">&rarr;</span>
     </a>
   </section>
   )}

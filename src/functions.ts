@@ -38,24 +38,43 @@ export const getResearchEntries = async (): Promise<CollectionEntry<'research'>[
 }
 
 /**
- * Development projects from the `projects` collection, ordered by the CMS "order" field.
- * Returns the same shape the old src/projects.ts exported, so Card.astro is unchanged.
+ * All projects (research, development, devops...) from the `projects` collection.
+ * Sorted by the CMS "order" field: lower number first, so the first entry is the "latest".
  */
-export const getProjects = async () => {
+export const getProjects = async (): Promise<CollectionEntry<'projects'>[]> => {
     const all = (await getCollection('projects')) ?? [];
     return all
         .filter(({data}) => (import.meta.env.PROD ? !data.draft : true))
-        .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title))
-        .map(({id, data}) => ({
-            slug: id.replace(/\.json$/, ''),
-            title: data.title,
-            description: data.description,
-            imgSrc: data.imgSrc || undefined,
-            projectdesc: data.projectdesc || undefined,
-            srccode: data.srccode || undefined,
-            url: data.url || undefined,
-            stack: data.stack,
-        }));
+        .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
 }
 
-export type DevProject = Awaited<ReturnType<typeof getProjects>>[number];
+export const isResearchProject = ({data}: CollectionEntry<'projects'>) => data.kind === 'research';
+
+/**
+ * The project shown on the homepage card: the first "featured" project, else the latest one.
+ * Pass kind "research" to restrict it to research projects (used on the Research page).
+ */
+export const getFeaturedProject = async (kind?: 'research'): Promise<CollectionEntry<'projects'> | undefined> => {
+    const all = (await getProjects()).filter((entry) => !kind || isResearchProject(entry));
+    return all.find(({data}) => data.featured) ?? all[0];
+}
+
+/** Props for Card.astro (development-style card). */
+export const toCardProps = ({slug, data}: CollectionEntry<'projects'>) => ({
+    slug,
+    title: data.title,
+    description: data.description,
+    imgSrc: data.imgSrc || undefined,
+    projectdesc: data.projectdesc || undefined,
+    srccode: data.srccode || undefined,
+    url: data.url || undefined,
+    stack: data.stack,
+});
+
+export const STAGE_LABEL: Record<string, string> = {
+    idea: 'Idea',
+    plan: 'Planned',
+    'in-progress': 'In progress',
+    demo: 'Demo',
+    shipped: 'Shipped',
+};

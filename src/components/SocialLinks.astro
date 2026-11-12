@@ -1,0 +1,24 @@
+---
+// Renders the social icons managed in the CMS (Site content > Site identity > Social links).
+import SocialIcon from "@/components/social-icons/index.astro";
+import { siteData } from "@/data/content";
+
+interface Props {
+  size?: number;
+  class?: string;
+  /** Extra icons rendered after the CMS list (used by the hero for the Scholar link). */
+  extra?: { kind: any; href: string }[];
+}
+
+const { size = 6, class: className = "flex space-x-4", extra = [] } = Astro.props;
+const links = [
+  ...siteData.socialLinks.map(({ kind, url }) => ({ kind, href: kind === "mail" && !url.startsWith("mailto:") ? `mailto:${url}` : url })),
+  ...extra.filter((item) => !siteData.socialLinks.some((link) => link.kind === item.kind)),
+];
+---
+
+{links.length > 0 && (
+  <nav aria-label="Social profiles" class={className}>
+    {links.map((link) => <SocialIcon kind={link.kind} href={link.href} size={size} />)}
+  </nav>
+)}

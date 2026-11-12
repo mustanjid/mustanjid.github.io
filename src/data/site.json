@@ -4,17 +4,73 @@
   "description": "Md Al Mustanjid is a Support Engineer (NetOps), researcher, and bioinformatics enthusiast.",
   "author": "Md Al Mustanjid",
   "keywords": [
-    "Software Engineer",
-    "Portfolio",
-    "JavaScript",
-    "Laravel",
-    "React",
     "Md Al Mustanjid",
-    "Web development"
+    "Portfolio",
+    "Data center",
+    "Support Engineer",
+    "NetOps",
+    "Systems and Network",
+    "Research",
+    "Bioinformatics",
+    "Systems Biology",
+    "Machine Learning",
+    "Pattern Recognition"
   ],
-  "social": {
-    "github": "https://github.com/mustanjid",
-    "linkedin": "https://www.linkedin.com/in/mustanjid/",
-    "hackerrank": "https://www.hackerrank.com/profile/mustanjid"
-  }
+  "ogImage": "/static/logo.png",
+  "navigation": [
+    {
+      "title": "Home",
+      "href": "/",
+      "visible": true
+    },
+    {
+      "title": "Thoughts",
+      "href": "/blog",
+      "visible": true
+    },
+    {
+      "title": "Research",
+      "href": "/research",
+      "visible": true
+    },
+    {
+      "title": "Projects",
+      "href": "/projects",
+      "visible": true
+    },
+    {
+      "title": "Achievement",
+      "href": "/award",
+      "visible": true
+    },
+    {
+      "title": "Moments",
+      "href": "/moments",
+      "visible": true
+    },
+    {
+      "title": "CV",
+      "href": "/cv",
+      "visible": false
+    },
+    {
+      "title": "About",
+      "href": "/about",
+      "visible": false
+    }
+  ],
+  "socialLinks": [
+    {
+      "kind": "github",
+      "url": "https://github.com/mustanjid"
+    },
+    {
+      "kind": "linkedin",
+      "url": "https://www.linkedin.com/in/mustanjid/"
+    },
+    {
+      "kind": "hacker",
+      "url": "https://www.hackerrank.com/profile/mustanjid"
+    }
+  ]
 }

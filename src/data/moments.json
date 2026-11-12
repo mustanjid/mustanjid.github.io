@@ -7,41 +7,6 @@
       "caption": "Street art and a message of identity",
       "writeup": "A hand-painted mural brings language, identity, and public art together on a city wall.",
       "motif": "art"
-    },
-    {
-      "src": "/static/images/time-machine.jpg",
-      "alt": "A close-up of interlocking mechanical gears",
-      "caption": "Time, motion, and the details in between",
-      "writeup": "An intricate mechanism is a reminder of how small moving parts work together.",
-      "motif": "gears"
-    },
-    {
-      "src": "/static/images/canada/toronto.jpg",
-      "alt": "A view of Toronto",
-      "caption": "A city view",
-      "writeup": "A glimpse of the city, where architecture and everyday movement shape the view.",
-      "motif": "city"
-    },
-    {
-      "src": "/static/images/canada/maple.jpg",
-      "alt": "A maple leaf",
-      "caption": "A small sign of autumn",
-      "writeup": "The shape and color of a maple leaf make a simple marker of the changing season.",
-      "motif": "leaf"
-    },
-    {
-      "src": "/static/images/canada/lake.jpg",
-      "alt": "A lake landscape",
-      "caption": "A quiet moment by the water",
-      "writeup": "Still water and open scenery offer a quiet pause in the middle of a busy day.",
-      "motif": "lake"
-    },
-    {
-      "src": "/static/images/canada/mountains.jpg",
-      "alt": "A mountain landscape",
-      "caption": "Looking toward the mountains",
-      "writeup": "The distant peaks bring a sense of scale and calm to the landscape.",
-      "motif": "mountains"
     }
   ]
 }

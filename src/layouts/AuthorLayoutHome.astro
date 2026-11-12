@@ -1,17 +1,19 @@
 ---
 import { Image } from "astro:assets";
-import { type CollectionEntry } from "astro:content";
+import { getEntry, type CollectionEntry } from "astro:content";
 
 import SocialIcon from "@/components/social-icons/index.astro";
 import { settings } from "@/data/settings";
-import { homeData } from "@/data/content";
+import SocialLinks from "@/components/SocialLinks.astro";
 
 interface Props {
   content: CollectionEntry<"authors">["data"];
 }
 
-const { name, avatar, github, linkedin } = Astro.props.content;
-const linkClass = "font-medium text-primary-700 underline decoration-primary-300 underline-offset-2 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200";
+const { name, avatar } = Astro.props.content;
+const intro = await getEntry("home", "intro");
+const { Content } = intro ? await intro.render() : { Content: null };
+const tagline = intro?.data.tagline ?? [];
 ---
 
 <section aria-labelledby="home-title" class="relative isolate pb-8">
@@ -47,9 +49,9 @@ const linkClass = "font-medium text-primary-700 underline decoration-primary-300
         loading="eager"
       />
     )}
-    {homeData.tagline.length > 0 && (
+    {tagline.length > 0 && (
       <p class="mt-2 text-sm font-medium text-gray-600 dark:text-gray-300">
-        {homeData.tagline.map((item, index) => (
+        {tagline.map((item, index) => (
           <>
             {index > 0 && <span class="px-1 text-primary-500" aria-hidden="true">|</span>}
             {item}{" "}
@@ -57,28 +59,20 @@ const linkClass = "font-medium text-primary-700 underline decoration-primary-300
         ))}
       </p>
     )}
-    <nav aria-label="Social profiles" class="mt-3 flex justify-center gap-3">
-      {linkedin && <SocialIcon kind="linkedin" href={linkedin} size={4} />}
-      {settings.scholarUrl && <SocialIcon kind="scholar" href={settings.scholarUrl} size={4} />}
-      {github && <SocialIcon kind="github" href={github} size={4} />}
-    </nav>
+    <SocialLinks class="mt-3 flex justify-center gap-3" size={4} extra={settings.scholarUrl ? [{ kind: "scholar", href: settings.scholarUrl }] : []} />
   </div>
 
   <div class="flex min-w-0 flex-col justify-center md:-ml-12 xl:-ml-28">
-    <div class="space-y-2 text-sm leading-6 text-gray-600 dark:text-gray-300 sm:text-base">
-      {homeData.intro.map((paragraph) => <p>{paragraph}</p>)}
-      {(homeData.closing || homeData.cvUrl || homeData.showMomentsLink) && (
-        <p>
-          {homeData.closing}
-          {(homeData.cvUrl || homeData.showMomentsLink) && " You can find "}
-          {homeData.cvUrl && (<><span>my </span><a href={homeData.cvUrl} class={linkClass}>{homeData.cvLabel}</a></>)}
-          {homeData.cvUrl && homeData.showMomentsLink && " and browse "}
-          {!homeData.cvUrl && homeData.showMomentsLink && "browse "}
-          {homeData.showMomentsLink && (<><span>my </span><a href="/moments" class={linkClass}>moments</a></>)}
-          {(homeData.cvUrl || homeData.showMomentsLink) && "."}
-        </p>
-      )}
+    <div class="home-intro space-y-2 text-sm leading-6 text-gray-600 dark:text-gray-300 sm:text-base">
+      {Content && <Content />}
     </div>
   </div>
   </div>
 </section>
+
+<style is:global>
+  /* Links with no style preset */
+  .home-intro a:not([class]) {
+    @apply font-medium text-primary-700 underline decoration-primary-300 underline-offset-2 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200;
+  }
+</style>

@@ -1,4 +1,5 @@
 ---
+import { siteData } from "@/data/content";
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import '@/styles/global.css';
@@ -13,7 +14,7 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const FIXED_LOGO = "https://mustanjid.github.io/static/logo.png";
+const ogImage = /^https?:\/\//.test(siteData.ogImage) ? siteData.ogImage : new URL(siteData.ogImage, Astro.site).href;
 
 const {title, description} = Astro.props;
 ---
@@ -46,16 +47,16 @@ const {title, description} = Astro.props;
     <meta property="og:url" content={Astro.url}/>
     <meta name="title" property="og:title" content={title}/>
     <meta name="description" property="og:description" content={description}/>
-    <meta name="image" property="og:image" content="https://mustanjid.github.io/static/logo.png" />
+    <meta name="image" property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="https://mustanjid.github.io/static/logo.png" />
+    <meta property="twitter:card" content={ogImage} />
     <meta property="twitter:url" content={Astro.url}/>
     <meta property="twitter:title" content={title}/>
     <meta property="twitter:description" content={description}/>
-    <meta property="twitter:image" content="https://mustanjid.github.io/static/logo.png" />
+    <meta property="twitter:image" content={ogImage} />
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png"/>

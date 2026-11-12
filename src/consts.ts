@@ -22,11 +22,8 @@ export const SITE_METADATA = {
     author: siteData.author,
     mastodon: 'https://mastodon.social/@mastodonuser',
     email: '',
-    github: siteData.social.github,
-    twitter: siteData.social.hackerrank,
     facebook: 'https://facebook.com',
     youtube: 'https://youtube.com',
-    linkedin: siteData.social.linkedin,
     keywords: siteData.keywords,
 
     // These are not supported yet
@@ -105,11 +102,6 @@ export const SITE_METADATA = {
  */
 export const ITEMS_PER_PAGE = 6;
 
-export const NAVIGATION = [
-    {href: '/', title: 'Home'},
-    {href: '/blog', title: 'Thoughts'},
-    {href: '/research', title: 'Research'},
-    {href: '/projects', title: 'Projects'},
-    {href: '/award', title: 'Achievement'},
-    {href: '/moments', title: 'Moments'},
-]
+export const NAVIGATION = siteData.navigation
+    .filter(({visible}) => visible)
+    .map(({href, title}) => ({href, title}))

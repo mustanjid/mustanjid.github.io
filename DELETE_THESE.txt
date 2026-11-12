@@ -1,0 +1,2 @@
+src/pages/projects/research/[slug].astro
+src/projects.ts
