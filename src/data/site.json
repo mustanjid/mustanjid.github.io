@@ -16,7 +16,7 @@
     "Machine Learning",
     "Pattern Recognition"
   ],
-  "ogImage": "/static/logo.png",
+  "ogImage": "static/logo1.png",
   "navigation": [
     {
       "title": "Home",
@@ -69,8 +69,8 @@
       "url": "https://www.linkedin.com/in/mustanjid/"
     },
     {
-      "kind": "hacker",
-      "url": "https://www.hackerrank.com/profile/mustanjid"
+      "kind": "scholar",
+      "url": "https://scholar.google.com/citations?user=MPlz5dQAAAAJ&hl=en&authuser=1"
     }
   ]
 }
