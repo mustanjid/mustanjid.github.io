@@ -4,6 +4,12 @@ tagline:
   - Research Assistant (Part-time)
 ---
 
-I work as a **NetOps Engineer** at **[Daffodil Online Limited](https://www.daffodilnet.com/)**, a multi-service provider and a concern of the prominent **[Daffodil Group](https://daffodil.group/)**. My daily duty is keeping the infrastructure reliable behind our network, data center and affiliated services, which support more than 30,000 customers across the nation. Additionally, I serve as a part-time **Research Assistant** at **CAMLAs**, where we explore ways to uncover patterns within binaries and systems—research that has the potential to contribute to the advancement of humanity. Browse my **[CV](/cv)**
+| About | Details |
+| :--- | :--- |
+| **Work** | NetOps Engineer at [Daffodil Online Limited (DOL)](https://www.daffodilnet.com/), a multi-service provider under the prominent [Daffodil Group](https://daffodil.group/). |
+| **Duty** | Keeping network, data center and affiliated services reliable for 30,000+ customers across the nation. |
+| **Research** | Part-time Research Assistant at CAMLAs, exploring how binaries, systems and research reveal patterns that serve human development. |
+| **Writing** | I write to share, because sharing is how I grow. |
+| **Here** | My CV, and the moments we hold in memory, mine included. |
 
-I also **[write](/blog)**, because sharing is how I grow; the _moments_ we hold in memory, mine included **[here](/moments)**.
+</div>
