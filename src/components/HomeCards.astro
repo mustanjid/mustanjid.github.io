@@ -20,16 +20,20 @@ const researchEntries = await getResearchEntries();
 const underReview = researchEntries.filter(({ data }) => data.status === "under-review" || data.status === "submitted");
 const published = researchEntries.filter(({ data }) => data.status === "published" || data.status === "accepted");
 const publications = [...underReview, ...published].slice(0, 4);
-const linkClass = "font-semibold text-primary-700 hover:underline dark:text-primary-300";
 ---
 
-<section aria-label={view === "both" ? "Recent publications and thoughts" : view === "publications" ? "Recent publications" : "Latest thoughts"} class:list={[both && "mt-8 grid gap-8 md:grid-cols-2"]}>
+<section aria-label={view === "both" ? "Recent publications and thoughts" : view === "publications" ? "Recent publications" : "Latest thoughts"} class:list={[both && "mt-8 grid gap-8 md:grid-cols-2", view === "thoughts" && "flex h-full flex-col"]}>
   {view !== "thoughts" && (
   <section aria-labelledby="latest-publications-title" class="min-w-0">
-    <header class="mb-4 flex items-end justify-between gap-3 border-b border-gray-200 pb-3 dark:border-gray-700">
+    <header class="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-3 dark:border-gray-700">
       <div>
         <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{pagesData.home.latestPublicationsEyebrow}</p>
         <h2 id="latest-publications-title" class="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100">{pagesData.home.latestPublicationsTitle}</h2>
+      </div>
+      <div class="ml-auto flex flex-wrap items-center justify-end gap-2">
+        <a href="/research" class="inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-bold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400">
+          All Articles <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </header>
 
@@ -41,26 +45,43 @@ const linkClass = "font-semibold text-primary-700 hover:underline dark:text-prim
       <p class="rounded-xl border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">{pagesData.home.publicationsEmpty}</p>
     )}
 
-    <a href="/research" class={`${linkClass} mt-4 inline-flex items-center gap-1 rounded-lg border border-primary-700 px-4 py-2 text-sm dark:border-primary-300`}>
-      {pagesData.home.allResearchButton} <span aria-hidden="true">&rarr;</span>
+    <a href="/research" class="mt-4 inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-bold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400">
+      All Articles <span aria-hidden="true">&rarr;</span>
     </a>
   </section>
   )}
 
   {view !== "publications" && (
-  <section aria-labelledby="latest-thoughts-title" class="min-w-0">
+  <section aria-labelledby="latest-thoughts-title" class:list={["min-w-0", view === "thoughts" && "flex h-full flex-col"]}>
     <header class="mb-1.5 border-b border-gray-200 pb-1.5 dark:border-gray-700">
-      <h2 id="latest-thoughts-title" class="text-base font-bold text-gray-900 dark:text-gray-100">{pagesData.home.latestThoughtsTitle}</h2>
+      <h2 id="latest-thoughts-title" class="text-lg font-bold text-gray-900 dark:text-gray-100">{pagesData.home.latestThoughtsTitle}</h2>
     </header>
 
     {posts.length > 0 ? (
-      <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-        {recentPosts.map((post) => (
-          <li class="py-1 first:pt-0 last:pb-0">
-            <time class="block text-[10px] leading-4 text-gray-500 dark:text-gray-400" datetime={post.data.date.toISOString()}><FormattedDate date={post.data.date} /></time>
-            <a href={`/blog/${post.slug}`} title={post.data.title} class:list={["line-clamp-2 text-[11px] leading-4 font-semibold text-gray-900 hover:text-primary-700 dark:text-gray-100 dark:hover:text-primary-300", post.hasBengali && "font-bengali"]}>
-              {post.data.title} <span class="ml-1.5 inline-flex whitespace-nowrap rounded-full border border-primary-700/40 px-1.5 py-0.5 align-middle text-[9px] font-semibold leading-none text-primary-700 dark:border-primary-300/40 dark:text-primary-300">{pagesData.home.readLabel} <span aria-hidden="true">&rarr;</span></span>
-            </a>
+      <ul class:list={["divide-y divide-gray-200 dark:divide-gray-800", view === "thoughts" && "flex flex-1 flex-col justify-evenly"]}>
+        {recentPosts.map((post) => view === "thoughts" ? (
+          <li class="py-2 first:pt-0 last:pb-0">
+            <time class="block text-[11px] leading-4 text-gray-500 dark:text-gray-400" datetime={post.data.date.toISOString()}><FormattedDate date={post.data.date} /></time>
+            <div class="mt-1 flex items-start gap-1.5">
+              <a href={`/blog/${post.slug}`} title={post.data.title} class:list={["min-w-0 flex-1 line-clamp-2 text-sm leading-5 font-semibold text-gray-900 hover:text-primary-700 dark:text-gray-100 dark:hover:text-primary-300", post.hasBengali && "font-bengali"]}>
+                {post.data.title}
+              </a>
+              <a href={`/blog/${post.slug}`} aria-label={`${pagesData.home.readLabel}: ${post.data.title}`} class="shrink-0 whitespace-nowrap text-[11px] font-semibold leading-5 text-primary-700 hover:underline dark:text-primary-300">
+                {pagesData.home.readLabel}<span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </li>
+        ) : (
+          <li class="py-2 first:pt-0 last:pb-0">
+            <time class="block text-xs leading-4 text-gray-500 dark:text-gray-400" datetime={post.data.date.toISOString()}><FormattedDate date={post.data.date} /></time>
+            <div class="flex items-start gap-2">
+              <a href={`/blog/${post.slug}`} title={post.data.title} class:list={["min-w-0 flex-1 line-clamp-2 text-sm leading-5 font-semibold text-gray-900 hover:text-primary-700 dark:text-gray-100 dark:hover:text-primary-300", post.hasBengali && "font-bengali"]}>
+                {post.data.title}
+              </a>
+              <a href={`/blog/${post.slug}`} aria-label={`${pagesData.home.readLabel}: ${post.data.title}`} class="inline-flex shrink-0 whitespace-nowrap rounded-full border border-primary-700/40 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-primary-700 dark:border-primary-300/40 dark:text-primary-300">
+                {pagesData.home.readLabel} <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
           </li>
         ))}
       </ul>
@@ -68,9 +89,11 @@ const linkClass = "font-semibold text-primary-700 hover:underline dark:text-prim
       <p class="text-sm text-gray-500 dark:text-gray-400">{pagesData.home.thoughtsEmpty}</p>
     )}
 
-    <a href="/blog" class={`${linkClass} mt-2 inline-flex items-center gap-1 rounded-lg border border-primary-700 px-3 py-1 text-xs dark:border-primary-300`}>
-      {pagesData.home.allThoughtsButton} <span aria-hidden="true">&rarr;</span>
-    </a>
+    <div class:list={[view === "thoughts" ? "mt-auto pt-4" : "mt-4"]}>
+      <a href="/blog" class="inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-bold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400">
+        {pagesData.home.allThoughtsButton} <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
   </section>
   )}
 </section>

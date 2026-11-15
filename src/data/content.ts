@@ -94,7 +94,7 @@ const labels = <K extends string>(keys: readonly K[]) =>
   );
 
 const pages = z.object({
-  home: labels(["latestPublicationsEyebrow", "latestPublicationsTitle", "publicationsEmpty", "allResearchButton", "latestThoughtsTitle", "thoughtsEmpty", "allThoughtsButton", "readLabel", "updatesTitle", "updatesLinkLabel", "nowLabel", "techNewsLabel", "currentProjectEyebrow", "areasLabel", "toolsLabel", "projectDetailsLabel", "repositoryLabel", "implementationLabel"]),
+  home: labels(["latestPublicationsEyebrow", "latestPublicationsTitle", "publicationsEmpty", "allResearchButton", "latestThoughtsTitle", "thoughtsEmpty", "allThoughtsButton", "readLabel", "updatesTitle", "updatesLinkLabel", "nowLabel", "techNewsLabel", "currentProjectEyebrow", "currentDevProjectEyebrow", "areasLabel", "toolsLabel", "projectDetailsLabel", "repositoryLabel", "implementationLabel"]),
   thoughts: labels(["seoTitle", "seoDescription", "title", "subtitle", "filterLabel", "allTopicsLabel", "readMoreLabel"]),
   research: labels(["seoTitle", "seoDescription", "interestsTitle", "publicationsTitle", "scholarLinkLabel", "groupUnderReview", "groupJournal", "groupConference", "groupThesis", "empty"]),
   projects: labels(["seoTitle", "seoDescription", "title", "subtitle", "tabLatest", "tabResearch", "tabDevelopment", "detailsLabel", "emptyResearch", "emptyDevelopment", "comingSoonResearch", "comingSoonDevelopment", "backLabel", "researchKindLabel", "developmentKindLabel", "overviewLabel", "areasLabel", "toolsLabel", "liveLabel", "sourceLabel", "notesLabel", "paperLabel"]),

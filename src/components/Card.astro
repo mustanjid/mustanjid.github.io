@@ -144,16 +144,18 @@ const {slug, title, description, imgSrc, projectdesc, srccode, url, stack} = Ast
                 </p>
             </div>
 
-            <div class="mb-3 flex items-baseline gap-2 border-t border-gray-200 pt-3 dark:border-gray-700">
-                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Tech Stack:</span>
-                <div class="flex flex-1 flex-wrap gap-1.5">
-                    {stack.map((item, index) => (
-                        <span key={index} class="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                            {item}
-                        </span>
-                    ))}
+            {stack.length > 0 && (
+                <div class="mb-3 flex items-baseline gap-2 border-t border-gray-200 pt-3 dark:border-gray-700">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Tech Stack:</span>
+                    <div class="flex flex-1 flex-wrap gap-1.5">
+                        {stack.map((item, index) => (
+                            <span key={index} class="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                {item}
+                            </span>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div class="mt-auto flex items-center justify-between gap-2">
                 <div class="flex gap-2">

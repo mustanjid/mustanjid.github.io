@@ -30,13 +30,13 @@ const buttonClass = "inline-flex min-h-9 items-center rounded-md border border-p
 ---
 
 <article id={slug} class="scroll-mt-24 overflow-hidden rounded-xl border border-gray-200 bg-white transition hover:border-primary-300 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-primary-800">
-  <div class="grid items-stretch sm:grid-cols-[minmax(33.333%,1fr)_minmax(0,2fr)]">
+  <div class="grid items-stretch xl:grid-cols-[minmax(18rem,0.9fr)_minmax(0,1.1fr)]">
     {data.image ? (
-      <div class="relative min-h-28 self-stretch sm:min-h-full">
-        <img src={data.image} alt="" class="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" />
+      <div class="relative h-36 self-stretch bg-gray-50 sm:h-44 dark:bg-gray-800 xl:h-auto xl:min-h-48">
+        <img src={data.image} alt="" class="absolute inset-0 h-full w-full object-contain object-center p-2" loading="lazy" />
       </div>
     ) : (
-      <div role="img" aria-label={`${publicationType} publication`} class="flex min-h-28 items-center justify-center bg-gradient-to-br from-blue-100 to-emerald-100 p-3 dark:from-blue-950 dark:to-emerald-950">
+      <div role="img" aria-label={`${publicationType} publication`} class="flex h-36 items-center justify-center bg-gradient-to-br from-blue-100 to-emerald-100 p-3 dark:from-blue-950 dark:to-emerald-950 sm:h-44 xl:min-h-48">
         <svg viewBox="0 0 24 24" class="h-7 w-7 text-primary-700 dark:text-primary-300" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <path d="M5 4.75A1.75 1.75 0 0 1 6.75 3H20v16H6.75A1.75 1.75 0 0 0 5 20.75v-16Z" />
           <path d="M5 17.5c.48-.32 1.06-.5 1.75-.5H20M8 7h8m-8 3h8" />

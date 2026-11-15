@@ -36,7 +36,7 @@ const tagline = intro?.data.tagline ?? [];
     <circle cx="80" cy="168" r="4" fill="currentColor" />
   </svg>
 
-  <div class="relative z-10 grid items-center gap-2 md:grid-cols-2">
+  <div class="relative z-10 grid items-center gap-3 md:grid-cols-2 md:gap-4">
   <div class="flex flex-col items-center justify-center text-center">
     <h1 id="home-title" class="text-xl font-semibold leading-tight text-gray-900 dark:text-gray-100 sm:text-2xl">{name}</h1>
     {avatar && (
@@ -50,7 +50,7 @@ const tagline = intro?.data.tagline ?? [];
       />
     )}
     {tagline.length > 0 && (
-      <p class="mt-2 text-sm font-medium text-gray-600 dark:text-gray-300">
+      <p class="mt-2 text-base font-medium text-gray-600 dark:text-gray-300">
         {tagline.map((item, index) => (
           <>
             {index > 0 && <span class="px-1 text-primary-500" aria-hidden="true">|</span>}
@@ -59,11 +59,11 @@ const tagline = intro?.data.tagline ?? [];
         ))}
       </p>
     )}
-    <SocialLinks class="mt-3 flex justify-center gap-3" size={4} extra={settings.scholarUrl ? [{ kind: "scholar", href: settings.scholarUrl }] : []} />
+    <SocialLinks class="mt-3 flex justify-center gap-3" size={6} extra={settings.scholarUrl ? [{ kind: "scholar", href: settings.scholarUrl }] : []} />
   </div>
 
-  <div class="flex min-w-0 flex-col justify-center md:-ml-12 xl:-ml-28">
-    <div class="home-intro space-y-2 text-sm leading-6 text-gray-600 dark:text-gray-300 sm:text-base">
+  <div class="flex min-w-0 flex-col justify-center md:-ml-8 xl:-ml-12">
+    <div class="home-intro space-y-2 text-justify text-[15px] leading-6 text-gray-600 dark:text-gray-300 sm:text-[17px]">
       {Content && <Content />}
     </div>
   </div>
