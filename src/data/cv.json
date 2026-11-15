@@ -1,11 +1,11 @@
 {
   "headline": "Support Engineer (NetOps) · Researcher",
-  "summary": "I’m a Support Engineer (NetOps), helping keep network services and infrastructure reliable at a nationwide ISP. I work across networking and infrastructure, with a focus on practical, dependable systems.\n\nAlongside engineering, I work as a research assistant in computational biology, exploring how bioinformatics and systems biology can reveal disease mechanisms, connected pathways, and potential therapeutic targets.",
+  "summary": "I work as a NetOps Engineer at Daffodil Online Limited (DOL), a multi-service provider under the well-known Daffodil Group. My core responsibility involves maintaining a seamless and reliable infrastructure for networks, data centers, and related services, supporting over 30,000 customers across the country.\n\nAdditionally, I serve as a part-time Research Assistant at CAMLAs, where we explore ways to uncover patterns within binaries and systems—research that has the potential to contribute to the advancement of humanity. I also write regularly on various topics, as I believe that the act of writing fosters the development of knowledge and thought.",
   "pdf": "",
   "experience": [],
   "education": [],
   "skills": [],
-  "showPublications": true,
+  "showPublications": false,
   "showAwards": false,
   "showCertificates": false
 }
