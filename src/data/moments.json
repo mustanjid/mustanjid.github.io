@@ -1,5 +1,5 @@
 {
-  "intro": "Time never holds us but moment does... what we cherish in our heart forever",
+  "intro": "Time never holds us but moment does... what we cherish as memories in our heart forever. Sharing mine...",
   "items": [
     {
       "images": [
@@ -8,7 +8,8 @@
       "alt": "Convocation Day",
       "caption": "Learning like endless sky never ends",
       "writeup": "",
-      "category": "events"
+      "category": "events",
+      "sharePreview": null
     },
     {
       "images": [
@@ -17,7 +18,8 @@
       "alt": "A sunset on the Padma River, Rajshahi",
       "caption": "Before dark on the vast Padma river, Rajshahi",
       "writeup": "",
-      "category": "places"
+      "category": "places",
+      "sharePreview": null
     },
     {
       "images": [
@@ -26,7 +28,8 @@
       "alt": "",
       "caption": "China Clay Hill, Durgapur, Netrakona",
       "writeup": "",
-      "category": "bangladesh-minerals"
+      "category": "bangladesh-minerals",
+      "sharePreview": null
     },
     {
       "images": [
@@ -35,7 +38,8 @@
       "alt": "",
       "caption": "Waiting little wave",
       "writeup": "",
-      "category": "sea"
+      "category": "sea",
+      "sharePreview": null
     }
   ]
 }
