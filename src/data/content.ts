@@ -76,6 +76,11 @@ const moments = z.object({
     caption: z.string().min(1),
     writeup: text,
     category: z.string().min(1),
+    // "Link preview image" for this moment's share page (see src/og.ts shareImageSource).
+    sharePreview: z.preprocess(blank, z.object({
+      source: z.enum(["cover", "logo", "custom"]).default("cover"),
+      image: text,
+    }).optional()),
   })).default([]),
 });
 

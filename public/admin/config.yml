@@ -82,7 +82,7 @@ collections:
           - { label: "Site description", name: description, widget: text, hint: "Used for SEO and link previews." }
           - { label: "Author name", name: author, widget: string, hint: "Shown in the footer copyright." }
           - { label: "SEO keywords", name: keywords, widget: list, required: false }
-          - { label: "Link preview image", name: ogImage, widget: image, media_folder: public/static, public_folder: /static, hint: "Shown when the site is shared on social media. Recommended 1200x630." }
+          - { label: "Default link preview image (logo)", name: ogImage, widget: image, media_folder: public/static, public_folder: /static, hint: "The default picture shown when any page is shared, unless that page picks its own. Recommended 1200x630." }
           - label: "Navigation menu"
             name: navigation
             widget: list
@@ -229,6 +229,22 @@ collections:
                 search_fields: [name]
                 value_field: "{{slug}}"
                 display_fields: [name]
+              - label: "Link preview image (when shared)"
+                name: sharePreview
+                widget: object
+                required: false
+                collapsed: true
+                hint: "Controls the picture shown when this is shared on WhatsApp, LinkedIn, Facebook or X."
+                fields:
+                  - label: "Preview picture"
+                    name: source
+                    widget: select
+                    default: cover
+                    options:
+                      - { label: "Cover image (default logo if there is none)", value: cover }
+                      - { label: "Default site logo", value: logo }
+                      - { label: "Custom: choose or upload an image", value: custom }
+                  - { label: "Custom image", name: image, widget: image, required: false, hint: "Only used when 'Custom' is selected above. Best at 1200x630; large files are shrunk automatically." }
 
 
       - name: cv
@@ -328,6 +344,9 @@ collections:
               - { label: "Group conference", name: groupConference, widget: string }
               - { label: "Group thesis", name: groupThesis, widget: string }
               - { label: "Empty", name: empty, widget: string }
+              - { label: "Back link label (paper page)", name: backLabel, widget: string }
+              - { label: "Share button label", name: shareLabel, widget: string }
+              - { label: "Citation heading (paper page)", name: citationLabel, widget: string }
           - label: "Projects (list and detail pages)"
             name: projects
             widget: object
@@ -356,6 +375,7 @@ collections:
               - { label: "Notes label", name: notesLabel, widget: string }
               - { label: "Paper label", name: paperLabel, widget: string }
               - { label: "Paper details link label", name: paperDetailsLabel, widget: string }
+              - { label: "Share button label", name: shareLabel, widget: string }
           - label: "Achievements page"
             name: achievements
             widget: object
@@ -491,6 +511,22 @@ collections:
       - { label: "Date", name: date, widget: datetime, required: false, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
       - { label: "Short description", name: description, widget: text }
       - { label: "Project image", name: imgSrc, widget: image, required: false, hint: "Upload an image or paste a full image URL." }
+      - label: "Link preview image (when shared)"
+        name: sharePreview
+        widget: object
+        required: false
+        collapsed: true
+        hint: "Controls the picture shown when this is shared on WhatsApp, LinkedIn, Facebook or X."
+        fields:
+          - label: "Preview picture"
+            name: source
+            widget: select
+            default: cover
+            options:
+              - { label: "Cover image (default logo if there is none)", value: cover }
+              - { label: "Default site logo", value: logo }
+              - { label: "Custom: choose or upload an image", value: custom }
+          - { label: "Custom image", name: image, widget: image, required: false, hint: "Only used when 'Custom' is selected above. Best at 1200x630; large files are shrunk automatically." }
       - { label: "Research areas", name: areas, widget: list, required: false, hint: "Mostly for research projects." }
       - { label: "Tools, methods or tech stack", name: stack, widget: list, required: false }
       - { label: "Live demo link", name: url, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
@@ -538,6 +574,22 @@ collections:
         default: [sparrowhawk]
       - { label: "Summary", name: summary, widget: text, required: false }
       - { label: "Cover image", name: images, widget: image, required: false }
+      - label: "Link preview image (when shared)"
+        name: sharePreview
+        widget: object
+        required: false
+        collapsed: true
+        hint: "Controls the picture shown when this is shared on WhatsApp, LinkedIn, Facebook or X."
+        fields:
+          - label: "Preview picture"
+            name: source
+            widget: select
+            default: cover
+            options:
+              - { label: "Cover image (default logo if there is none)", value: cover }
+              - { label: "Default site logo", value: logo }
+              - { label: "Custom: choose or upload an image", value: custom }
+          - { label: "Custom image", name: image, widget: image, required: false, hint: "Only used when 'Custom' is selected above. Best at 1200x630; large files are shrunk automatically." }
       - label: "Layout"
         name: layout
         widget: select
@@ -606,6 +658,22 @@ collections:
       - { label: "Dataset link", name: datasetUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
       - { label: "Project link", name: projectUrl, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
       - { label: "Cover image", name: image, widget: image, required: false }
+      - label: "Link preview image (when shared)"
+        name: sharePreview
+        widget: object
+        required: false
+        collapsed: true
+        hint: "Controls the picture shown when this is shared on WhatsApp, LinkedIn, Facebook or X."
+        fields:
+          - label: "Preview picture"
+            name: source
+            widget: select
+            default: cover
+            options:
+              - { label: "Cover image (default logo if there is none)", value: cover }
+              - { label: "Default site logo", value: logo }
+              - { label: "Custom: choose or upload an image", value: custom }
+          - { label: "Custom image", name: image, widget: image, required: false, hint: "Only used when 'Custom' is selected above. Best at 1200x630; large files are shrunk automatically." }
       - { label: "Plain-language summary", name: summary, widget: text, required: false }
       - { label: "Tags", name: tags, widget: list, required: false }
       - { label: "Featured", name: featured, widget: boolean, default: false, required: false }

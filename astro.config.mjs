@@ -7,12 +7,12 @@ import {readdirSync} from 'node:fs';
 import {SITE_METADATA} from "./src/consts.ts";
 import rehypeLinkStyles from "./src/plugins/rehype-link-styles.mjs";
 
-// /projects/research/<paper> used to be one page per paper; papers now live under /research.
+// /projects/research/<paper> used to be one page per paper; each paper now has its own page under /research/<paper>.
 const paperRedirects = Object.fromEntries(
     readdirSync('./src/content/research')
         .filter((file) => /\.mdx?$/.test(file))
         .map((file) => file.replace(/\.mdx?$/, ''))
-        .map((slug) => [`/projects/research/${slug}`, `/research#${slug}`])
+        .map((slug) => [`/projects/research/${slug}`, `/research/${slug}`])
 );
 
 // https://astro.build/config

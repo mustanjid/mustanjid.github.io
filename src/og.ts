@@ -33,3 +33,26 @@ export const ogImagePath = (src?: string): string | undefined => {
   if (!value || !isLocalImage(value)) return undefined;
   return existsSync(publicFile(value)) ? `/og/${ogKey(value)}.jpg` : undefined;
 };
+
+/**
+ * The "Link preview image" choice saved by the CMS on every shareable item (blog post, research paper, project,
+ * moment): "cover" = the item's own cover image, "logo" = the site-wide default image, "custom" = a chosen/uploaded one.
+ */
+export interface SharePreview {
+  source?: "cover" | "logo" | "custom";
+  image?: string;
+}
+
+/**
+ * Image to hand to <BaseHead image=...>. Returning undefined makes BaseHead use the site-wide default (the logo).
+ * Items without a saved choice keep the old behaviour: their cover image, else the logo. A custom choice whose file
+ * is missing falls back to the cover image rather than silently dropping to the logo.
+ */
+export const shareImageSource = (cover?: string, preview?: SharePreview): string | undefined => {
+  if (preview?.source === "logo") return undefined;
+  if (preview?.source === "custom") {
+    const custom = preview.image?.trim();
+    if (custom && ogImagePath(custom)) return custom;
+  }
+  return cover?.trim() || undefined;
+};

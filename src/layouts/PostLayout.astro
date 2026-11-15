@@ -8,6 +8,7 @@ import SocialShare from "./share/SocialShare.astro";
 import ScrollTopAndComments from "../components/ScrollTopAndComments.astro";
 import RootLayout from "./RootLayout.astro";
 import { excludeDrafts, sortBlogPosts } from "../functions";
+import { shareImageSource } from "@/og";
 
 interface Props {
   post: CollectionEntry<"blog">;
@@ -40,7 +41,7 @@ const readingTime = Math.max(1, Math.ceil(readableBody.trim().split(/\s+/).filte
 <RootLayout
   title={post.data.title}
   description={post.data.summary}
-  image={post.data.images}
+  image={shareImageSource(post.data.images, post.data.sharePreview)}
   imageAlt={post.data.title}
   type="article"
   publishedTime={post.data.date.toISOString()}

@@ -4,6 +4,7 @@ import RootLayout from "@/layouts/RootLayout.astro";
 import SocialShare from "@/layouts/share/SocialShare.astro";
 import { getMoments } from "@/functions";
 import { pagesData } from "@/data/content";
+import { shareImageSource } from "@/og";
 
 // One page per moment so it can be shared with its own title, image and description in the link preview.
 export async function getStaticPaths() {
@@ -21,7 +22,7 @@ const alt = moment.alt || moment.caption;
 const description = moment.writeup || moment.alt || `${moment.categoryLabel} · ${t.title}`;
 ---
 
-<RootLayout title={`${moment.caption} | ${t.title}`} description={description} image={moment.images[0]} imageAlt={alt} wide>
+<RootLayout title={`${moment.caption} | ${t.title}`} description={description} image={shareImageSource(moment.images[0], moment.sharePreview)} imageAlt={alt} wide>
   <article class="mx-auto max-w-4xl py-8">
     <a href="/moments" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
 

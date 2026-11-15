@@ -5,6 +5,12 @@ import {defineCollection, reference, z} from 'astro:content';
 const blank = (value: unknown) => (value === '' || value === null ? undefined : value);
 const optional = <T extends z.ZodTypeAny>(schema: T) => z.preprocess(blank, schema.optional());
 
+// "Link preview image" chosen in the CMS for anything that can be shared (see src/og.ts shareImageSource).
+const sharePreview = optional(z.object({
+    source: z.enum(['cover', 'logo', 'custom']).default('cover'),
+    image: optional(z.string()),
+}));
+
 const authors = defineCollection({
     type: 'content',
     schema: z.object({
@@ -30,6 +36,7 @@ const blog = defineCollection({
         draft: z.boolean().default(false),
         summary: optional(z.string()),
         images: optional(z.string()),
+        sharePreview,
         authors: z.array(reference('authors')).default(['default']),
         // TODO: Add support for tags-and-list layout
         layout: z.enum(['list', 'tags-and-list']).default('list'),
@@ -83,6 +90,7 @@ const research = defineCollection({
         datasetUrl: optional(z.string().url()),
         projectUrl: optional(z.string().url()),
         image: optional(z.string()),
+        sharePreview,
         summary: optional(z.string()),      // 1-2 plain-language sentences
         tags: z.array(z.string()).default([]),
         featured: z.boolean().default(false),
@@ -103,6 +111,7 @@ const projects = defineCollection({
         date: optional(z.coerce.date()),
         description: z.string(),
         imgSrc: optional(z.string()),
+        sharePreview,
         projectdesc: optional(z.string()),  // README / notes link
         srccode: optional(z.string()),      // source code / repository link
         url: optional(z.string()),          // live demo link

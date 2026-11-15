@@ -39,7 +39,10 @@
     "groupJournal": "Journal",
     "groupConference": "Conference",
     "groupThesis": "Thesis",
-    "empty": "No publications yet."
+    "empty": "No publications yet.",
+    "backLabel": "All research",
+    "shareLabel": "Share",
+    "citationLabel": "Citation"
   },
   "projects": {
     "seoTitle": "MB-Projects",
@@ -64,7 +67,8 @@
     "sourceLabel": "Source code",
     "notesLabel": "Project notes",
     "paperLabel": "Related publication",
-    "paperDetailsLabel": "View publication details"
+    "paperDetailsLabel": "View publication details",
+    "shareLabel": "Share"
   },
   "achievements": {
     "seoTitle": "Achievements & Certificates",

@@ -2,6 +2,7 @@
 import { getFeaturedProject, STAGE_LABEL } from "@/functions";
 import { pagesData } from "@/data/content";
 import type { CollectionEntry } from "astro:content";
+import ShareButton from "@/components/ShareButton.astro";
 
 interface Props {
   size?: "default" | "large" | "tile";
@@ -27,6 +28,7 @@ const project = entry && {
   demoUrl: entry.data.url,
 };
 const areas = project?.areas ?? [];
+const shareUrl = project ? new URL(`/projects/${project.slug}/`, Astro.site).href : "";
 const tools = project?.tools ?? [];
 const t = pagesData.home;
 const chipClass = isTile
@@ -115,6 +117,7 @@ const chipClass = isTile
           </a>
           {isLarge && project.repoUrl && <a class="text-primary-700 hover:underline dark:text-primary-300" href={project.repoUrl} target="_blank" rel="noopener noreferrer">{t.repositoryLabel}</a>}
           {isLarge && project.demoUrl && <a class="text-primary-700 hover:underline dark:text-primary-300" href={project.demoUrl} target="_blank" rel="noopener noreferrer">{t.implementationLabel}</a>}
+          {isLarge && <span class="relative"><ShareButton url={shareUrl} title={project.title} text={project.summary} label={pagesData.projects.shareLabel} /></span>}
         </div>
       </div>
     </div>

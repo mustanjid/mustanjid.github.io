@@ -3,6 +3,8 @@ import RootLayout from "@/layouts/RootLayout.astro";
 import { getProjects, isResearchProject, STAGE_LABEL } from "@/functions";
 import { getEntry } from "astro:content";
 import { pagesData } from "@/data/content";
+import { shareImageSource } from "@/og";
+import SocialShare from "@/layouts/share/SocialShare.astro";
 
 export async function getStaticPaths() {
     const projects = await getProjects();
@@ -26,7 +28,7 @@ const paperMeta = paper ? [paper.data.venue, paper.data.date?.getFullYear()].fil
 const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-800 dark:bg-primary-950 dark:text-primary-200";
 ---
 
-<RootLayout title={`${data.title} | ${t.title}`} description={data.description} image={data.imgSrc} imageAlt={data.title}>
+<RootLayout title={`${data.title} | ${t.title}`} description={data.description} image={shareImageSource(data.imgSrc, data.sharePreview)} imageAlt={data.title}>
     <article class="mx-auto max-w-4xl py-8">
         <a href="/projects" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
         {data.imgSrc && <img src={data.imgSrc} alt="" class="mt-6 max-h-64 w-full rounded-xl object-cover" />}
@@ -80,5 +82,7 @@ const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-pr
             {data.srccode && <a class={btn} href={data.srccode} target="_blank" rel="noopener noreferrer">{t.sourceLabel}</a>}
             {data.projectdesc && <a class={btn} href={data.projectdesc} target="_blank" rel="noopener noreferrer">{t.notesLabel}</a>}
         </nav>
+
+        <SocialShare title={data.title} description={data.description} />
     </article>
 </RootLayout>

@@ -1,23 +1,27 @@
 // Build-time generator for link-preview images: /og/<name>.jpg (1200x630 JPEG, under ~300 KB).
-// Covers the site default image, blog covers, project images and every Moments photo.
+// Covers the site default image, blog / research / project covers, every Moments photo and any custom link-preview
+// image picked in the CMS.
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import sharp from "sharp";
 import { siteData } from "@/data/content";
-import { getMoments, getProjects } from "@/functions";
+import { getMoments, getProjects, getResearchEntries } from "@/functions";
 import { OG_HEIGHT, OG_WIDTH, isLocalImage, normalizeSrc, ogKey, publicFile } from "@/og";
 
 const MAX_BYTES = 280_000; // WhatsApp ignores og:image files much larger than ~300 KB
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog")) ?? [];
+  const research = await getResearchEntries();
+  const projects = await getProjects();
   const sources = [
     siteData.ogImage,
-    ...posts.map(({ data }) => data.images),
-    ...(await getProjects()).map(({ data }) => data.imgSrc),
-    ...getMoments().flatMap(({ images }) => images),
+    ...posts.flatMap(({ data }) => [data.images, data.sharePreview?.image]),
+    ...projects.flatMap(({ data }) => [data.imgSrc, data.sharePreview?.image]),
+    ...research.flatMap(({ data }) => [data.image, data.sharePreview?.image]),
+    ...getMoments().flatMap(({ images, sharePreview }) => [...images, sharePreview?.image]),
   ].filter((src): src is string => !!src && isLocalImage(src) && existsSync(publicFile(src)));
 
   const unique = new Map(sources.map((src) => [ogKey(src), normalizeSrc(src)]));
