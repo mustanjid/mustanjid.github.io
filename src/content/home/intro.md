@@ -1,7 +1,7 @@
 ---
 tagline:
   - NetOps Engnieer
-  - Bioinfomatics Enthusiast
+  - Research Assistant (Part-time)
 ---
 
 I’m a **NetOps Support Engineer**, keeping data center, network services and infrastructure reliable at [Daffodil Online Limited](https://www.daffodilnet.com/), a multi-service provider across nationa wide and concern of the prominent [Daffodil Group](https://daffodil.group/). Alongside engineering, also work as a part-time **Research Assistant** at CAMLAs. As of that exploring how binaries, systems and biology can reveal disease mechanisms, connected pathways, and potential therapeutic targets.
