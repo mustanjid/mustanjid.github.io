@@ -11,12 +11,13 @@
     "NetOps",
     "Systems and Network",
     "Research",
+    "Research Assistant",
     "Bioinformatics",
     "Systems Biology",
     "Machine Learning",
     "Pattern Recognition"
   ],
-  "ogImage": "/static/logo.png",
+  "ogImage": "public/static/logo1.png",
   "navigation": [
     {
       "title": "Home",
