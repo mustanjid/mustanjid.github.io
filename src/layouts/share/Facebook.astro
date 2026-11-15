@@ -1,15 +1,13 @@
 ---
-import type ButtonProps  from './types';
+import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const { url=Astro.request.url} = Astro.props;
-
-let URL = `https://www.facebook.com/sharer/sharer.php?u=${url}`
-
+const { url = Astro.url.href } = Astro.props;
+const href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
 ---
 <div>
-<a class="fill-current text-gray-700" target="_blank" href={URL} rel="noopener noreferrer">
+<a aria-label="Share on Facebook" title="Share on Facebook" class="fill-current text-gray-700" target="_blank" href={href} rel="noopener noreferrer">
   <style>
    svg:hover {
       fill:#f21818;

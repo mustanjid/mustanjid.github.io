@@ -24,7 +24,7 @@ const latestDevelopment = developmentProjects[0];
             </p>
         </div>
 
-        <div class="space-y-6 py-8">
+        <div class="space-y-6 py-8" data-project-tabs>
             <nav class="flex flex-wrap gap-2" aria-label="Filter projects">
                 <button type="button" data-project-filter="latest" aria-pressed="true" class="rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white">{t.tabLatest}</button>
                 <button type="button" data-project-filter="research" aria-pressed="false" class="rounded-md px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">{t.tabResearch}</button>
@@ -69,24 +69,29 @@ const latestDevelopment = developmentProjects[0];
 </RootLayout>
 
 <script>
-    const filterButtons = document.querySelectorAll<HTMLButtonElement>("[data-project-filter]");
-    const projectPanels = document.querySelectorAll<HTMLElement>("[data-project-panel]");
+    // Delegated listener: Astro View Transitions swap the page body without re-running this module script,
+    // so listeners attached directly to the buttons die after "Project details -> All projects".
+    const w = window as unknown as { __projectTabsReady?: boolean };
     const selectedButtonClass = "rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white";
     const unselectedButtonClass = "rounded-md px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800";
 
-    filterButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const selectedFilter = button.dataset.projectFilter;
+    if (!w.__projectTabsReady) {
+        w.__projectTabsReady = true;
 
-            filterButtons.forEach((item) => {
+        document.addEventListener("click", (event) => {
+            const button = (event.target as Element).closest<HTMLButtonElement>("[data-project-filter]");
+            const root = button?.closest<HTMLElement>("[data-project-tabs]");
+            if (!button || !root) return;
+
+            const selectedFilter = button.dataset.projectFilter;
+            root.querySelectorAll<HTMLButtonElement>("[data-project-filter]").forEach((item) => {
                 const isSelected = item === button;
                 item.setAttribute("aria-pressed", String(isSelected));
                 item.className = isSelected ? selectedButtonClass : unselectedButtonClass;
             });
-
-            projectPanels.forEach((panel) => {
+            root.querySelectorAll<HTMLElement>("[data-project-panel]").forEach((panel) => {
                 panel.classList.toggle("hidden", panel.dataset.projectPanel !== selectedFilter);
             });
         });
-    });
+    }
 </script>

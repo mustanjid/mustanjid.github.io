@@ -3,13 +3,13 @@ import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const url = encodeURIComponent(Astro.props.url ?? Astro.request.url);
-const URL = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-
+const { url = Astro.url.href } = Astro.props;
+// LinkedIn builds the preview card (title, description, image) from the page's Open Graph tags.
+const href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
 ---
 
 <div>
-  <a class="fill-current text-gray-700" rel="noopener noreferrer" target="_blank" href={URL}>
+  <a aria-label="Share on LinkedIn" title="Share on LinkedIn" class="fill-current text-gray-700" rel="noopener noreferrer" target="_blank" href={href}>
     <style>
       svg:hover {
         fill: #f21818;

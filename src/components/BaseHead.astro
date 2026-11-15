@@ -5,18 +5,29 @@ import { siteData } from "@/data/content";
 import '@/styles/global.css';
 import {SITE_METADATA} from "@/consts";
 import {ViewTransitions} from 'astro:transitions';
+import {OG_HEIGHT, OG_WIDTH, ogImagePath} from "@/og";
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
+  /** Link-preview image for this page (site-relative or absolute). Falls back to the site-wide preview image. */
   image?: string;
+  imageAlt?: string;
+  type?: "website" | "article";
+  /** ISO date; only used for type="article". */
+  publishedTime?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const toAbsolute = (src: string) => (/^https?:\/\//.test(src) ? src : new URL(src, Astro.site).href);
 
-const ogImage = /^https?:\/\//.test(siteData.ogImage) ? siteData.ogImage : new URL(siteData.ogImage, Astro.site).href;
-
-const {title, description} = Astro.props;
+const {title, description: pageDescription, image, imageAlt, type = "website", publishedTime} = Astro.props;
+const description = pageDescription?.trim() || siteData.description;
+// Prefer the re-encoded 1200x630 JPEG; a page with no (or a missing) image falls back to the site-wide default.
+const ogPath = ogImagePath(image) ?? ogImagePath(siteData.ogImage) ?? siteData.ogImage;
+const ogImage = toAbsolute(ogPath);
+const isGeneratedImage = ogPath.startsWith("/og/");
+const ogImageAlt = imageAlt?.trim() || title;
 ---
 
 <head>
@@ -42,21 +53,28 @@ const {title, description} = Astro.props;
     <title>{title}</title>
     <meta name="description" content={description}/>
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content={Astro.url}/>
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+    <meta property="og:type" content={type}/>
+    <meta property="og:site_name" content={siteData.title}/>
+    <meta property="og:locale" content="en_US"/>
+    <meta property="og:url" content={canonicalURL}/>
     <meta name="title" property="og:title" content={title}/>
     <meta name="description" property="og:description" content={description}/>
     <meta name="image" property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:secure_url" content={ogImage} />
+    {isGeneratedImage && <meta property="og:image:type" content="image/jpeg" />}
+    {isGeneratedImage && <meta property="og:image:width" content={String(OG_WIDTH)} />}
+    {isGeneratedImage && <meta property="og:image:height" content={String(OG_HEIGHT)} />}
+    <meta property="og:image:alt" content={ogImageAlt} />
+    {type === "article" && publishedTime && <meta property="article:published_time" content={publishedTime}/>}
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content={ogImage} />
-    <meta property="twitter:url" content={Astro.url}/>
-    <meta property="twitter:title" content={title}/>
-    <meta property="twitter:description" content={description}/>
-    <meta property="twitter:image" content={ogImage} />
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL}/>
+    <meta name="twitter:title" content={title}/>
+    <meta name="twitter:description" content={description}/>
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png"/>

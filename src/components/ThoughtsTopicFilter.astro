@@ -29,8 +29,16 @@ const selectedTag = selectedTagProp ?? routeTag;
 </div>
 
 <script>
-  const topicFilter = document.querySelector<HTMLSelectElement>("[data-thoughts-filter]");
-  topicFilter?.addEventListener("change", () => {
-    if (topicFilter.value) window.location.assign(topicFilter.value);
-  });
+  // navigate() swaps the page in place (View Transitions) instead of window.location.assign(), which reloaded the
+  // whole site. Delegated so it still works after a client-side navigation re-renders the <select>.
+  import { navigate } from "astro:transitions/client";
+
+  const w = window as unknown as { __thoughtsFilterReady?: boolean };
+  if (!w.__thoughtsFilterReady) {
+    w.__thoughtsFilterReady = true;
+    document.addEventListener("change", (event) => {
+      const select = event.target as HTMLSelectElement;
+      if (select.matches?.("[data-thoughts-filter]") && select.value) navigate(select.value);
+    });
+  }
 </script>

@@ -11,13 +11,18 @@ import {SITE_METADATA} from "../consts";
 type Props = Pick<CollectionEntry<'blog'>['data'], 'title' | 'summary'> & {
     description?: string;
     wide?: boolean;
+    /** Link-preview image and type for sharing (LinkedIn, Facebook, X, WhatsApp). */
+    image?: string;
+    imageAlt?: string;
+    type?: 'website' | 'article';
+    publishedTime?: string;
 };
 
-const {title, description, summary, wide = false} = Astro.props;
+const {title, description, summary, wide = false, image, imageAlt, type, publishedTime} = Astro.props;
 ---
 
 <html lang={SITE_METADATA.language} class="scroll-smooth">
-<BaseHead title={title} description={description ?? summary}/>
+<BaseHead title={title} description={description ?? summary} image={image} imageAlt={imageAlt} type={type} publishedTime={publishedTime}/>
 <body class="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
 
 <!--TODO: Add Google Analytics-->

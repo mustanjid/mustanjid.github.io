@@ -1,17 +1,49 @@
-<section class="giscus mx-auto mt-10 w-full"></section>
+---
+// Giscus comments (GitHub Discussions). The script is injected from code instead of being a static <script> tag
+// because Astro View Transitions run a normal script only once per full load: opening a second post by clicking a
+// link would otherwise show no comment box.
+---
 
-<script src="https://giscus.app/client.js"
-        data-repo="mustanjid/mustanjid.github.io"
-        data-repo-id="R_kgDOK_PBjQ"
-        data-category="General"
-        data-category-id="DIC_kwDOK_PBjc4CcWCI"
-        data-mapping="url"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="en"
-        crossorigin="anonymous"
-        async>
+<section id="comments" aria-label="Comments" class="mx-auto mt-10 w-full">
+  <div class="giscus" data-giscus-host></div>
+</section>
+
+<script>
+  const GISCUS_ORIGIN = "https://giscus.app";
+  const isDark = () => document.documentElement.classList.contains("dark");
+
+  const mountComments = () => {
+    const host = document.querySelector<HTMLElement>("[data-giscus-host]");
+    if (!host || host.childElementCount > 0) return;
+
+    const script = document.createElement("script");
+    script.src = `${GISCUS_ORIGIN}/client.js`;
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    const attributes: Record<string, string> = {
+      "data-repo": "mustanjid/mustanjid.github.io",
+      "data-repo-id": "R_kgDOK_PBjQ",
+      "data-category": "General",
+      "data-category-id": "DIC_kwDOK_PBjc4CcWCI",
+      "data-mapping": "url",
+      "data-strict": "0",
+      "data-reactions-enabled": "1",
+      "data-emit-metadata": "0",
+      "data-input-position": "bottom",
+      "data-theme": isDark() ? "dark" : "light",
+      "data-lang": "en",
+    };
+    Object.entries(attributes).forEach(([name, value]) => script.setAttribute(name, value));
+    host.appendChild(script);
+  };
+
+  // The site's own light/dark toggle changes the <html> class; keep the comment box in step with it.
+  const syncTheme = () => {
+    const frame = document.querySelector<HTMLIFrameElement>("iframe.giscus-frame");
+    frame?.contentWindow?.postMessage({ giscus: { setConfig: { theme: isDark() ? "dark" : "light" } } }, GISCUS_ORIGIN);
+  };
+
+  document.addEventListener("astro:page-load", mountComments);
+  new MutationObserver(syncTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  mountComments();
 </script>

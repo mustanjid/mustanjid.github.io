@@ -1,15 +1,16 @@
 ---
 import type ButtonProps from './types';
 
-const { url = Astro.request.url } = Astro.props;
+type Props = ButtonProps;
 
-const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(url)}`;
+const { url = Astro.url.href, title = '' } = Astro.props;
+const href = `https://api.whatsapp.com/send?text=${encodeURIComponent([title, url].filter(Boolean).join(' '))}`;
 ---
 
 <div>
-    <a 
+    <a aria-label="Share on WhatsApp" title="Share on WhatsApp" 
     class="fill-current text-gray-700"
-    href={whatsappUrl}
+    href={href}
     target="_blank"
     rel="noopener noreferrer"
   >

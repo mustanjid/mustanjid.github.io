@@ -1,15 +1,14 @@
 ---
-import type ButtonProps  from './types';
+import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const { url=Astro.request.url, title =Astro.request.title , description = Astro.request.description} = Astro.props;
-
-let URL = `mailto:?subject=${title}&body=${description}%0A${url}`
-
+const { url = Astro.url.href, title = '', description = '' } = Astro.props;
+const body = [description, url].filter(Boolean).join('\n\n');
+const href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
 ---
 <div>
-<a class="fill-current text-gray-700" target="_blank" href={URL} rel="noopener noreferrer">
+<a aria-label="Share by email" title="Share by email" class="fill-current text-gray-700" href={href}>
   <style>
     svg:hover {
       fill:#f21818;

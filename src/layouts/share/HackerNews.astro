@@ -1,15 +1,13 @@
 ---
-import type ButtonProps  from './types';
+import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const { url=Astro.request.url, title =Astro.request.title} = Astro.props;
-
-let URL = `http://news.ycombinator.com/submitlink?u=${url}&t=${title}`
-
+const { url = Astro.url.href, title = '' } = Astro.props;
+const href = `https://news.ycombinator.com/submitlink?u=${encodeURIComponent(url)}&t=${encodeURIComponent(title)}`;
 ---
 <div>
-<a class="fill-current text-gray-700" target="_blank" href={URL} rel="noopener noreferrer">
+<a aria-label="Share on Hacker News" title="Share on Hacker News" class="fill-current text-gray-700" target="_blank" href={href} rel="noopener noreferrer">
   <style>
    svg:hover {
       fill:#f21818;

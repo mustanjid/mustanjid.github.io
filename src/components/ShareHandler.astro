@@ -1,0 +1,70 @@
+---
+// Behaviour for every share control on the page (full row + compact button). Include it in each component that
+// renders share controls; Astro bundles the script a single time per page.
+---
+
+<script>
+  // Delegated, document-level listeners keep working after Astro View Transitions swap the page body.
+  // (Module scripts only run once per full load, so per-element listeners silently die on the next navigation.)
+  const w = window as unknown as { __shareReady?: boolean };
+
+  const revealNativeShare = () => {
+    if (typeof navigator.share !== "function") return;
+    document.querySelectorAll<HTMLElement>("[data-share-native]").forEach((el) => (el.hidden = false));
+  };
+
+  const copyText = async (text: string): Promise<boolean> => {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // Clipboard API needs https and permission; fall back to a temporary textarea.
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      const ok = document.execCommand("copy");
+      area.remove();
+      return ok;
+    }
+  };
+
+  const announce = (button: HTMLElement, message: string) => {
+    const label = button.querySelector<HTMLElement>("[data-share-label]");
+    const status = button.closest("[data-share-root]")?.querySelector<HTMLElement>("[data-share-status]");
+    const original = label?.textContent ?? "";
+    if (label) label.textContent = message;
+    if (status) status.textContent = message;
+    window.setTimeout(() => {
+      if (label) label.textContent = original;
+      if (status) status.textContent = "";
+    }, 2000);
+  };
+
+  if (!w.__shareReady) {
+    w.__shareReady = true;
+
+    document.addEventListener("click", async (event) => {
+      const button = (event.target as Element).closest<HTMLElement>("[data-share-action]");
+      if (!button) return;
+      const { shareAction, shareUrl, shareTitle, shareText } = button.dataset;
+      const url = shareUrl || window.location.href.split("#")[0];
+
+      if (shareAction === "native" && typeof navigator.share === "function") {
+        try {
+          await navigator.share({ title: shareTitle, text: shareText, url });
+          return;
+        } catch (error) {
+          if ((error as DOMException).name === "AbortError") return; // person closed the share sheet
+        }
+      }
+      announce(button, (await copyText(url)) ? "Link copied!" : "Copy failed");
+    });
+
+    document.addEventListener("astro:page-load", revealNativeShare);
+  }
+  revealNativeShare();
+</script>

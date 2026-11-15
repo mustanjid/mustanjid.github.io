@@ -1,21 +1,16 @@
 ---
-import type ButtonProps  from './types';
+import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-let regex = /\w*(?:['-](?!['-])\w*)+/
-
-const { url=Astro.request.url, title=Astro.request.url.match(regex)?.toString().replace(/-/g, " "), via } = Astro.props;
-
-let URL = `https://twitter.com/intent/tweet?url=${url}&text=${title}&via=${'mustanjis_se'}`
-
-// if (title) URL += `&text=${title}`
-// if (via) URL += `&via=${via}`
-
+const { url = Astro.url.href, title = '', via = 'mustanjis_se' } = Astro.props;
+const params = new URLSearchParams({ url, text: title });
+if (via) params.set('via', via);
+const href = `https://twitter.com/intent/tweet?${params.toString()}`;
 ---
 
 <div>
-<a class="fill-current text-gray-700" target="_blank" href={URL} rel="noopener noreferrer">
+<a aria-label="Share on X (Twitter)" title="Share on X (Twitter)" class="fill-current text-gray-700" target="_blank" href={href} rel="noopener noreferrer">
   <style>
    svg:hover {
       fill:#f21818;

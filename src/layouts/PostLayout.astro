@@ -37,7 +37,15 @@ const readableBody = post.body
 const readingTime = Math.max(1, Math.ceil(readableBody.trim().split(/\s+/).filter(Boolean).length / 220));
 ---
 
-<RootLayout title={post.data.title} description={post.data.summary} wide>
+<RootLayout
+  title={post.data.title}
+  description={post.data.summary}
+  image={post.data.images}
+  imageAlt={post.data.title}
+  type="article"
+  publishedTime={post.data.date.toISOString()}
+  wide
+>
   <ScrollTopAndComments />
 
   <nav aria-label="Breadcrumb" class="py-4 text-sm">
@@ -98,7 +106,7 @@ const readingTime = Math.max(1, Math.ceil(readableBody.trim().split(/\s+/).filte
         </div>
 
         <footer class="space-y-8 border-t border-gray-200 py-8 dark:border-gray-800">
-          <SocialShare />
+          <SocialShare title={post.data.title} description={post.data.summary} />
 
           {related.length > 0 && (
             <section aria-labelledby="related-thoughts-title">

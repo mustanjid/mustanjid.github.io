@@ -63,7 +63,8 @@
     "liveLabel": "Live project",
     "sourceLabel": "Source code",
     "notesLabel": "Project notes",
-    "paperLabel": "Related publication"
+    "paperLabel": "Related publication",
+    "paperDetailsLabel": "View publication details"
   },
   "achievements": {
     "seoTitle": "Achievements & Certificates",
@@ -81,7 +82,9 @@
   "moments": {
     "seoTitle": "MB-Moments",
     "seoDescription": "A gallery of photos and moments.",
-    "title": "Moments"
+    "title": "Moments",
+    "backLabel": "All moments",
+    "shareLabel": "Share"
   },
   "about": {
     "seoTitle": "MB-About",

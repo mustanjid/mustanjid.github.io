@@ -355,6 +355,7 @@ collections:
               - { label: "Source label", name: sourceLabel, widget: string }
               - { label: "Notes label", name: notesLabel, widget: string }
               - { label: "Paper label", name: paperLabel, widget: string }
+              - { label: "Paper details link label", name: paperDetailsLabel, widget: string }
           - label: "Achievements page"
             name: achievements
             widget: object
@@ -379,6 +380,8 @@ collections:
               - { label: "Browser tab title (SEO)", name: seoTitle, widget: string }
               - { label: "Search description (SEO)", name: seoDescription, widget: text, required: false }
               - { label: "Title", name: title, widget: string }
+              - { label: "Back link label", name: backLabel, widget: string }
+              - { label: "Share button label", name: shareLabel, widget: string }
           - label: "About page"
             name: about
             widget: object

@@ -1,0 +1,26 @@
+---
+import type ButtonProps from './types';
+
+type Props = ButtonProps;
+
+const { url = Astro.url.href, title = '', description = '' } = Astro.props;
+---
+
+<!-- Opens the phone's own share sheet (WhatsApp, Messenger, LinkedIn app...). Hidden until the browser reports support. -->
+<div data-share-native hidden>
+  <button
+    type="button"
+    class="text-gray-700 hover:text-red-600 dark:text-gray-400"
+    data-share-action="native"
+    data-share-url={url}
+    data-share-title={title}
+    data-share-text={description}
+    aria-label="Share via..."
+    title="Share via..."
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+      <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" />
+    </svg>
+  </button>
+</div>

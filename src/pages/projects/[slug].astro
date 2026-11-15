@@ -22,10 +22,11 @@ const paper = data.paper ? await getEntry(data.paper) : undefined;
 const stage = data.stage ? STAGE_LABEL[data.stage] : undefined;
 const btnPrimary = "rounded-md bg-primary-700 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-800";
 const btn = "rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800";
+const paperMeta = paper ? [paper.data.venue, paper.data.date?.getFullYear()].filter(Boolean).join(" · ") : "";
 const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-800 dark:bg-primary-950 dark:text-primary-200";
 ---
 
-<RootLayout title={`${data.title} | ${t.title}`} description={data.description}>
+<RootLayout title={`${data.title} | ${t.title}`} description={data.description} image={data.imgSrc} imageAlt={data.title}>
     <article class="mx-auto max-w-4xl py-8">
         <a href="/projects" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
         {data.imgSrc && <img src={data.imgSrc} alt="" class="mt-6 max-h-64 w-full rounded-xl object-cover" />}
@@ -61,11 +62,23 @@ const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-pr
             </section>
         )}
 
+        {paper && (
+            <section class="mt-8" aria-labelledby="project-paper">
+                <h2 id="project-paper" class="text-xl font-bold text-gray-900 dark:text-gray-100">{t.paperLabel}</h2>
+                <div class="mt-3 rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+                    <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
+                        <a href={`/research#${paper.slug}`} class="hover:text-primary-700 dark:hover:text-primary-300">{paper.data.title}</a>
+                    </h3>
+                    {paperMeta && <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{paperMeta}</p>}
+                    <a class={`${btnPrimary} mt-3 inline-flex items-center gap-1`} href={`/research#${paper.slug}`}>{t.paperDetailsLabel} <span aria-hidden="true">&rarr;</span></a>
+                </div>
+            </section>
+        )}
+
         <nav class="mt-8 flex flex-wrap gap-3" aria-label="Project links">
             {data.url && <a class={btnPrimary} href={data.url} target="_blank" rel="noopener noreferrer">{t.liveLabel}</a>}
             {data.srccode && <a class={btn} href={data.srccode} target="_blank" rel="noopener noreferrer">{t.sourceLabel}</a>}
             {data.projectdesc && <a class={btn} href={data.projectdesc} target="_blank" rel="noopener noreferrer">{t.notesLabel}</a>}
-            {paper && <a class={btn} href={`/research#${paper.slug}`}>{t.paperLabel}</a>}
         </nav>
     </article>
 </RootLayout>

@@ -1,17 +1,14 @@
 ---
-import type ButtonProps  from './types';
+import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const { url=Astro.request.url, title =Astro.request.title} = Astro.props;
-
-const encoded_url = encodeURIComponent(url);
-let URL = `https://www.reddit.com/submit?url=${encoded_url}&title=${title}`
-
+const { url = Astro.url.href, title = '' } = Astro.props;
+const href = `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
 ---
 
 <div>
-<a class="fill-current text-gray-700" target="_blank" title={title} href={URL} rel="noopener noreferrer">
+<a aria-label="Share on Reddit" title="Share on Reddit" class="fill-current text-gray-700" target="_blank" title={title} href={href} rel="noopener noreferrer">
   <style>
     svg:hover {
       fill:#f21818;

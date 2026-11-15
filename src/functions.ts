@@ -1,4 +1,5 @@
 import {getCollection, type CollectionEntry} from "astro:content";
+import {momentsData} from "@/data/content";
 
 /**
  * Filter blog posts by published date and order them.
@@ -77,4 +78,29 @@ export const STAGE_LABEL: Record<string, string> = {
     'in-progress': 'In progress',
     demo: 'Demo',
     shipped: 'Shipped',
+};
+
+
+const slugify = (value: string): string =>
+    value
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 80);
+
+/**
+ * Moments from src/data/moments.json, each with its own shareable /moments/<slug> page.
+ * The slug comes from the caption (de-duplicated); captions with no latin letters fall back to "moment-<n>".
+ */
+export const getMoments = () => {
+    const used = new Set<string>();
+    return momentsData.items.map((item, index) => {
+        const base = slugify(item.caption) || `moment-${index + 1}`;
+        let slug = base;
+        for (let n = 2; used.has(slug); n++) slug = `${base}-${n}`;
+        used.add(slug);
+        return {...item, slug};
+    });
 };

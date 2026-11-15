@@ -100,11 +100,11 @@ const chipClass = isTile
           </div>
         )}
 
-        <div class:list={["mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold", isTile && "mt-auto pt-4"]}>
+        <div class:list={["mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold", isTile && "mt-auto pt-4"]}>
           <a
             class:list={[
               isLarge
-                ? "text-primary-700 hover:underline dark:text-primary-300"
+                ? "inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400"
                 : isTile
                   ? "relative inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition group-hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:group-hover:bg-primary-400 after:absolute after:inset-0 after:content-['']"
                   : "inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400 after:absolute after:inset-0 after:content-['']",

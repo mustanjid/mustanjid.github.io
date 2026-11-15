@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import RootLayout from "@/layouts/RootLayout.astro";
+import SocialShare from "@/layouts/share/SocialShare.astro";
+import { getMoments } from "@/functions";
+import { pagesData } from "@/data/content";
+
+// One page per moment so it can be shared with its own title, image and description in the link preview.
+export async function getStaticPaths() {
+  const categories = await getCollection("moment-categories");
+  const names = new Map(categories.map(({ id, data }) => [id.replace(/\.mdx?$/, ""), data.name]));
+  return getMoments().map((moment) => ({
+    params: { slug: moment.slug },
+    props: { moment: { ...moment, categoryLabel: names.get(moment.category) ?? moment.category } },
+  }));
+}
+
+const t = pagesData.moments;
+const { moment } = Astro.props;
+const alt = moment.alt || moment.caption;
+const description = moment.writeup || moment.alt || `${moment.categoryLabel} · ${t.title}`;
+---
+
+<RootLayout title={`${moment.caption} | ${t.title}`} description={description} image={moment.images[0]} imageAlt={alt} wide>
+  <article class="mx-auto max-w-4xl py-8">
+    <a href="/moments" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
+
+    <header class="mt-6">
+      <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{moment.categoryLabel}</p>
+      <h1 class="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl">{moment.caption}</h1>
+    </header>
+
+    <div class:list={["mt-6 grid gap-3 sm:gap-4", moment.images.length > 1 && "sm:grid-cols-2"]}>
+      {moment.images.map((image) => (
+        <img src={image} alt={alt} class="w-full rounded-xl bg-gray-100 object-cover dark:bg-gray-800" loading="eager" decoding="async" />
+      ))}
+    </div>
+
+    {moment.writeup && <p class="mt-6 max-w-2xl text-base leading-7 text-gray-700 dark:text-gray-300">{moment.writeup}</p>}
+
+    <SocialShare title={moment.caption} description={description} />
+  </article>
+</RootLayout>

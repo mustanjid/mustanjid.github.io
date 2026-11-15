@@ -1,19 +1,28 @@
 ---
 import { getCollection } from "astro:content";
 import { pagesData, momentsData } from "@/data/content";
+import { getMoments } from "@/functions";
 import MomentMotif from "@/components/MomentMotif.astro";
+import ShareHandler from "@/components/ShareHandler.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
 
 const categories = (await getCollection("moment-categories"))
   .map(({ id, data }) => ({ id: id.replace(/\.mdx?$/, ""), data }))
   .sort((a, b) => a.data.name.localeCompare(b.data.name));
 const categoryNames = new Map(categories.map(({ id, data }) => [id, data.name]));
-const galleryItems = momentsData.items.map((item) => {
+const galleryItems = getMoments().map((item) => {
   const categoryLabel = categoryNames.get(item.category);
   if (!categoryLabel) {
     throw new Error(`Unknown Moments category "${item.category}" for "${item.caption}".`);
   }
-  return { ...item, categoryLabel };
+  const path = `/moments/${item.slug}/`; // trailing slash matches the page canonical/og:url
+  return {
+    ...item,
+    categoryLabel,
+    path,
+    shareUrl: new URL(path, Astro.site).href,
+    shareText: item.writeup || item.alt || categoryLabel,
+  };
 });
 const usedCategories = categories.filter(({ id }) =>
   momentsData.items.some((item) => item.category === id),
@@ -80,8 +89,27 @@ const usedCategories = categories.filter(({ id }) =>
               <MomentMotif category={item.category} />
               <div class="relative z-10">
                 <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{item.categoryLabel}</p>
-                <h2 class="mt-2 text-xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-2xl">{item.caption}</h2>
+                <h2 class="mt-2 text-xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-2xl">
+                  <a href={item.path} class="hover:text-primary-700 dark:hover:text-primary-300">{item.caption}</a>
+                </h2>
                 {item.writeup && <p class="mt-3 max-w-xl text-sm leading-6 text-gray-600 dark:text-gray-300">{item.writeup}</p>}
+                <div data-share-root class="mt-4 flex items-center gap-3">
+                  <button
+                    type="button"
+                    data-share-action="native"
+                    data-share-url={item.shareUrl}
+                    data-share-title={item.caption}
+                    data-share-text={item.shareText}
+                    class="inline-flex items-center gap-1.5 rounded-full border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+                      <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" />
+                    </svg>
+                    <span data-share-label>{pagesData.moments.shareLabel}</span>
+                  </button>
+                  <span data-share-status role="status" aria-live="polite" class="sr-only"></span>
+                </div>
               </div>
             </div>
           </article>
@@ -114,46 +142,54 @@ const usedCategories = categories.filter(({ id }) =>
     </div>
     <img data-lightbox-image src="" alt="" class="max-h-[82vh] w-full bg-black object-contain" />
   </dialog>
+  <ShareHandler />
 </RootLayout>
 
 <script>
-  const filterButtons = document.querySelectorAll<HTMLButtonElement>("[data-moments-filter]");
-  const entries = document.querySelectorAll<HTMLElement>("[data-moment-card]");
+  // Delegated listeners: Astro View Transitions swap the page body without re-running module scripts, so
+  // per-button listeners die after the first client-side navigation (e.g. Home -> Moments -> Home -> Moments).
+  const w = window as unknown as { __momentsReady?: boolean };
   const activeClass = "rounded-full bg-primary-700 px-4 py-2 text-sm font-semibold text-white";
   const inactiveClass = "rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800";
 
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const filter = button.dataset.momentsFilter;
-      filterButtons.forEach((item) => {
-        const selected = item === button;
-        item.setAttribute("aria-pressed", String(selected));
-        item.className = selected ? activeClass : inactiveClass;
-      });
-      entries.forEach((entry) => {
-        entry.classList.toggle("hidden", filter !== "all" && entry.dataset.momentCategory !== filter);
-      });
+  if (!w.__momentsReady) {
+    w.__momentsReady = true;
+
+    document.addEventListener("click", (event) => {
+      const target = event.target as Element;
+
+      const filterButton = target.closest<HTMLButtonElement>("[data-moments-filter]");
+      if (filterButton) {
+        const filter = filterButton.dataset.momentsFilter;
+        document.querySelectorAll<HTMLButtonElement>("[data-moments-filter]").forEach((item) => {
+          const selected = item === filterButton;
+          item.setAttribute("aria-pressed", String(selected));
+          item.className = selected ? activeClass : inactiveClass;
+        });
+        document.querySelectorAll<HTMLElement>("[data-moment-card]").forEach((card) => {
+          card.classList.toggle("hidden", filter !== "all" && card.dataset.momentCategory !== filter);
+        });
+        return;
+      }
+
+      const dialog = document.querySelector<HTMLDialogElement>("#moment-lightbox");
+      if (!dialog) return;
+
+      const openButton = target.closest<HTMLButtonElement>("[data-moment-open]");
+      if (openButton) {
+        const image = dialog.querySelector<HTMLImageElement>("[data-lightbox-image]");
+        const caption = dialog.querySelector<HTMLElement>("[data-lightbox-caption]");
+        const category = dialog.querySelector<HTMLElement>("[data-lightbox-category]");
+        if (!image || !caption || !category) return;
+        image.src = openButton.dataset.imageSrc ?? "";
+        image.alt = openButton.dataset.imageAlt ?? "";
+        caption.textContent = openButton.dataset.imageCaption ?? "";
+        category.textContent = openButton.dataset.imageCategory ?? "";
+        dialog.showModal();
+        return;
+      }
+
+      if (target.closest("[data-lightbox-close]") || target === dialog) dialog.close();
     });
-  });
-
-  const dialog = document.querySelector<HTMLDialogElement>("#moment-lightbox");
-  const dialogImage = dialog?.querySelector<HTMLImageElement>("[data-lightbox-image]");
-  const dialogCaption = dialog?.querySelector<HTMLElement>("[data-lightbox-caption]");
-  const dialogCategory = dialog?.querySelector<HTMLElement>("[data-lightbox-category]");
-
-  document.querySelectorAll<HTMLButtonElement>("[data-moment-open]").forEach((button) => {
-    button.addEventListener("click", () => {
-      if (!dialog || !dialogImage || !dialogCaption || !dialogCategory) return;
-      dialogImage.src = button.dataset.imageSrc ?? "";
-      dialogImage.alt = button.dataset.imageAlt ?? "";
-      dialogCaption.textContent = button.dataset.imageCaption ?? "";
-      dialogCategory.textContent = button.dataset.imageCategory ?? "";
-      dialog.showModal();
-    });
-  });
-
-  dialog?.querySelector<HTMLButtonElement>("[data-lightbox-close]")?.addEventListener("click", () => dialog.close());
-  dialog?.addEventListener("click", (event) => {
-    if (event.target === dialog) dialog.close();
-  });
+  }
 </script>
