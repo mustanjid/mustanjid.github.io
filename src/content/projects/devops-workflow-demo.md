@@ -1,17 +1,25 @@
 ---
-title: DevOps Workflow Demo
+title: HTB Linux Fundamentals
 kind: devops
-stage: demo
+stage: in-progress
 order: 1
 featured: true
 draft: false
-description: A demo project concept for a reliable service-delivery workflow, covering automated builds and deployments, infrastructure configuration, and application health monitoring.
+date: ''
+description: Learning linux core fundamentals as the core beginning of systems, DevOps, ML and cloud.
+imgSrc: /static/uploads/Screenshot_6.png
+sharePreview: null
 areas:
   - CI/CD
-  - Infrastructure automation
-  - Containerized delivery
-  - Monitoring and observability
-stack: []
+  - Bash
+  - Scheduling
+  - System
+  - Linux
+stack:
+  - CLI
+  - Linux OS
+url: ''
+srccode: ''
+projectdesc: ''
+paper: ''
 ---
-
-This demo project outlines an end-to-end DevOps workflow, connecting repeatable build and deployment steps with infrastructure configuration and service observability.
