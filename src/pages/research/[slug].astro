@@ -5,7 +5,7 @@ import FormattedDate from "@/components/FormattedDate.astro";
 import { getResearchEntries } from "@/functions";
 import { pagesData } from "@/data/content";
 import { shareImageSource } from "@/og";
-import { STATUS_BADGE, STATUS_LABEL, doiUrl, paperPdfUrl } from "@/research-ui";
+import { STATUS_BADGE, STATUS_LABEL, doiUrl, paperCitation, paperPdfUrl } from "@/research-ui";
 
 // One page per paper so it can be shared with its own title, image and description in the link preview.
 export async function getStaticPaths() {
@@ -18,12 +18,7 @@ const { entry } = Astro.props;
 const { data } = entry;
 const { Content } = await entry.render();
 const hasNotes = entry.body.trim().length > 0;
-const citation = data.citation?.trim() || [
-  `${data.authors}${data.date ? ` (${data.date.getFullYear()})` : ""}.`,
-  `${data.title}.`,
-  data.venue,
-  data.citationDetails,
-].filter(Boolean).join(" ");
+const citation = paperCitation(data);
 const pdfLink = paperPdfUrl(data.pdfUrl, data.url, data.preprintUrl);
 const doiLink = doiUrl(data.doi);
 const links = [
@@ -50,7 +45,7 @@ const meta = [data.venue, data.publisher, data.citationDetails].filter(Boolean).
 >
   <article class="mx-auto max-w-4xl py-8">
     <a href="/research" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
-    {data.image && <img src={data.image} alt="" class="mt-6 max-h-72 w-full rounded-xl bg-gray-50 object-contain p-2 dark:bg-gray-800" />}
+    {data.image && <img src={data.image} alt="" class="mx-auto mt-6 h-auto max-h-[32rem] w-full rounded-xl object-contain" />}
 
     <header class="mt-8 border-b border-gray-200 pb-6 dark:border-gray-700">
       <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-gray-500 dark:text-gray-400">

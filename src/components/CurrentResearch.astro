@@ -39,7 +39,7 @@ const chipClass = isTile
 {project && (
   <article id={articleId} aria-labelledby={`${articleId}-title`} class:list={[
     isLarge
-      ? "overflow-hidden rounded-2xl"
+      ? "group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:border-primary-300 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-primary-700"
       : isTile
         ? "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:border-primary-300 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-primary-700"
         : "relative",
@@ -51,9 +51,9 @@ const chipClass = isTile
     ]}>
       <div class:list={[
         isTile
-          ? "relative h-32 shrink-0 bg-gradient-to-br from-sky-50 via-indigo-50 to-emerald-50 dark:from-sky-950 dark:via-indigo-950 dark:to-emerald-950 sm:h-36"
+          ? "relative h-32 shrink-0 sm:h-36"
           : isLarge
-            ? "relative h-40 self-stretch bg-gradient-to-br from-sky-50 via-indigo-50 to-emerald-50 dark:from-sky-950 dark:via-indigo-950 dark:to-emerald-950 sm:h-48 xl:h-auto xl:min-h-48"
+            ? "relative h-40 self-stretch sm:h-48 xl:h-auto xl:min-h-48"
             : "relative min-h-28 self-stretch sm:min-h-full",
       ]}>
         {project.image ? (
@@ -74,7 +74,7 @@ const chipClass = isTile
         )}
       </div>
       <div class:list={[isLarge ? "p-5 sm:p-6" : isTile ? "flex flex-1 flex-col p-4 sm:p-5" : "p-4 sm:p-5"]}>
-        <div class:list={["flex flex-wrap items-center gap-1 font-bold uppercase tracking-wide text-primary-700 dark:text-primary-300", isTile ? "text-xs" : "text-sm"]}>
+        <div class:list={["flex flex-wrap items-center gap-1 font-bold uppercase tracking-wide text-primary-700 dark:text-primary-300", isTile ? "text-sm" : "text-base"]}>
           <span>{kind === "other" ? t.currentDevProjectEyebrow : t.currentProjectEyebrow}</span>
           {project.stage && <><span aria-hidden="true">·</span><span>{STAGE_LABEL[project.stage]}</span></>}
         </div>
@@ -106,18 +106,18 @@ const chipClass = isTile
           <a
             class:list={[
               isLarge
-                ? "inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400"
+                ? "inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition group-hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:group-hover:bg-primary-400 after:absolute after:inset-0 after:content-['']"
                 : isTile
-                  ? "relative inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition group-hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:group-hover:bg-primary-400 after:absolute after:inset-0 after:content-['']"
+                  ? "inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition group-hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:group-hover:bg-primary-400 after:absolute after:inset-0 after:content-['']"
                   : "inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400 after:absolute after:inset-0 after:content-['']",
             ]}
             href={`/projects/${project.slug}`}
           >
             {t.projectDetailsLabel} <span aria-hidden="true">&rarr;</span>
           </a>
-          {isLarge && project.repoUrl && <a class="text-primary-700 hover:underline dark:text-primary-300" href={project.repoUrl} target="_blank" rel="noopener noreferrer">{t.repositoryLabel}</a>}
-          {isLarge && project.demoUrl && <a class="text-primary-700 hover:underline dark:text-primary-300" href={project.demoUrl} target="_blank" rel="noopener noreferrer">{t.implementationLabel}</a>}
-          {isLarge && <span class="relative"><ShareButton url={shareUrl} title={project.title} text={project.summary} label={pagesData.projects.shareLabel} /></span>}
+          {isLarge && project.repoUrl && <a class="relative z-10 text-primary-700 hover:underline dark:text-primary-300" href={project.repoUrl} target="_blank" rel="noopener noreferrer">{t.repositoryLabel}</a>}
+          {isLarge && project.demoUrl && <a class="relative z-10 text-primary-700 hover:underline dark:text-primary-300" href={project.demoUrl} target="_blank" rel="noopener noreferrer">{t.implementationLabel}</a>}
+          {isLarge && <span class="relative z-10"><ShareButton url={shareUrl} title={project.title} text={project.summary} label={pagesData.projects.shareLabel} /></span>}
         </div>
       </div>
     </div>

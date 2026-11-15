@@ -5,6 +5,7 @@ import { getEntry } from "astro:content";
 import { pagesData } from "@/data/content";
 import { shareImageSource } from "@/og";
 import SocialShare from "@/layouts/share/SocialShare.astro";
+import PaperDialog from "@/components/PaperDialog.astro";
 
 export async function getStaticPaths() {
     const projects = await getProjects();
@@ -31,11 +32,11 @@ const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-pr
 <RootLayout title={`${data.title} | ${t.title}`} description={data.description} image={shareImageSource(data.imgSrc, data.sharePreview)} imageAlt={data.title}>
     <article class="mx-auto max-w-4xl py-8">
         <a href="/projects" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
-        {data.imgSrc && <img src={data.imgSrc} alt="" class="mt-6 max-h-64 w-full rounded-xl object-cover" />}
+        {data.imgSrc && <img src={data.imgSrc} alt="" class="mx-auto mt-6 h-auto max-h-[32rem] w-full rounded-xl object-contain" />}
 
         <header class="mt-8 border-b border-gray-200 pb-6 dark:border-gray-700">
             <p class="text-sm font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">{research ? t.researchKindLabel : t.developmentKindLabel}</p>
-            <h1 class="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">{data.title}</h1>
+            <h1 class="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl">{data.title}</h1>
             {(stage || data.date) && (
                 <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
                     {stage && <span class="rounded-full bg-primary-50 px-3 py-1 font-medium text-primary-700 dark:bg-primary-950 dark:text-primary-300">{stage}</span>}
@@ -44,7 +45,7 @@ const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-pr
             )}
         </header>
 
-        <section class="prose prose-lg mt-8 max-w-none dark:prose-invert" aria-labelledby="project-overview">
+        <section class="prose mt-6 max-w-none dark:prose-invert prose-h2:mb-2 prose-h2:mt-0 prose-h2:text-xl prose-p:mt-0 prose-p:mb-3" aria-labelledby="project-overview">
             <h2 id="project-overview">{t.overviewLabel}</h2>
             <p>{data.description}</p>
             {hasBody && <Content />}
@@ -69,10 +70,11 @@ const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-pr
                 <h2 id="project-paper" class="text-xl font-bold text-gray-900 dark:text-gray-100">{t.paperLabel}</h2>
                 <div class="mt-3 rounded-xl border border-gray-200 p-4 dark:border-gray-800">
                     <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
-                        <a href={`/research#${paper.slug}`} class="hover:text-primary-700 dark:hover:text-primary-300">{paper.data.title}</a>
+                        <button type="button" data-paper-open={`details-${paper.slug}`} aria-haspopup="dialog" aria-controls={`details-${paper.slug}`} class="text-left hover:text-primary-700 dark:hover:text-primary-300">{paper.data.title}</button>
                     </h3>
                     {paperMeta && <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{paperMeta}</p>}
-                    <a class={`${btnPrimary} mt-3 inline-flex items-center gap-1`} href={`/research#${paper.slug}`}>{t.paperDetailsLabel} <span aria-hidden="true">&rarr;</span></a>
+                    <button type="button" data-paper-open={`details-${paper.slug}`} aria-haspopup="dialog" aria-controls={`details-${paper.slug}`} class={`${btnPrimary} mt-3 inline-flex items-center gap-1`}>{t.paperDetailsLabel} <span aria-hidden="true">&rarr;</span></button>
+                    <PaperDialog entry={paper} />
                 </div>
             </section>
         )}

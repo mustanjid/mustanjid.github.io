@@ -1,0 +1,120 @@
+---
+// "Details" modal for one research paper. Render it anywhere a paper is shown (research cards, project pages...) and
+// give any button `data-paper-open={`details-${entry.slug}`}` to open it. The click handling at the bottom is
+// delegated, so it keeps working after Astro View Transitions swap the page body.
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@/components/FormattedDate.astro";
+import { STATUS_LABEL, doiUrl, paperCitation, paperPdfUrl } from "@/research-ui";
+
+interface Props {
+  entry: CollectionEntry<"research">;
+}
+
+const { entry } = Astro.props;
+const { data, slug } = entry;
+const dialogId = `details-${slug}`;
+const citation = paperCitation(data);
+const pdfLink = paperPdfUrl(data.pdfUrl, data.url, data.preprintUrl);
+const doiLink = doiUrl(data.doi);
+const buttonClass = "inline-flex min-h-9 items-center rounded-md border border-primary-700 px-3 py-1.5 text-xs font-semibold text-primary-700 hover:bg-primary-50 dark:border-primary-300 dark:text-primary-300 dark:hover:bg-gray-800";
+---
+
+<dialog id={dialogId} data-paper-dialog aria-labelledby={`${dialogId}-title`} class="m-auto max-h-[85vh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto rounded border border-gray-200 bg-white p-0 text-left text-gray-900 shadow-2xl backdrop:bg-black/60 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100">
+  <div class="flex items-start justify-between gap-4 border-b border-gray-200 p-4 dark:border-gray-700">
+    <div class="min-w-0">
+      <p class="text-xs font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">{STATUS_LABEL[data.status]}</p>
+      <h3 id={`${dialogId}-title`} class="mt-1 text-lg font-bold leading-6">{data.title}</h3>
+    </div>
+    <button type="button" data-paper-close class="shrink-0 rounded border border-gray-300 px-2 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800">Close</button>
+  </div>
+  <div class="space-y-4 p-4">
+  {data.image && (
+    <figure>
+      <a href={data.image} target="_blank" rel="noopener noreferrer" aria-label={`Open full-size image for ${data.title}`}>
+        <img src={data.image} alt={`Image for ${data.title}`} class="max-h-[65vh] w-full rounded object-contain" loading="lazy" />
+      </a>
+      <figcaption class="mt-1 text-center text-[10px] text-gray-500 dark:text-gray-400">Select image to open full size</figcaption>
+    </figure>
+  )}
+    <p class="text-sm leading-5 text-gray-700 dark:text-gray-300">{citation}</p>
+    <dl class="grid gap-x-4 gap-y-2 text-xs sm:grid-cols-[7rem_minmax(0,1fr)]">
+      <dt class="font-semibold text-gray-500 dark:text-gray-400">Authors</dt>
+      <dd>{data.authors}</dd>
+      {data.venue && <><dt class="font-semibold text-gray-500 dark:text-gray-400">Journal / venue</dt><dd>{data.venue}</dd></>}
+      {data.publisher && <><dt class="font-semibold text-gray-500 dark:text-gray-400">Publisher</dt><dd>{data.publisher}</dd></>}
+      {data.date && <><dt class="font-semibold text-gray-500 dark:text-gray-400">Date</dt><dd><FormattedDate date={data.date} /></dd></>}
+      {data.citationDetails && <><dt class="font-semibold text-gray-500 dark:text-gray-400">Publication</dt><dd>{data.citationDetails}</dd></>}
+      {data.doi && <><dt class="font-semibold text-gray-500 dark:text-gray-400">DOI</dt><dd>{data.doi}</dd></>}
+    </dl>
+    <section>
+      <h4 class="text-sm font-semibold">Description</h4>
+      <p class="mt-1 whitespace-pre-line text-xs leading-5 text-gray-700 dark:text-gray-300">{data.summary?.trim() || "No description has been added yet."}</p>
+    </section>
+    <div class="flex flex-wrap gap-1.5">
+      {pdfLink && <a class={buttonClass} href={pdfLink} target="_blank" rel="noopener noreferrer">PDF</a>}
+      {data.datasetUrl && <a class={buttonClass} href={data.datasetUrl} target="_blank" rel="noopener noreferrer">Dataset</a>}
+      {data.projectUrl && <a class={buttonClass} href={data.projectUrl} target="_blank" rel="noopener noreferrer">Project</a>}
+      {data.codeUrl && <a class={buttonClass} href={data.codeUrl} target="_blank" rel="noopener noreferrer">Code</a>}
+      {doiLink && <a class={buttonClass} href={doiLink} target="_blank" rel="noopener noreferrer">DOI</a>}
+    </div>
+  </div>
+</dialog>
+
+<script>
+  // Delegated listeners. With Astro View Transitions this module script runs once per full page load, but the
+  // page body is replaced on every client-side navigation (menu -> Research on a phone, project -> paper link...).
+  // Listeners attached to the buttons themselves are lost then, which made "Details" do nothing.
+  const w = window as unknown as { __publicationUiReady?: boolean };
+
+  const copyText = async (text: string): Promise<boolean> => {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      const ok = document.execCommand("copy");
+      area.remove();
+      return ok;
+    }
+  };
+
+  if (!w.__publicationUiReady) {
+    w.__publicationUiReady = true;
+
+    document.addEventListener("click", async (event) => {
+      const target = event.target as Element;
+
+      const citeButton = target.closest<HTMLButtonElement>("[data-cite-copy]");
+      if (citeButton) {
+        const status = citeButton.closest("article")?.querySelector<HTMLElement>("[data-cite-status]");
+        const copied = await copyText(citeButton.dataset.citeCopy ?? "");
+        if (status) {
+          status.textContent = copied ? "Citation copied." : "Could not copy citation. Open Details to copy it manually.";
+          window.setTimeout(() => (status.textContent = ""), 3000);
+        }
+        return;
+      }
+
+      const openButton = target.closest<HTMLButtonElement>("[data-paper-open]");
+      if (openButton) {
+        const dialog = document.getElementById(openButton.dataset.paperOpen ?? "") as HTMLDialogElement | null;
+        if (dialog && !dialog.open) dialog.showModal();
+        return;
+      }
+
+      if (target.closest("[data-paper-close]")) {
+        target.closest("dialog")?.close();
+        return;
+      }
+
+      // A click on the dimmed backdrop lands on the <dialog> element itself.
+      if (target instanceof HTMLDialogElement && target.hasAttribute("data-paper-dialog")) target.close();
+    });
+  }
+</script>

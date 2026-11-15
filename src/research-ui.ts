@@ -27,3 +27,19 @@ export const doiUrl = (doi?: string): string | undefined => {
 
 export const paperPdfUrl = (...urls: (string | undefined)[]): string | undefined =>
   urls.find((url) => url && /^https?:\/\/\S+\.pdf(?:[?#].*)?$/i.test(url));
+
+/** Citation text for a paper: the hand-written citation if there is one, otherwise built from its fields. */
+export const paperCitation = (data: {
+  citation?: string;
+  authors: string;
+  date?: Date;
+  title: string;
+  venue?: string;
+  citationDetails?: string;
+}): string =>
+  data.citation?.trim() || [
+    `${data.authors}${data.date ? ` (${data.date.getFullYear()})` : ""}.`,
+    `${data.title}.`,
+    data.venue,
+    data.citationDetails,
+  ].filter(Boolean).join(" ");
