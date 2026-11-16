@@ -8,7 +8,9 @@ draft: false
 date: ''
 description: Learning linux core fundamentals as the core beginning of systems, DevOps, ML and cloud.
 imgSrc: /static/uploads/Screenshot_6.png
-sharePreview: null
+sharePreview:
+  source: custom
+  image: /static/uploads/Screenshot_6.png
 areas:
   - CI/CD
   - Bash
