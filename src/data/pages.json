@@ -81,7 +81,8 @@
     "seoDescription": "A gallery of photos and moments.",
     "title": "Moments",
     "backLabel": "All moments",
-    "shareLabel": "Share"
+    "shareLabel": "Share",
+    "detailsLabel": "View details"
   },
   "about": {
     "seoTitle": "MB-About",

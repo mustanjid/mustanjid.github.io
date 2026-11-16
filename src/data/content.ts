@@ -65,23 +65,41 @@ const achievements = z.object({
   })).default([]),
 });
 
+// Moments written before photos had their own descriptions stored `images`, `alt` and `writeup`; read them as the
+// new shape so an old file (or an unmerged CMS edit) never breaks the build.
+const upgradeMoment = (raw: unknown) => {
+  const item = raw as Record<string, unknown> | null;
+  if (!item || Array.isArray(item.photos) || !Array.isArray(item.images)) return raw;
+  const { images, alt, writeup, ...rest } = item;
+  return {
+    ...rest,
+    description: writeup,
+    photos: (images as string[]).map((image, index) => ({ image, description: index === 0 ? alt : "" })),
+  };
+};
+
+const imagePath = (src: string) => {
+  const path = src.replace(/^\/?public\//, "");
+  return path.startsWith("static/") ? `/${path}` : path;
+};
+
 const moments = z.object({
   intro: text,
-  items: z.array(z.object({
-    images: z.array(z.string().min(1).transform((src) => {
-      const path = src.replace(/^\/?public\//, "");
-      return path.startsWith("static/") ? `/${path}` : path;
+  items: z.array(z.preprocess(upgradeMoment, z.object({
+    photos: z.array(z.object({
+      image: z.string().min(1).transform(imagePath),
+      description: text,                 // this photo only; shown full size and on the details page
     })).min(1).max(12),
-    alt: z.string().default(""),
-    caption: z.string().min(1),
-    writeup: text,
     category: z.string().min(1),
+    location: text,                      // e.g. "Khulna"
+    caption: text,                       // optional short line for the card; falls back to the category name
+    description: text,                   // about the whole moment; the card shows only the first lines
     // "Link preview image" for this moment's share page (see src/og.ts shareImageSource).
     sharePreview: z.preprocess(blank, z.object({
       source: z.enum(["cover", "logo", "custom"]).default("cover"),
       image: text,
     }).optional()),
-  })).default([]),
+  }))).default([]),
 });
 
 export const siteData = site.parse(siteRaw);
@@ -104,7 +122,7 @@ const pages = z.object({
   research: labels(["seoTitle", "seoDescription", "interestsTitle", "publicationsTitle", "scholarLinkLabel", "groupUnderReview", "groupJournal", "groupConference", "groupThesis", "empty"]),
   projects: labels(["seoTitle", "seoDescription", "title", "subtitle", "tabLatest", "detailsLabel", "emptyProjects", "backLabel", "overviewLabel", "areasLabel", "toolsLabel", "liveLabel", "sourceLabel", "notesLabel", "paperLabel", "paperDetailsLabel"]),
   achievements: labels(["seoTitle", "seoDescription", "title", "subtitle", "filterAll", "filterAwards", "filterCertificates", "awardsHeading", "certificatesHeading", "certificatesHint", "closeLabel"]),
-  moments: labels(["seoTitle", "seoDescription", "title", "backLabel", "shareLabel"]),
+  moments: labels(["seoTitle", "seoDescription", "title", "backLabel", "shareLabel", "detailsLabel"]),
   about: labels(["seoTitle", "seoDescription", "title", "subtitle", "latestPostsTitle"]),
   cv: labels(["seoTitle", "seoDescription", "title", "downloadLabel", "summaryTitle", "experienceTitle", "educationTitle", "skillsTitle", "publicationsTitle", "awardsTitle", "certificatesTitle"]),
   notFound: labels(["seoTitle", "heading", "message", "hint", "button"]),

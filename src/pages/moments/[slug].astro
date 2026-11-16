@@ -2,11 +2,12 @@
 import { getCollection } from "astro:content";
 import RootLayout from "@/layouts/RootLayout.astro";
 import SocialShare from "@/layouts/share/SocialShare.astro";
+import MomentGallery from "@/components/MomentGallery.astro";
 import { getMoments } from "@/functions";
 import { pagesData } from "@/data/content";
 import { shareImageSource } from "@/og";
 
-// One page per moment so it can be shared with its own title, image and description in the link preview.
+// One details page per moment: slider with every photo's description, the full general description, and sharing.
 export async function getStaticPaths() {
   const categories = await getCollection("moment-categories");
   const names = new Map(categories.map(({ id, data }) => [id.replace(/\.mdx?$/, ""), data.name]));
@@ -18,27 +19,38 @@ export async function getStaticPaths() {
 
 const t = pagesData.moments;
 const { moment } = Astro.props;
-const alt = moment.alt || moment.caption;
-const description = moment.writeup || moment.alt || `${moment.categoryLabel} · ${t.title}`;
+const title = moment.caption || moment.categoryLabel;
+const description = moment.description || moment.photos[0]?.description || moment.location || `${moment.categoryLabel} · ${t.title}`;
+const cover = moment.photos[0];
 ---
 
-<RootLayout title={`${moment.caption} | ${t.title}`} description={description} image={shareImageSource(moment.images[0], moment.sharePreview)} imageAlt={alt} wide>
+<RootLayout
+  title={`${title} | ${t.title}`}
+  description={description}
+  image={shareImageSource(cover.image, moment.sharePreview)}
+  imageAlt={cover.description || title}
+  wide
+>
   <article class="mx-auto max-w-4xl py-8">
     <a href="/moments" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
 
     <header class="mt-6">
       <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{moment.categoryLabel}</p>
-      <h1 class="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl">{moment.caption}</h1>
+      <h1 class="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl">{title}</h1>
+      {moment.location && (
+        <p class="mt-2 flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+          <span>{moment.location}</span>
+        </p>
+      )}
     </header>
 
-    <div class:list={["mt-6 grid gap-3 sm:gap-4", moment.images.length > 1 && "sm:grid-cols-2"]}>
-      {moment.images.map((image) => (
-        <img src={image} alt={alt} class="w-full rounded-xl bg-gray-100 object-cover dark:bg-gray-800" loading="eager" decoding="async" />
-      ))}
+    <div class="mt-6 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800">
+      <MomentGallery photos={moment.photos} title={title} variant="detail" />
     </div>
 
-    {moment.writeup && <p class="mt-6 max-w-2xl text-base leading-7 text-gray-700 dark:text-gray-300">{moment.writeup}</p>}
+    {moment.description && <p class="mt-6 max-w-2xl whitespace-pre-line text-base leading-7 text-gray-700 dark:text-gray-300">{moment.description}</p>}
 
-    <SocialShare title={moment.caption} description={description} />
+    <SocialShare title={title} description={description} />
   </article>
 </RootLayout>

@@ -2,10 +2,12 @@
 import { getCollection } from "astro:content";
 import { pagesData, momentsData } from "@/data/content";
 import { getMoments } from "@/functions";
+import MomentGallery from "@/components/MomentGallery.astro";
 import MomentMotif from "@/components/MomentMotif.astro";
 import ShareHandler from "@/components/ShareHandler.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
 
+const t = pagesData.moments;
 const categories = (await getCollection("moment-categories"))
   .map(({ id, data }) => ({ id: id.replace(/\.mdx?$/, ""), data }))
   .sort((a, b) => a.data.name.localeCompare(b.data.name));
@@ -13,25 +15,25 @@ const categoryNames = new Map(categories.map(({ id, data }) => [id, data.name]))
 const galleryItems = getMoments().map((item) => {
   const categoryLabel = categoryNames.get(item.category);
   if (!categoryLabel) {
-    throw new Error(`Unknown Moments category "${item.category}" for "${item.caption}".`);
+    throw new Error(`Unknown Moments category "${item.category}" for "${item.caption ?? item.slug}".`);
   }
   const path = `/moments/${item.slug}/`; // trailing slash matches the page canonical/og:url
+  const title = item.caption || categoryLabel;
   return {
     ...item,
+    title,
     categoryLabel,
     path,
     shareUrl: new URL(path, Astro.site).href,
-    shareText: item.writeup || item.alt || categoryLabel,
+    shareText: item.description || item.photos[0]?.description || item.location || categoryLabel,
   };
 });
-const usedCategories = categories.filter(({ id }) =>
-  momentsData.items.some((item) => item.category === id),
-);
+const usedCategories = categories.filter(({ id }) => momentsData.items.some((item) => item.category === id));
 ---
 
-<RootLayout title={pagesData.moments.seoTitle} description={pagesData.moments.seoDescription} wide>
+<RootLayout title={t.seoTitle} description={t.seoDescription} wide>
   <header class="mb-6 border-b border-gray-200 pb-4 dark:border-gray-800">
-    <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100">{pagesData.moments.title}</h1>
+    <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100">{t.title}</h1>
     <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-600 dark:text-gray-300">
       {momentsData.intro}
     </p>
@@ -61,69 +63,44 @@ const usedCategories = categories.filter(({ id }) =>
   {galleryItems.length > 0 ? (
     <ul class="mt-4 grid grid-cols-1 gap-x-8 lg:grid-cols-2">
       {galleryItems.map((item) => (
-        <li data-moment-card data-moment-category={item.category} data-moment-caption={item.caption} data-moment-category-label={item.categoryLabel} class="py-4">
+        <li
+          data-moment-card
+          data-moment-category={item.category}
+          data-moment-caption={item.title}
+          data-moment-category-label={item.categoryLabel}
+          data-moment-path={item.path}
+          class="py-4"
+        >
           <article class="space-y-3">
-            <div data-moment-gallery class="relative w-full max-w-[36rem]">
-              <ul
-                data-moment-track
-                class="flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg bg-gray-100 [scrollbar-width:none] dark:bg-gray-800 [&::-webkit-scrollbar]:hidden"
-              >
-                {item.images.map((image, index) => (
-                  <li class="w-full shrink-0 snap-center" data-moment-slide>
-                    <button
-                      type="button"
-                      data-moment-open
-                      data-index={index}
-                      data-image-src={image}
-                      data-image-alt={item.alt || item.caption}
-                      aria-label={`View photo ${index + 1} of ${item.images.length} full size: ${item.caption}`}
-                      class="group block w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-                    >
-                      <img
-                        src={image}
-                        alt={item.alt || item.caption}
-                        class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              {item.images.length > 1 && (
-                <>
-                  <span data-moment-count aria-hidden="true" class="pointer-events-none absolute right-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white">
-                    1 / {item.images.length}
-                  </span>
-                  <div class="mt-3 flex justify-center gap-2" role="group" aria-label={`Photos for ${item.caption}`}>
-                    {item.images.map((_, index) => (
-                      <button
-                        type="button"
-                        data-moment-dot
-                        data-index={index}
-                        aria-label={`Show photo ${index + 1} of ${item.images.length}`}
-                        aria-current={index === 0 ? "true" : "false"}
-                        class:list={["h-2.5 rounded-full transition-all", index === 0 ? "w-6 bg-primary-600" : "w-2.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"]}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
+            <div class="max-w-[36rem]">
+              <MomentGallery photos={item.photos} title={item.title} />
             </div>
             <div class="relative isolate min-h-32 max-w-[36rem] py-2">
               <MomentMotif category={item.category} />
               <div class="relative z-10">
-                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{item.categoryLabel}</p>
+                {item.caption && <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{item.categoryLabel}</p>}
                 <h2 class="mt-2 text-xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-2xl">
-                  <a href={item.path} class="hover:text-primary-700 dark:hover:text-primary-300">{item.caption}</a>
+                  <a href={item.path} class="hover:text-primary-700 dark:hover:text-primary-300">{item.title}</a>
                 </h2>
-                {item.writeup && <p class="mt-3 max-w-xl text-sm leading-6 text-gray-600 dark:text-gray-300">{item.writeup}</p>}
-                <div data-share-root class="mt-4 flex items-center gap-3">
+                {item.location && (
+                  <p class="mt-1.5 flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+                    <span>{item.location}</span>
+                  </p>
+                )}
+                {item.description && <p class="mt-3 line-clamp-2 max-w-xl whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-gray-300">{item.description}</p>}
+                <div data-share-root class="mt-4 flex flex-wrap items-center gap-3">
+                  <a
+                    href={item.path}
+                    class="inline-flex items-center gap-1 rounded-md bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-primary-800 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400"
+                  >
+                    {t.detailsLabel} <span aria-hidden="true">&rarr;</span>
+                  </a>
                   <button
                     type="button"
                     data-share-action="native"
                     data-share-url={item.shareUrl}
-                    data-share-title={item.caption}
+                    data-share-title={item.title}
                     data-share-text={item.shareText}
                     class="inline-flex items-center gap-1.5 rounded-full border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
                   >
@@ -131,7 +108,7 @@ const usedCategories = categories.filter(({ id }) =>
                       <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
                       <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" />
                     </svg>
-                    <span data-share-label>{pagesData.moments.shareLabel}</span>
+                    <span data-share-label>{t.shareLabel}</span>
                   </button>
                   <span data-share-status role="status" aria-live="polite" class="sr-only"></span>
                 </div>
@@ -150,7 +127,7 @@ const usedCategories = categories.filter(({ id }) =>
   <dialog
     id="moment-lightbox"
     aria-labelledby="moment-lightbox-caption"
-    class="m-auto max-h-[92vh] w-[calc(100%-2rem)] max-w-6xl overflow-hidden rounded-2xl border border-gray-200 bg-white p-0 text-gray-900 shadow-2xl backdrop:bg-black/80 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+    class="m-auto max-h-[94vh] w-[calc(100%-2rem)] max-w-6xl overflow-hidden rounded-2xl border border-gray-200 bg-white p-0 text-gray-900 shadow-2xl backdrop:bg-black/80 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
   >
     <div class="flex items-center justify-between gap-4 border-b border-gray-200 p-3 dark:border-gray-700">
       <div class="min-w-0">
@@ -169,7 +146,7 @@ const usedCategories = categories.filter(({ id }) =>
       </div>
     </div>
     <div class="relative bg-black">
-      <img data-lightbox-image src="" alt="" class="max-h-[82vh] w-full object-contain" />
+      <img data-lightbox-image src="" alt="" class="max-h-[66vh] w-full object-contain" />
       <button
         type="button"
         data-lightbox-prev
@@ -187,6 +164,12 @@ const usedCategories = categories.filter(({ id }) =>
         <span aria-hidden="true">&#8250;</span>
       </button>
     </div>
+    <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 border-t border-gray-200 p-3 dark:border-gray-700">
+      <p data-lightbox-description class="max-h-24 min-w-0 flex-1 overflow-y-auto whitespace-pre-line text-sm leading-6 text-gray-700 dark:text-gray-200"></p>
+      <a data-lightbox-details href="#" class="shrink-0 text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">
+        {t.detailsLabel} <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
   </dialog>
   <ShareHandler />
 </RootLayout>
@@ -194,34 +177,15 @@ const usedCategories = categories.filter(({ id }) =>
 <script>
   // Delegated listeners: Astro View Transitions swap the page body without re-running module scripts, so
   // per-button listeners die after the first client-side navigation (e.g. Home -> Moments -> Home -> Moments).
+  // (The photo sliders' dots and scroll sync live in MomentGallery.astro.)
   const w = window as unknown as { __momentsReady?: boolean };
   const activeClass = "rounded-full bg-primary-700 px-4 py-2 text-sm font-semibold text-white";
   const inactiveClass = "rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800";
-  const dotBase = "h-2.5 rounded-full transition-all";
-  const dotActive = `${dotBase} w-6 bg-primary-600`;
-  const dotIdle = `${dotBase} w-2.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500`;
 
-  type Photo = { src: string; alt: string };
+  type Photo = { src: string; alt: string; description: string };
   const lightbox = { photos: [] as Photo[], index: 0, track: null as HTMLElement | null };
 
   const getDialog = () => document.querySelector<HTMLDialogElement>("#moment-lightbox");
-
-  // Keep a card's dots and "2 / 5" counter in step with the photo currently scrolled into view.
-  const syncGallery = (gallery: HTMLElement, index: number) => {
-    gallery.querySelectorAll<HTMLElement>("[data-moment-dot]").forEach((dot, i) => {
-      dot.className = i === index ? dotActive : dotIdle;
-      dot.setAttribute("aria-current", String(i === index));
-    });
-    const count = gallery.querySelector<HTMLElement>("[data-moment-count]");
-    const total = gallery.querySelectorAll("[data-moment-slide]").length;
-    if (count) count.textContent = `${index + 1} / ${total}`;
-  };
-
-  const goToSlide = (track: HTMLElement, index: number, smooth = true) => {
-    const left = index * track.clientWidth;
-    if (typeof track.scrollTo === "function") track.scrollTo({ left, behavior: smooth ? "smooth" : "auto" });
-    else track.scrollLeft = left;
-  };
 
   const showPhoto = (index: number) => {
     const dialog = getDialog();
@@ -231,11 +195,16 @@ const usedCategories = categories.filter(({ id }) =>
     const photo = lightbox.photos[lightbox.index];
     const image = dialog.querySelector<HTMLImageElement>("[data-lightbox-image]");
     const counter = dialog.querySelector<HTMLElement>("[data-lightbox-counter]");
+    const description = dialog.querySelector<HTMLElement>("[data-lightbox-description]");
     if (image) {
       image.src = photo.src;
       image.alt = photo.alt;
     }
     if (counter) counter.textContent = total > 1 ? `${lightbox.index + 1} / ${total}` : "";
+    if (description) {
+      description.textContent = photo.description;
+      description.hidden = photo.description === "";
+    }
     dialog.querySelectorAll<HTMLElement>("[data-lightbox-prev], [data-lightbox-next]").forEach((button) => (button.hidden = total < 2));
     // warm the cache for the neighbours so arrow clicks feel instant
     [lightbox.index - 1, lightbox.index + 1].forEach((i) => {
@@ -246,7 +215,12 @@ const usedCategories = categories.filter(({ id }) =>
 
   const closeLightbox = (dialog: HTMLDialogElement) => {
     // leave the card on the photo the visitor was looking at
-    if (lightbox.track) goToSlide(lightbox.track, lightbox.index, false);
+    const track = lightbox.track;
+    if (track) {
+      const left = lightbox.index * track.clientWidth;
+      if (typeof track.scrollTo === "function") track.scrollTo({ left, behavior: "auto" });
+      else track.scrollLeft = left;
+    }
     dialog.close();
   };
 
@@ -270,13 +244,6 @@ const usedCategories = categories.filter(({ id }) =>
         return;
       }
 
-      const dot = target.closest<HTMLButtonElement>("[data-moment-dot]");
-      if (dot) {
-        const track = dot.closest<HTMLElement>("[data-moment-gallery]")?.querySelector<HTMLElement>("[data-moment-track]");
-        if (track) goToSlide(track, Number(dot.dataset.index ?? 0));
-        return;
-      }
-
       const dialog = getDialog();
       if (!dialog) return;
 
@@ -288,12 +255,15 @@ const usedCategories = categories.filter(({ id }) =>
         lightbox.photos = [...gallery.querySelectorAll<HTMLElement>("[data-moment-open]")].map((button) => ({
           src: button.dataset.imageSrc ?? "",
           alt: button.dataset.imageAlt ?? "",
+          description: button.dataset.imageDesc ?? "",
         }));
         lightbox.track = gallery.querySelector<HTMLElement>("[data-moment-track]");
         const caption = dialog.querySelector<HTMLElement>("[data-lightbox-caption]");
         const category = dialog.querySelector<HTMLElement>("[data-lightbox-category]");
+        const details = dialog.querySelector<HTMLAnchorElement>("[data-lightbox-details]");
         if (caption) caption.textContent = card.dataset.momentCaption ?? "";
         if (category) category.textContent = card.dataset.momentCategoryLabel ?? "";
+        if (details) details.href = card.dataset.momentPath ?? "#";
         showPhoto(Number(openButton.dataset.index ?? 0));
         dialog.showModal();
         return;
@@ -303,18 +273,6 @@ const usedCategories = categories.filter(({ id }) =>
       if (target.closest("[data-lightbox-next]")) return showPhoto(lightbox.index + 1);
       if (target.closest("[data-lightbox-close]") || target === dialog) closeLightbox(dialog);
     });
-
-    // scroll events do not bubble, so listen in the capture phase to track which photo is in view
-    document.addEventListener(
-      "scroll",
-      (event) => {
-        const track = event.target instanceof HTMLElement ? event.target.closest<HTMLElement>("[data-moment-track]") : null;
-        const gallery = track?.closest<HTMLElement>("[data-moment-gallery]");
-        if (!track || !gallery || track.clientWidth === 0) return;
-        syncGallery(gallery, Math.round(track.scrollLeft / track.clientWidth));
-      },
-      true,
-    );
 
     document.addEventListener("keydown", (event) => {
       const dialog = getDialog();

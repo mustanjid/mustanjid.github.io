@@ -2,54 +2,68 @@
   "intro": "Time never holds us but moment does; what we cherish as memories in our heart forever",
   "items": [
     {
-      "images": [
-        "/static/images/convo.webp"
-      ],
-      "alt": "Convocation Day",
-      "caption": "Learning like endless sky never ends",
-      "writeup": "",
       "category": "events",
+      "caption": "Learning like endless sky never ends",
+      "description": "",
+      "photos": [
+        {
+          "image": "/static/images/convo.webp",
+          "description": "Convocation Day"
+        }
+      ],
       "sharePreview": null
     },
     {
-      "images": [
-        "/static/images/1794513697037.webp"
-      ],
-      "alt": "A sunset on the Padma River, Rajshahi",
-      "caption": "Before dark on the vast Padma river, Rajshahi",
-      "writeup": "",
       "category": "places",
+      "caption": "Before dark on the vast Padma river, Rajshahi",
+      "description": "",
+      "photos": [
+        {
+          "image": "/static/images/1794513697037.webp",
+          "description": "A sunset on the Padma River, Rajshahi"
+        }
+      ],
       "sharePreview": null
     },
     {
-      "images": [
-        "/static/images/1794851512122.webp"
-      ],
-      "alt": "",
-      "caption": "China Clay Hill, Durgapur, Netrakona",
-      "writeup": "",
       "category": "bangladesh-minerals",
+      "caption": "China Clay Hill, Durgapur, Netrakona",
+      "description": "",
+      "photos": [
+        {
+          "image": "/static/images/1794851512122.webp",
+          "description": ""
+        }
+      ],
       "sharePreview": null
     },
     {
-      "images": [
-        "/static/images/20230225_175405.webp",
-        "/static/images/20230225_085314.webp"
-      ],
-      "alt": "Waiting little wave",
-      "caption": "Waiting little wave",
-      "writeup": "Location: Dublar Char, Coastal area of Bay of Bengal Sundarban\nIf we look at world map or google map then we will find still some places which are distant from our general life. This place is at the corner of the Bay of Bengal and surrounded by Sundarban area (though farm from this largest mangrove forest).",
       "category": "sea",
+      "location": "Dublar Char, Coastal area of Bay of Bengal Sundarban",
+      "caption": "Waiting little wave",
+      "description": "If we look at world map or google map then we will find still some places which are distant from our general life. This place is at the corner of the Bay of Bengal and surrounded by Sundarban area (though farm from this largest mangrove forest).",
+      "photos": [
+        {
+          "image": "/static/images/20230225_175405.webp",
+          "description": "Waiting little wave"
+        },
+        {
+          "image": "/static/images/20230225_085314.webp",
+          "description": ""
+        }
+      ],
       "sharePreview": null
     },
     {
-      "images": [
-        "/static/images/1000041776.webp"
-      ],
-      "alt": "",
-      "caption": "Joy of friends",
-      "writeup": "",
       "category": "friends",
+      "caption": "Joy of friends",
+      "description": "",
+      "photos": [
+        {
+          "image": "/static/images/1000041776.webp",
+          "description": ""
+        }
+      ],
       "sharePreview": null
     }
   ]

@@ -133,15 +133,16 @@ const slugify = (value: string): string =>
 
 /**
  * Moments from src/data/moments.json, each with its own shareable /moments/<slug> page.
- * The slug comes from the caption (de-duplicated); captions with no latin letters fall back to "moment-<n>".
+ * The slug comes from the card caption, else the category (de-duplicated); anything with no latin letters falls back
+ * to "moment-<n>". `images` lists every photo's file path (used for share previews).
  */
 export const getMoments = () => {
     const used = new Set<string>();
     return momentsData.items.map((item, index) => {
-        const base = slugify(item.caption) || `moment-${index + 1}`;
+        const base = slugify(item.caption ?? '') || slugify(item.category) || `moment-${index + 1}`;
         let slug = base;
         for (let n = 2; used.has(slug); n++) slug = `${base}-${n}`;
         used.add(slug);
-        return {...item, slug};
+        return {...item, slug, images: item.photos.map(({image}) => image)};
     });
 };

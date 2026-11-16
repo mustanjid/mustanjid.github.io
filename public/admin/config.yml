@@ -200,28 +200,8 @@ collections:
             name: items
             widget: list
             required: false
-            summary: "{{fields.caption}}"
+            summary: "{{fields.category}} — {{fields.caption}}"
             fields:
-              - label: "Photos"
-                name: images
-                widget: image
-                multiple: true
-                max: 12
-                required: true
-                hint: "Add up to 12 photos for this moment. Visitors swipe or tap dots to move between them, and tap a photo to see it full size with arrows. The first photo is the cover. Each is converted to high-quality WebP, resized to at most 2560px, and limited to 1 MB."
-                media_libraries:
-                  default:
-                    config:
-                      max_file_size: 1000000
-                      transformations:
-                        raster_image:
-                          format: webp
-                          quality: 90
-                          width: 2560
-                          height: 2560
-              - { label: "Photo description (alt text)", name: alt, widget: string, required: false }
-              - { label: "Caption", name: caption, widget: string }
-              - { label: "Write-up", name: writeup, widget: text, required: false }
               - label: "Category"
                 name: category
                 widget: relation
@@ -229,6 +209,32 @@ collections:
                 search_fields: [name]
                 value_field: "{{slug}}"
                 display_fields: [name]
+              - { label: "Location", name: location, widget: string, required: false, hint: "Example: Khulna. Shown on the card and on the details page." }
+              - { label: "Caption for card (optional)", name: caption, widget: string, required: false, hint: "A short line used as the card heading. Leave empty to use the category name." }
+              - { label: "General description", name: description, widget: text, required: false, hint: "About the whole moment. The card shows only the first two lines; the full text is on the details page. A blank line starts a new paragraph." }
+              - label: "Photos"
+                name: photos
+                widget: list
+                min: 1
+                max: 12
+                required: true
+                summary: "{{fields.description}}"
+                hint: "Add up to 12 photos, each with its own description. The first photo is the cover. Visitors swipe or tap dots on the card, tap a photo to see it full size with arrows, and open Details for the slider with every description."
+                fields:
+                  - label: "Photo"
+                    name: image
+                    widget: image
+                    media_libraries:
+                      default:
+                        config:
+                          max_file_size: 1000000
+                          transformations:
+                            raster_image:
+                              format: webp
+                              quality: 90
+                              width: 2560
+                              height: 2560
+                  - { label: "Photo description", name: description, widget: text, required: false, hint: "About this photo only. Also used as its alt text for screen readers." }
               - label: "Link preview image (when shared)"
                 name: sharePreview
                 widget: object
@@ -346,6 +352,7 @@ collections:
               - { label: "Empty", name: empty, widget: string }
               - { label: "Back link label (paper page)", name: backLabel, widget: string }
               - { label: "Share button label", name: shareLabel, widget: string }
+              - { label: "Details button label", name: detailsLabel, widget: string }
               - { label: "Citation heading (paper page)", name: citationLabel, widget: string }
           - label: "Projects (list and detail pages)"
             name: projects
