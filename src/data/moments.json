@@ -3,6 +3,7 @@
   "items": [
     {
       "category": "events",
+      "location": "",
       "caption": "Learning like endless sky never ends",
       "description": "",
       "photos": [
@@ -15,6 +16,7 @@
     },
     {
       "category": "places",
+      "location": "",
       "caption": "Before dark on the vast Padma river, Rajshahi",
       "description": "",
       "photos": [
@@ -27,6 +29,7 @@
     },
     {
       "category": "bangladesh-minerals",
+      "location": "",
       "caption": "China Clay Hill, Durgapur, Netrakona",
       "description": "",
       "photos": [
@@ -49,13 +52,14 @@
         },
         {
           "image": "/static/images/20230225_085314.webp",
-          "description": ""
+          "description": "Dead branches with life"
         }
       ],
       "sharePreview": null
     },
     {
       "category": "friends",
+      "location": "",
       "caption": "Joy of friends",
       "description": "",
       "photos": [
