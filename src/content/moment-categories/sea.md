@@ -1,3 +1,3 @@
 ---
-name: Sea
+name: Bay of Bengal
 ---
