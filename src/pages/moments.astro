@@ -61,29 +61,54 @@ const usedCategories = categories.filter(({ id }) =>
   {galleryItems.length > 0 ? (
     <ul class="mt-4 grid grid-cols-1 gap-x-8 lg:grid-cols-2">
       {galleryItems.map((item) => (
-        <li data-moment-card data-moment-category={item.category} class="py-4">
+        <li data-moment-card data-moment-category={item.category} data-moment-caption={item.caption} data-moment-category-label={item.categoryLabel} class="py-4">
           <article class="space-y-3">
-            <div class="grid w-full max-w-[36rem] grid-cols-2 gap-3 sm:gap-4">
-              {item.images.map((image, index) => (
-                <button
-                  type="button"
-                  data-moment-open
-                  data-image-src={image}
-                  data-image-alt={item.alt || item.caption}
-                  data-image-caption={item.caption}
-                  data-image-category={item.categoryLabel}
-                  aria-label={`View photo ${index + 1} for ${item.caption}`}
-                  class:list={["group block w-full overflow-hidden rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-gray-800 dark:focus:ring-offset-gray-950", item.images.length === 1 && "col-span-2"]}
-                >
-                  <img
-                    src={image}
-                    alt={item.alt}
-                    class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </button>
-              ))}
+            <div data-moment-gallery class="relative w-full max-w-[36rem]">
+              <ul
+                data-moment-track
+                class="flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg bg-gray-100 [scrollbar-width:none] dark:bg-gray-800 [&::-webkit-scrollbar]:hidden"
+              >
+                {item.images.map((image, index) => (
+                  <li class="w-full shrink-0 snap-center" data-moment-slide>
+                    <button
+                      type="button"
+                      data-moment-open
+                      data-index={index}
+                      data-image-src={image}
+                      data-image-alt={item.alt || item.caption}
+                      aria-label={`View photo ${index + 1} of ${item.images.length} full size: ${item.caption}`}
+                      class="group block w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                    >
+                      <img
+                        src={image}
+                        alt={item.alt || item.caption}
+                        class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              {item.images.length > 1 && (
+                <>
+                  <span data-moment-count aria-hidden="true" class="pointer-events-none absolute right-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white">
+                    1 / {item.images.length}
+                  </span>
+                  <div class="mt-3 flex justify-center gap-2" role="group" aria-label={`Photos for ${item.caption}`}>
+                    {item.images.map((_, index) => (
+                      <button
+                        type="button"
+                        data-moment-dot
+                        data-index={index}
+                        aria-label={`Show photo ${index + 1} of ${item.images.length}`}
+                        aria-current={index === 0 ? "true" : "false"}
+                        class:list={["h-2.5 rounded-full transition-all", index === 0 ? "w-6 bg-primary-600" : "w-2.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"]}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             <div class="relative isolate min-h-32 max-w-[36rem] py-2">
               <MomentMotif category={item.category} />
@@ -128,19 +153,40 @@ const usedCategories = categories.filter(({ id }) =>
     class="m-auto max-h-[92vh] w-[calc(100%-2rem)] max-w-6xl overflow-hidden rounded-2xl border border-gray-200 bg-white p-0 text-gray-900 shadow-2xl backdrop:bg-black/80 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
   >
     <div class="flex items-center justify-between gap-4 border-b border-gray-200 p-3 dark:border-gray-700">
-      <div>
+      <div class="min-w-0">
         <p data-lightbox-category class="text-xs font-semibold uppercase tracking-wide text-primary-700 dark:text-primary-300"></p>
-        <h2 id="moment-lightbox-caption" data-lightbox-caption class="mt-1 text-sm font-semibold"></h2>
+        <h2 id="moment-lightbox-caption" data-lightbox-caption class="mt-1 truncate text-sm font-semibold"></h2>
       </div>
+      <div class="flex shrink-0 items-center gap-3">
+        <span data-lightbox-counter class="text-sm font-medium text-gray-500 dark:text-gray-400"></span>
+        <button
+          type="button"
+          data-lightbox-close
+          class="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:hover:bg-gray-800"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+    <div class="relative bg-black">
+      <img data-lightbox-image src="" alt="" class="max-h-[82vh] w-full object-contain" />
       <button
         type="button"
-        data-lightbox-close
-        class="shrink-0 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:hover:bg-gray-800"
+        data-lightbox-prev
+        aria-label="Previous photo"
+        class="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-2xl text-white hover:bg-black/75 focus:outline-none focus:ring-2 focus:ring-white sm:left-4"
       >
-        Close
+        <span aria-hidden="true">&#8249;</span>
+      </button>
+      <button
+        type="button"
+        data-lightbox-next
+        aria-label="Next photo"
+        class="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-2xl text-white hover:bg-black/75 focus:outline-none focus:ring-2 focus:ring-white sm:right-4"
+      >
+        <span aria-hidden="true">&#8250;</span>
       </button>
     </div>
-    <img data-lightbox-image src="" alt="" class="max-h-[82vh] w-full bg-black object-contain" />
   </dialog>
   <ShareHandler />
 </RootLayout>
@@ -151,6 +197,58 @@ const usedCategories = categories.filter(({ id }) =>
   const w = window as unknown as { __momentsReady?: boolean };
   const activeClass = "rounded-full bg-primary-700 px-4 py-2 text-sm font-semibold text-white";
   const inactiveClass = "rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800";
+  const dotBase = "h-2.5 rounded-full transition-all";
+  const dotActive = `${dotBase} w-6 bg-primary-600`;
+  const dotIdle = `${dotBase} w-2.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500`;
+
+  type Photo = { src: string; alt: string };
+  const lightbox = { photos: [] as Photo[], index: 0, track: null as HTMLElement | null };
+
+  const getDialog = () => document.querySelector<HTMLDialogElement>("#moment-lightbox");
+
+  // Keep a card's dots and "2 / 5" counter in step with the photo currently scrolled into view.
+  const syncGallery = (gallery: HTMLElement, index: number) => {
+    gallery.querySelectorAll<HTMLElement>("[data-moment-dot]").forEach((dot, i) => {
+      dot.className = i === index ? dotActive : dotIdle;
+      dot.setAttribute("aria-current", String(i === index));
+    });
+    const count = gallery.querySelector<HTMLElement>("[data-moment-count]");
+    const total = gallery.querySelectorAll("[data-moment-slide]").length;
+    if (count) count.textContent = `${index + 1} / ${total}`;
+  };
+
+  const goToSlide = (track: HTMLElement, index: number, smooth = true) => {
+    const left = index * track.clientWidth;
+    if (typeof track.scrollTo === "function") track.scrollTo({ left, behavior: smooth ? "smooth" : "auto" });
+    else track.scrollLeft = left;
+  };
+
+  const showPhoto = (index: number) => {
+    const dialog = getDialog();
+    if (!dialog || lightbox.photos.length === 0) return;
+    const total = lightbox.photos.length;
+    lightbox.index = (index + total) % total; // arrows wrap around
+    const photo = lightbox.photos[lightbox.index];
+    const image = dialog.querySelector<HTMLImageElement>("[data-lightbox-image]");
+    const counter = dialog.querySelector<HTMLElement>("[data-lightbox-counter]");
+    if (image) {
+      image.src = photo.src;
+      image.alt = photo.alt;
+    }
+    if (counter) counter.textContent = total > 1 ? `${lightbox.index + 1} / ${total}` : "";
+    dialog.querySelectorAll<HTMLElement>("[data-lightbox-prev], [data-lightbox-next]").forEach((button) => (button.hidden = total < 2));
+    // warm the cache for the neighbours so arrow clicks feel instant
+    [lightbox.index - 1, lightbox.index + 1].forEach((i) => {
+      const neighbour = lightbox.photos[(i + total) % total];
+      if (neighbour) new Image().src = neighbour.src;
+    });
+  };
+
+  const closeLightbox = (dialog: HTMLDialogElement) => {
+    // leave the card on the photo the visitor was looking at
+    if (lightbox.track) goToSlide(lightbox.track, lightbox.index, false);
+    dialog.close();
+  };
 
   if (!w.__momentsReady) {
     w.__momentsReady = true;
@@ -172,24 +270,68 @@ const usedCategories = categories.filter(({ id }) =>
         return;
       }
 
-      const dialog = document.querySelector<HTMLDialogElement>("#moment-lightbox");
+      const dot = target.closest<HTMLButtonElement>("[data-moment-dot]");
+      if (dot) {
+        const track = dot.closest<HTMLElement>("[data-moment-gallery]")?.querySelector<HTMLElement>("[data-moment-track]");
+        if (track) goToSlide(track, Number(dot.dataset.index ?? 0));
+        return;
+      }
+
+      const dialog = getDialog();
       if (!dialog) return;
 
       const openButton = target.closest<HTMLButtonElement>("[data-moment-open]");
       if (openButton) {
-        const image = dialog.querySelector<HTMLImageElement>("[data-lightbox-image]");
+        const card = openButton.closest<HTMLElement>("[data-moment-card]");
+        const gallery = openButton.closest<HTMLElement>("[data-moment-gallery]");
+        if (!card || !gallery) return;
+        lightbox.photos = [...gallery.querySelectorAll<HTMLElement>("[data-moment-open]")].map((button) => ({
+          src: button.dataset.imageSrc ?? "",
+          alt: button.dataset.imageAlt ?? "",
+        }));
+        lightbox.track = gallery.querySelector<HTMLElement>("[data-moment-track]");
         const caption = dialog.querySelector<HTMLElement>("[data-lightbox-caption]");
         const category = dialog.querySelector<HTMLElement>("[data-lightbox-category]");
-        if (!image || !caption || !category) return;
-        image.src = openButton.dataset.imageSrc ?? "";
-        image.alt = openButton.dataset.imageAlt ?? "";
-        caption.textContent = openButton.dataset.imageCaption ?? "";
-        category.textContent = openButton.dataset.imageCategory ?? "";
+        if (caption) caption.textContent = card.dataset.momentCaption ?? "";
+        if (category) category.textContent = card.dataset.momentCategoryLabel ?? "";
+        showPhoto(Number(openButton.dataset.index ?? 0));
         dialog.showModal();
         return;
       }
 
-      if (target.closest("[data-lightbox-close]") || target === dialog) dialog.close();
+      if (target.closest("[data-lightbox-prev]")) return showPhoto(lightbox.index - 1);
+      if (target.closest("[data-lightbox-next]")) return showPhoto(lightbox.index + 1);
+      if (target.closest("[data-lightbox-close]") || target === dialog) closeLightbox(dialog);
     });
+
+    // scroll events do not bubble, so listen in the capture phase to track which photo is in view
+    document.addEventListener(
+      "scroll",
+      (event) => {
+        const track = event.target instanceof HTMLElement ? event.target.closest<HTMLElement>("[data-moment-track]") : null;
+        const gallery = track?.closest<HTMLElement>("[data-moment-gallery]");
+        if (!track || !gallery || track.clientWidth === 0) return;
+        syncGallery(gallery, Math.round(track.scrollLeft / track.clientWidth));
+      },
+      true,
+    );
+
+    document.addEventListener("keydown", (event) => {
+      const dialog = getDialog();
+      if (!dialog?.open) return;
+      if (event.key === "ArrowLeft") showPhoto(lightbox.index - 1);
+      else if (event.key === "ArrowRight") showPhoto(lightbox.index + 1);
+    });
+
+    // swipe left/right on the full-size photo
+    let touchStartX = 0;
+    document.addEventListener("touchstart", (event) => {
+      if ((event.target as Element).closest("[data-lightbox-image]")) touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    document.addEventListener("touchend", (event) => {
+      if (!(event.target as Element).closest("[data-lightbox-image]")) return;
+      const delta = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) > 50) showPhoto(lightbox.index + (delta < 0 ? 1 : -1));
+    }, { passive: true });
   }
 </script>

@@ -4,11 +4,12 @@ import RootLayout from "@/layouts/RootLayout.astro";
 import AuthorLayoutHome from "@/pages/aboutHero.astro";
 import CurrentResearch from "@/components/CurrentResearch.astro";
 import HomeCards from "@/components/HomeCards.astro";
-import { getProjects } from "@/functions";
+import { getProjects, getResearchKinds, isResearchProject } from "@/functions";
 
 const projects = await getProjects();
-const currentResearch = projects.find(({ data }) => data.kind === "research" && data.featured);
-const currentDevelopment = projects.find(({ data }) => data.kind !== "research" && data.featured);
+const researchKinds = await getResearchKinds();
+const currentResearch = projects.find((project) => isResearchProject(project, researchKinds) && project.data.featured);
+const currentDevelopment = projects.find((project) => !isResearchProject(project, researchKinds) && project.data.featured);
 const hasBothProjects = Boolean(currentResearch && currentDevelopment);
 const hasProject = Boolean(currentResearch || currentDevelopment);
 const gridColumnsClass = hasBothProjects ? "xl:grid-cols-8" : hasProject ? "xl:grid-cols-7" : "xl:grid-cols-1";

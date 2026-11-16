@@ -206,9 +206,9 @@ collections:
                 name: images
                 widget: image
                 multiple: true
-                max: 2
+                max: 12
                 required: true
-                hint: "Add up to two photos for this moment. Each is converted to high-quality WebP, resized to at most 2560px, and limited to 1 MB."
+                hint: "Add up to 12 photos for this moment. Visitors swipe or tap dots to move between them, and tap a photo to see it full size with arrows. The first photo is the cover. Each is converted to high-quality WebP, resized to at most 2560px, and limited to 1 MB."
                 media_libraries:
                   default:
                     config:
@@ -357,16 +357,9 @@ collections:
               - { label: "Title", name: title, widget: string }
               - { label: "Subtitle", name: subtitle, widget: string }
               - { label: "Tab latest", name: tabLatest, widget: string }
-              - { label: "Tab research", name: tabResearch, widget: string }
-              - { label: "Tab development", name: tabDevelopment, widget: string }
               - { label: "Details label", name: detailsLabel, widget: string }
-              - { label: "Empty research", name: emptyResearch, widget: string }
-              - { label: "Empty development", name: emptyDevelopment, widget: string }
-              - { label: "Coming soon research", name: comingSoonResearch, widget: string }
-              - { label: "Coming soon development", name: comingSoonDevelopment, widget: string }
+              - { label: "Empty (no projects at all)", name: emptyProjects, widget: string }
               - { label: "Back label", name: backLabel, widget: string }
-              - { label: "Research kind label", name: researchKindLabel, widget: string }
-              - { label: "Development kind label", name: developmentKindLabel, widget: string }
               - { label: "Overview label", name: overviewLabel, widget: string }
               - { label: "Areas label", name: areasLabel, widget: string }
               - { label: "Tools label", name: toolsLabel, widget: string }
@@ -472,6 +465,20 @@ collections:
     fields:
       - { label: "Name", name: name, widget: string }
 
+  - name: project-categories
+    label: "Project categories"
+    folder: src/content/project-categories
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: [order, name]
+    summary: "{{name}}"
+    fields:
+      - { label: "Name", name: name, widget: string, hint: "Shown as the tab name on the Projects page. Example: Machine learning, Networking, Open source." }
+      - { label: "Order", name: order, widget: number, value_type: int, default: 100, hint: "Lower number = tab comes first." }
+      - { label: "Counts as research", name: research, widget: boolean, default: false, hint: "Turn on for research work. Its projects feed the Research page and the homepage current-research card." }
+
   - name: projects
     label: "Projects"
     folder: src/content/projects
@@ -484,17 +491,14 @@ collections:
     sortable_fields: [order, title, kind]
     fields:
       - { label: "Title", name: title, widget: string }
-      - label: "Type"
+      - label: "Category"
         name: kind
-        widget: select
-        default: development
-        hint: "Research projects appear under Projects > Research; everything else under Development & DevOps."
-        options:
-          - { label: "Research", value: research }
-          - { label: "Development", value: development }
-          - { label: "DevOps / Infrastructure", value: devops }
-          - { label: "Machine learning", value: ml }
-          - { label: "Other", value: other }
+        widget: relation
+        collection: project-categories
+        search_fields: [name]
+        value_field: "{{slug}}"
+        display_fields: [name]
+        hint: "Pick a category, or create a new one under Project categories. Each category gets its own tab on the Projects page."
       - label: "Stage"
         name: stage
         widget: select

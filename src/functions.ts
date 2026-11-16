@@ -49,14 +49,55 @@ export const getProjects = async (): Promise<CollectionEntry<'projects'>[]> => {
         .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
 }
 
-export const isResearchProject = ({data}: CollectionEntry<'projects'>) => data.kind === 'research';
+export interface ProjectCategory {
+    slug: string;
+    name: string;
+    order: number;
+    research: boolean;
+}
+
+const titleCase = (slug: string) => slug.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+/** Project categories created in the CMS, in tab order. */
+export const getProjectCategories = async (): Promise<ProjectCategory[]> => {
+    const all = (await getCollection('project-categories')) ?? [];
+    return all
+        .map(({slug, data}) => ({slug, name: data.name, order: data.order, research: data.research}))
+        .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+};
+
+/** Slugs of the categories marked "research". Falls back to "research" until one is marked. */
+export const getResearchKinds = async (): Promise<Set<string>> => {
+    const kinds = new Set((await getProjectCategories()).filter((category) => category.research).map((category) => category.slug));
+    if (kinds.size === 0) kinds.add('research');
+    return kinds;
+};
+
+export const isResearchProject = ({data}: CollectionEntry<'projects'>, researchKinds: Set<string>) => researchKinds.has(data.kind);
+
+/** Display name for a project's category (a project pointing at a deleted category still gets a readable name). */
+export const getProjectCategoryName = async (kind: string): Promise<string> =>
+    (await getProjectCategories()).find((category) => category.slug === kind)?.name ?? titleCase(kind);
+
+/** Categories that have at least one project, each with its projects (lowest `order` first = its "latest"). */
+export const getProjectGroups = async () => {
+    const categories = await getProjectCategories();
+    const projects = await getProjects();
+    const known = new Set(categories.map((category) => category.slug));
+    const orphans: ProjectCategory[] = [...new Set(projects.map(({data}) => data.kind).filter((kind) => !known.has(kind)))]
+        .map((slug) => ({slug, name: titleCase(slug), order: 1000, research: false}));
+    return [...categories, ...orphans]
+        .map((category) => ({category, projects: projects.filter(({data}) => data.kind === category.slug)}))
+        .filter((group) => group.projects.length > 0);
+};
 
 /**
  * The project shown on the homepage card: the first "featured" project, else the latest one.
  * Pass kind "research" to restrict it to research projects (used on the Research page).
  */
 export const getFeaturedProject = async (kind?: 'research'): Promise<CollectionEntry<'projects'> | undefined> => {
-    const all = (await getProjects()).filter((entry) => !kind || isResearchProject(entry));
+    const researchKinds = await getResearchKinds();
+    const all = (await getProjects()).filter((entry) => !kind || isResearchProject(entry, researchKinds));
     return all.find(({data}) => data.featured) ?? all[0];
 }
 

@@ -62,6 +62,17 @@ const tags = defineCollection({
     }),
 });
 
+// Project categories are created and ordered in the CMS (Project categories). A project's `kind` is the slug of one.
+const projectCategories = defineCollection({
+      type: 'content',
+      schema: z.object({
+          name: z.string().min(1),
+          order: z.number().default(100),   // lower number = its tab comes first
+          // Research categories feed the Research page and the homepage "current research" slot.
+          research: z.boolean().default(false),
+      }),
+});
+
 const momentCategories = defineCollection({
       type: 'content',
       schema: z.object({
@@ -102,8 +113,8 @@ const projects = defineCollection({
     type: 'content',
     schema: z.object({
         title: z.string(),
-        // research = shown under Projects > Research; everything else under Development & DevOps
-        kind: z.enum(['research', 'development', 'devops', 'ml', 'other']).default('development'),
+        // slug of a Project category (src/content/project-categories)
+        kind: z.string().min(1).default('development'),
         stage: optional(z.enum(['idea', 'plan', 'in-progress', 'demo', 'shipped'])),
         order: z.number().default(100),      // lower number = shown first ("latest")
         draft: z.boolean().default(false),
@@ -128,4 +139,4 @@ const home = defineCollection({
     }),
 });
 
-export const collections = {blog, authors, tags, research, projects, home, 'moment-categories': momentCategories};
+export const collections = {blog, authors, tags, research, projects, home, 'moment-categories': momentCategories, 'project-categories': projectCategories};

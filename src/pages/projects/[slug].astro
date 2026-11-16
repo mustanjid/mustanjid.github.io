@@ -1,6 +1,6 @@
 ---
 import RootLayout from "@/layouts/RootLayout.astro";
-import { getProjects, isResearchProject, STAGE_LABEL } from "@/functions";
+import { getProjects, getProjectCategoryName, STAGE_LABEL } from "@/functions";
 import { getEntry } from "astro:content";
 import { pagesData } from "@/data/content";
 import { shareImageSource } from "@/og";
@@ -20,7 +20,7 @@ const { entry } = Astro.props;
 const { data } = entry;
 const { Content } = await entry.render();
 const hasBody = entry.body.trim().length > 0;
-const research = isResearchProject(entry);
+const categoryName = await getProjectCategoryName(data.kind);
 const paper = data.paper ? await getEntry(data.paper) : undefined;
 const stage = data.stage ? STAGE_LABEL[data.stage] : undefined;
 const btnPrimary = "rounded-md bg-primary-700 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-800";
@@ -35,7 +35,7 @@ const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-pr
         {data.imgSrc && <img src={data.imgSrc} alt="" class="mx-auto mt-6 h-auto max-h-[32rem] w-full rounded-xl object-contain" />}
 
         <header class="mt-8 border-b border-gray-200 pb-6 dark:border-gray-700">
-            <p class="text-sm font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">{research ? t.researchKindLabel : t.developmentKindLabel}</p>
+            <p class="text-sm font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">{categoryName}</p>
             <h1 class="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl">{data.title}</h1>
             {(stage || data.date) && (
                 <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-gray-500 dark:text-gray-400">

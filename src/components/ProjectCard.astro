@@ -1,0 +1,90 @@
+---
+// One card for every project category on the Projects page (Latest tab and each category tab).
+// Only the image, the title and the buttons are links: the card itself is not, so scrolling and tapping on a
+// phone never opens a project by accident.
+import type { CollectionEntry } from "astro:content";
+import { STAGE_LABEL } from "@/functions";
+import { pagesData } from "@/data/content";
+import ShareButton from "@/components/ShareButton.astro";
+
+interface Props {
+    project: CollectionEntry<"projects">;
+    categoryName: string;
+    /** "latest" shows more of the project (longer description, more chips) than the plain list card. */
+    variant?: "latest" | "list";
+}
+
+const { project, categoryName, variant = "list" } = Astro.props;
+const { data, slug } = project;
+const t = pagesData.projects;
+const isLatest = variant === "latest";
+const href = `/projects/${slug}/`;
+const shareUrl = new URL(href, Astro.site).href;
+const stage = data.stage ? STAGE_LABEL[data.stage] : undefined;
+
+const areaLimit = isLatest ? 6 : 4;
+const stackLimit = isLatest ? 8 : 5;
+const areas = data.areas.slice(0, areaLimit);
+const stack = data.stack.slice(0, stackLimit);
+const moreAreas = data.areas.length - areas.length;
+const moreStack = data.stack.length - stack.length;
+
+const chip = "rounded-full px-2.5 py-1 text-xs font-medium";
+const linkClass = "text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400";
+---
+
+<article class="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/50">
+    <a href={href} class="group block h-44 shrink-0 overflow-hidden border-b border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900" aria-label={`${t.detailsLabel}: ${data.title}`}>
+        {data.imgSrc ? (
+            <img src={data.imgSrc} alt="" class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
+        ) : (
+            <div class="flex h-full items-end bg-gradient-to-br from-primary-100 to-primary-50 p-5 dark:from-primary-950 dark:to-gray-900">
+                <span class="text-sm font-bold uppercase tracking-[0.2em] text-primary-800 dark:text-primary-200">{categoryName}</span>
+            </div>
+        )}
+    </a>
+
+    <div class="flex flex-1 flex-col p-5">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+            <span class:list={[chip, "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200"]}>{categoryName}</span>
+            {stage && <span class:list={[chip, "bg-primary-50 text-primary-700 dark:bg-primary-950 dark:text-primary-300"]}>{stage}</span>}
+            {data.date && <time class="text-gray-500 dark:text-gray-400" datetime={data.date.toISOString()}>{data.date.toLocaleDateString("en-US", { month: "short", year: "numeric" })}</time>}
+        </div>
+
+        <h2 class="mt-3 text-xl font-bold leading-7 text-gray-900 dark:text-gray-100">
+            <a href={href} class="hover:text-primary-600 dark:hover:text-primary-400">{data.title}</a>
+        </h2>
+
+        {data.description && <p class:list={["mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300", isLatest ? "line-clamp-6" : "line-clamp-4"]}>{data.description}</p>}
+
+        {areas.length > 0 && (
+            <div class="mt-4">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{t.areasLabel}</p>
+                <ul class="mt-1.5 flex flex-wrap gap-1.5">
+                    {areas.map((area) => <li class:list={[chip, "bg-primary-50 text-primary-800 dark:bg-primary-950 dark:text-primary-200"]}>{area}</li>)}
+                    {moreAreas > 0 && <li class:list={[chip, "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"]}>+{moreAreas}</li>}
+                </ul>
+            </div>
+        )}
+
+        {stack.length > 0 && (
+            <div class="mt-3">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{t.toolsLabel}</p>
+                <ul class="mt-1.5 flex flex-wrap gap-1.5">
+                    {stack.map((item) => <li class:list={[chip, "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"]}>{item}</li>)}
+                    {moreStack > 0 && <li class:list={[chip, "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"]}>+{moreStack}</li>}
+                </ul>
+            </div>
+        )}
+
+        <div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-5">
+            <a href={href} class="inline-flex items-center gap-1 rounded-md bg-primary-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-primary-800 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400">
+                {t.detailsLabel} <span aria-hidden="true">&rarr;</span>
+            </a>
+            {data.url && <a class={linkClass} href={data.url} target="_blank" rel="noopener noreferrer">{t.liveLabel}</a>}
+            {data.srccode && <a class={linkClass} href={data.srccode} target="_blank" rel="noopener noreferrer">{t.sourceLabel}</a>}
+            {data.projectdesc && <a class={linkClass} href={data.projectdesc} target="_blank" rel="noopener noreferrer">{t.notesLabel}</a>}
+            <span class="ml-auto"><ShareButton url={shareUrl} title={data.title} text={data.description} label={t.shareLabel} /></span>
+        </div>
+    </div>
+</article>

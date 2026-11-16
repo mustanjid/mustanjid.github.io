@@ -71,7 +71,7 @@ const moments = z.object({
     images: z.array(z.string().min(1).transform((src) => {
       const path = src.replace(/^\/?public\//, "");
       return path.startsWith("static/") ? `/${path}` : path;
-    })).min(1).max(2),
+    })).min(1).max(12),
     alt: z.string().default(""),
     caption: z.string().min(1),
     writeup: text,
@@ -102,7 +102,7 @@ const pages = z.object({
   home: labels(["latestPublicationsEyebrow", "latestPublicationsTitle", "publicationsEmpty", "allResearchButton", "latestThoughtsTitle", "thoughtsEmpty", "allThoughtsButton", "readLabel", "updatesTitle", "updatesLinkLabel", "nowLabel", "techNewsLabel", "currentProjectEyebrow", "currentDevProjectEyebrow", "areasLabel", "toolsLabel", "projectDetailsLabel", "repositoryLabel", "implementationLabel"]),
   thoughts: labels(["seoTitle", "seoDescription", "title", "subtitle", "filterLabel", "allTopicsLabel", "readMoreLabel"]),
   research: labels(["seoTitle", "seoDescription", "interestsTitle", "publicationsTitle", "scholarLinkLabel", "groupUnderReview", "groupJournal", "groupConference", "groupThesis", "empty"]),
-  projects: labels(["seoTitle", "seoDescription", "title", "subtitle", "tabLatest", "tabResearch", "tabDevelopment", "detailsLabel", "emptyResearch", "emptyDevelopment", "comingSoonResearch", "comingSoonDevelopment", "backLabel", "researchKindLabel", "developmentKindLabel", "overviewLabel", "areasLabel", "toolsLabel", "liveLabel", "sourceLabel", "notesLabel", "paperLabel", "paperDetailsLabel"]),
+  projects: labels(["seoTitle", "seoDescription", "title", "subtitle", "tabLatest", "detailsLabel", "emptyProjects", "backLabel", "overviewLabel", "areasLabel", "toolsLabel", "liveLabel", "sourceLabel", "notesLabel", "paperLabel", "paperDetailsLabel"]),
   achievements: labels(["seoTitle", "seoDescription", "title", "subtitle", "filterAll", "filterAwards", "filterCertificates", "awardsHeading", "certificatesHeading", "certificatesHint", "closeLabel"]),
   moments: labels(["seoTitle", "seoDescription", "title", "backLabel", "shareLabel"]),
   about: labels(["seoTitle", "seoDescription", "title", "subtitle", "latestPostsTitle"]),

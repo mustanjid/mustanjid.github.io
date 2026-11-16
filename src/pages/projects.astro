@@ -1,16 +1,14 @@
 ---
-import Card from "@/components/Card.astro";
-import ResearchProjectCard from "@/components/ResearchProjectCard.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
-import { getProjects, isResearchProject, toCardProps } from "@/functions";
+import { getProjectGroups } from "@/functions";
 import { pagesData } from "@/data/content";
 
 const t = pagesData.projects;
-const allProjects = await getProjects();
-const researchProjects = allProjects.filter(isResearchProject);
-const developmentProjects = allProjects.filter((project) => !isResearchProject(project));
-const latestResearch = researchProjects[0];
-const latestDevelopment = developmentProjects[0];
+// One tab per project category (created in the CMS), plus "Latest" = the newest project of every category.
+const groups = await getProjectGroups();
+const selectedTab = "rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white";
+const idleTab = "rounded-md px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800";
 ---
 
 <RootLayout title={t.seoTitle} description={t.seoDescription}>
@@ -24,47 +22,30 @@ const latestDevelopment = developmentProjects[0];
             </p>
         </div>
 
-        <div class="space-y-6 py-8" data-project-tabs>
-            <nav class="flex flex-wrap gap-2" aria-label="Filter projects">
-                <button type="button" data-project-filter="latest" aria-pressed="true" class="rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white">{t.tabLatest}</button>
-                <button type="button" data-project-filter="research" aria-pressed="false" class="rounded-md px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">{t.tabResearch}</button>
-                <button type="button" data-project-filter="development" aria-pressed="false" class="rounded-md px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">{t.tabDevelopment}</button>
-            </nav>
+        {groups.length > 0 ? (
+            <div class="space-y-6 py-8" data-project-tabs>
+                <nav class="flex flex-wrap gap-2" aria-label="Filter projects">
+                    <button type="button" data-project-filter="latest" aria-pressed="true" class={selectedTab}>{t.tabLatest}</button>
+                    {groups.map(({ category }) => (
+                        <button type="button" data-project-filter={category.slug} aria-pressed="false" class={idleTab}>{category.name}</button>
+                    ))}
+                </nav>
 
-            <section data-project-panel="latest" aria-label="Latest projects" class="grid grid-cols-1 gap-5 md:grid-cols-2">
-                {latestResearch ? (
-                    <ResearchProjectCard project={latestResearch} variant="latest" />
-                ) : (
-                    <article class="rounded-xl border border-gray-200 p-6 text-gray-500 dark:border-gray-800 dark:text-gray-400">{t.comingSoonResearch}</article>
-                )}
+                <section data-project-panel="latest" aria-label="Latest projects" class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    {groups.map(({ category, projects }) => <ProjectCard project={projects[0]} categoryName={category.name} variant="latest" />)}
+                </section>
 
-                {latestDevelopment ? (
-                    <Card {...toCardProps(latestDevelopment)} />
-                ) : (
-                    <article class="rounded-xl border border-gray-200 p-6 text-gray-500 dark:border-gray-800 dark:text-gray-400">{t.comingSoonDevelopment}</article>
-                )}
-            </section>
-
-            <section data-project-panel="research" aria-label="All research projects" class="hidden">
-                {researchProjects.length > 0 ? (
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {researchProjects.map((project) => <ResearchProjectCard project={project} />)}
-                    </div>
-                ) : (
-                    <p class="text-gray-500 dark:text-gray-400">{t.emptyResearch}</p>
-                )}
-            </section>
-
-            <section data-project-panel="development" aria-label="All development projects" class="hidden">
-                {developmentProjects.length > 0 ? (
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {developmentProjects.map((project) => <Card {...toCardProps(project)} />)}
-                    </div>
-                ) : (
-                    <p class="text-gray-500 dark:text-gray-400">{t.emptyDevelopment}</p>
-                )}
-            </section>
-        </div>
+                {groups.map(({ category, projects }) => (
+                    <section data-project-panel={category.slug} aria-label={category.name} class="hidden">
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            {projects.map((project) => <ProjectCard project={project} categoryName={category.name} />)}
+                        </div>
+                    </section>
+                ))}
+            </div>
+        ) : (
+            <p class="py-8 text-gray-500 dark:text-gray-400">{t.emptyProjects}</p>
+        )}
     </div>
 </RootLayout>
 
