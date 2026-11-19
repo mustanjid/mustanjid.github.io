@@ -10,7 +10,10 @@
     "team": "Justice Journey",
     "location": "Dhaka, Bangladesh",
     "shareEnabled": true,
-    "sharePreview": null
+    "sharePreview": {
+      "source": "cover",
+      "image": ""
+    }
   },
   "awards": [
     {
