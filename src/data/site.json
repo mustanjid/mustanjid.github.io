@@ -18,6 +18,11 @@
     "Pattern Recognition"
   ],
   "ogImage": "/static/logo1.png",
+  "reactions": {
+    "enabled": true,
+    "url": "https://kotlrrsjvglqjitlxfcz.supabase.co",
+    "key": "sb_publishable_bbvvoCxONzYxSlKXYSKG4A_6AY2Gj-E"
+  },
   "navigation": [
     {
       "title": "Home",
@@ -73,10 +78,5 @@
       "kind": "scholar",
       "url": "https://scholar.google.com/citations?user=MPlz5dQAAAAJ&hl=en&authuser=1"
     }
-  ],
-  "reactions": {
-    "enabled": false,
-    "url": "",
-    "key": ""
-  }
+  ]
 }
