@@ -2,6 +2,8 @@
 import type { CollectionEntry } from "astro:content";
 import PaperDialog from "@/components/PaperDialog.astro";
 import ShareButton from "@/components/ShareButton.astro";
+import ReactionBar from "@/components/ReactionBar.astro";
+import { reactionsAvailable } from "@/reactions";
 import { pagesData } from "@/data/content";
 import { STATUS_BADGE, STATUS_LABEL, doiUrl, paperCitation, paperPdfUrl } from "@/research-ui";
 
@@ -64,6 +66,7 @@ const buttonClass = "inline-flex min-h-9 items-center rounded-md border border-p
         {data.codeUrl && <a class={buttonClass} href={data.codeUrl} target="_blank" rel="noopener noreferrer">Code</a>}
         {doiLink && <a class={buttonClass} href={doiLink} target="_blank" rel="noopener noreferrer">DOI</a>}
       </div>
+      {reactionsAvailable() && <div class="mt-3"><ReactionBar id={`paper:${slug}`} compact /></div>}
       <p data-cite-status role="status" aria-live="polite" class="mt-1 text-[10px] text-gray-500 dark:text-gray-400"></p>
     </div>
   </div>

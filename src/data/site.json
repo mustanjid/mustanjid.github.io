@@ -73,5 +73,10 @@
       "kind": "scholar",
       "url": "https://scholar.google.com/citations?user=MPlz5dQAAAAJ&hl=en&authuser=1"
     }
-  ]
+  ],
+  "reactions": {
+    "enabled": false,
+    "url": "",
+    "key": ""
+  }
 }

@@ -35,6 +35,12 @@ const site = z.object({
     href: z.string().min(1),
     visible: z.boolean().default(true),
   })).default([]),
+  // Like / Love buttons (see src/reactions.ts and supabase/reactions.sql). The key is the PUBLIC one.
+  reactions: z.object({
+    enabled: z.boolean().default(false),
+    url: text,
+    key: text,
+  }).default({}),
 });
 
 const researchPage = z.object({

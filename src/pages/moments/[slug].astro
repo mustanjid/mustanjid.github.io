@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import RootLayout from "@/layouts/RootLayout.astro";
 import SocialShare from "@/layouts/share/SocialShare.astro";
+import ReactionBar from "@/components/ReactionBar.astro";
 import MomentGallery from "@/components/MomentGallery.astro";
 import { getMoments } from "@/functions";
 import { pagesData } from "@/data/content";
@@ -51,6 +52,7 @@ const cover = moment.photos[0];
 
     {moment.description && <p class="mt-6 max-w-2xl whitespace-pre-line text-base leading-7 text-gray-700 dark:text-gray-300">{moment.description}</p>}
 
+    <div class="mt-8"><ReactionBar id={`moment:${moment.slug}`} /></div>
     <SocialShare title={title} description={description} />
   </article>
 </RootLayout>

@@ -83,6 +83,15 @@ collections:
           - { label: "Author name", name: author, widget: string, hint: "Shown in the footer copyright." }
           - { label: "SEO keywords", name: keywords, widget: list, required: false }
           - { label: "Default link preview image (logo)", name: ogImage, widget: image, media_folder: /public/static, public_folder: /static, hint: "The default picture shown when any page is shared, unless that page picks its own. Recommended 1200x630." }
+          - label: "Likes and Loves"
+            name: reactions
+            widget: object
+            collapsed: true
+            hint: "Adds Like and Love buttons to posts, projects, research papers, awards, certificates and moments. Needs a free Supabase project: run supabase/reactions.sql there, then paste the details below."
+            fields:
+              - { label: "Turn on Like and Love buttons", name: enabled, widget: boolean, default: false }
+              - { label: "Supabase project URL", name: url, widget: string, required: false, hint: "Example: https://abcdefgh.supabase.co" }
+              - { label: "Supabase PUBLIC key", name: key, widget: string, required: false, hint: "Project settings > API: the public 'anon' or 'publishable' key. NEVER paste the secret or service_role key; this file is public." }
           - label: "Navigation menu"
             name: navigation
             widget: list

@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { pagesData, momentsData } from "@/data/content";
 import { getMoments } from "@/functions";
 import MomentGallery from "@/components/MomentGallery.astro";
+import ReactionBar from "@/components/ReactionBar.astro";
 import MomentMotif from "@/components/MomentMotif.astro";
 import ShareHandler from "@/components/ShareHandler.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
@@ -107,6 +108,7 @@ const usedCategories = categories.filter(({ id }) => momentsData.items.some((ite
                     </svg>
                     <span data-share-label>{t.shareLabel}</span>
                   </button>
+                  <ReactionBar id={`moment:${item.slug}`} compact />
                   <span data-share-status role="status" aria-live="polite" class="sr-only"></span>
                 </div>
               </div>

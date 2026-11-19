@@ -6,6 +6,8 @@ import type { CollectionEntry } from "astro:content";
 import { STAGE_LABEL } from "@/functions";
 import { pagesData } from "@/data/content";
 import ShareButton from "@/components/ShareButton.astro";
+import ReactionBar from "@/components/ReactionBar.astro";
+import { reactionsAvailable } from "@/reactions";
 
 interface Props {
     project: CollectionEntry<"projects">;
@@ -86,5 +88,6 @@ const linkClass = "text-sm font-semibold text-primary-600 hover:underline dark:t
             {data.projectdesc && <a class={linkClass} href={data.projectdesc} target="_blank" rel="noopener noreferrer">{t.notesLabel}</a>}
             <span class="ml-auto"><ShareButton url={shareUrl} label={t.shareLabel} /></span>
         </div>
+        {reactionsAvailable() && <div class="pt-3"><ReactionBar id={`project:${slug}`} compact /></div>}
     </div>
 </article>

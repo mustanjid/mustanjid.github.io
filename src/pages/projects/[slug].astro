@@ -5,6 +5,7 @@ import { getEntry } from "astro:content";
 import { pagesData } from "@/data/content";
 import { shareImageSource } from "@/og";
 import SocialShare from "@/layouts/share/SocialShare.astro";
+import ReactionBar from "@/components/ReactionBar.astro";
 import PaperDialog from "@/components/PaperDialog.astro";
 
 export async function getStaticPaths() {
@@ -85,6 +86,7 @@ const chip = "rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-pr
             {data.projectdesc && <a class={btn} href={data.projectdesc} target="_blank" rel="noopener noreferrer">{t.notesLabel}</a>}
         </nav>
 
+        <div class="mt-8"><ReactionBar id={`project:${entry.slug}`} /></div>
         <SocialShare title={data.title} description={data.description} />
     </article>
 </RootLayout>

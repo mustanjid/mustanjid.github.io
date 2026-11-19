@@ -2,10 +2,13 @@
 import RootLayout from "@/layouts/RootLayout.astro";
 import AchievementActions from "@/components/AchievementActions.astro";
 import ShareHandler from "@/components/ShareHandler.astro";
+import ReactionBar from "@/components/ReactionBar.astro";
+import { reactionsAvailable } from "@/reactions";
 import { pagesData } from "@/data/content";
 import { certificateFacts, getAchievements } from "@/functions";
 
 const { certificates, awards, featured } = getAchievements();
+const reactionsOn = reactionsAvailable();
 
 // Certificate details for the pop-up (kept out of the HTML cards so the grid stays compact).
 const certificateData = certificates.map((certificate) => ({
@@ -51,7 +54,12 @@ const certificateJson = JSON.stringify(certificateData).replace(/</g, "\\u003c")
               {featured.team && (<><dt class="font-semibold text-gray-500 dark:text-gray-400">Team</dt><dd class="text-gray-700 dark:text-gray-200">{featured.team}</dd></>)}
               {featured.location && (<><dt class="font-semibold text-gray-500 dark:text-gray-400">Location</dt><dd class="text-gray-700 dark:text-gray-200">{featured.location}</dd></>)}
             </dl>
-            {featured.shareEnabled && <div class="mt-5"><AchievementActions slug={featured.slug} /></div>}
+            {(featured.shareEnabled || reactionsOn) && (
+              <div class="mt-5 flex flex-wrap items-center gap-3">
+                <ReactionBar id={`award:${featured.slug}`} />
+                {featured.shareEnabled && <AchievementActions slug={featured.slug} />}
+              </div>
+            )}
           </div>
         </div>
       </article>
@@ -67,7 +75,12 @@ const certificateJson = JSON.stringify(certificateData).replace(/</g, "\\u003c")
               <h3 class="mt-1 text-base font-semibold text-gray-900 dark:text-gray-100">{award.title}</h3>
               {award.issuer && <p class="mt-1 text-sm font-medium text-gray-700 dark:text-gray-300">{award.issuer}</p>}
               {award.description && <p class="mt-1 text-sm leading-5 text-gray-600 dark:text-gray-400">{award.description}</p>}
-              {award.shareEnabled && <div class="mt-3"><AchievementActions slug={award.slug} /></div>}
+              {(award.shareEnabled || reactionsOn) && (
+                <div class="mt-3 flex flex-wrap items-center gap-3">
+                  <ReactionBar id={`award:${award.slug}`} compact />
+                  {award.shareEnabled && <AchievementActions slug={award.slug} />}
+                </div>
+              )}
             </li>
           ))}
         </ol>
@@ -95,9 +108,10 @@ const certificateJson = JSON.stringify(certificateData).replace(/</g, "\\u003c")
                 <span class="mt-1 block text-sm font-medium text-gray-600 dark:text-gray-300">{certificate.provider}</span>
               </span>
             </button>
-            {certificate.shareEnabled && (
-              <div class="border-t border-gray-200 p-2.5 dark:border-gray-800">
-                <AchievementActions slug={certificate.slug} />
+            {(certificate.shareEnabled || reactionsOn) && (
+              <div class="flex flex-wrap items-center gap-2.5 border-t border-gray-200 p-2.5 dark:border-gray-800">
+                <ReactionBar id={`award:${certificate.slug}`} compact />
+                {certificate.shareEnabled && <AchievementActions slug={certificate.slug} />}
               </div>
             )}
           </li>
