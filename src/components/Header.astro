@@ -1,49 +1,37 @@
 ---
-import {SITE_METADATA, NAVIGATION} from '@/consts';
-import HeaderLink from './HeaderLink.astro';
-import Logo from './Logo.astro';
+import { SITE_METADATA, NAVIGATION } from "@/consts";
+import HeaderLink from "./HeaderLink.astro";
+import Logo from "./Logo.astro";
+import BasketLogo from "./BasketLogo.astro";
 import MobileNav from "./MobileNav.astro";
 import ThemeSwitcher from "./ThemeSwitcher.astro";
 ---
+
 <div class="relative mb-20">
-    <header class='fixed z-50 bg-white dark:bg-slate-950 w-full max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0 mx-auto'>
-<div class='flex h-16 items-center justify-between'>
-        <div>
-            <a href="/" aria-label={SITE_METADATA.headerTitle}>
-                <div class="flex items-center justify-between">
-                    {/* <div class="mr-3">
+  <header class="fixed z-50 bg-white dark:bg-slate-950 w-full max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0 mx-auto">
+    <div class="flex h-16 items-center justify-between">
+      <div>
+        <a href="/" aria-label={SITE_METADATA.headerTitle}>
+          <div class="flex items-center justify-between">
+            {/* <div class="mr-3">
                         <Logo/>
                     </div> */}
-                    {typeof SITE_METADATA.headerTitle === 'string' ? (
-                            <div class="h-6 text-lg font-semibold sm:block md:text-lg md:h-7 lg:text-lg lg:h-6">
-                                {SITE_METADATA.headerTitle}
-                            </div>
-                    ) : (
-                        SITE_METADATA.headerTitle
-                    )}
-                </div>
-            </a>
-        </div>
-        <div class="flex items-center leading-5 space-x-4 sm:space-x-6 mr-3">
-            {NAVIGATION
-                .filter((link) => link.href !== '/')
-                .map((link) => (
-                        <HeaderLink
-                                href={link.href}
-                                class="hidden xl:block font-medium"
-                        >
-                            {link.title}
-                        </HeaderLink>
-                ))}
-    
-            <!--TODO: add theme button-->
-            <!--<SearchButton />-->
-            <ThemeSwitcher />
-            <MobileNav />
-        </div>
+            <BasketLogo />
+          </div>
+        </a>
+      </div>
+      <div class="flex items-center leading-5 space-x-4 sm:space-x-6 mr-3">
+        {NAVIGATION.filter((link) => link.href !== "/").map((link) => (
+          <HeaderLink href={link.href} class="hidden xl:block font-medium">
+            {link.title}
+          </HeaderLink>
+        ))}
 
-</div>
-
-</header>
-</div>
+        <!--TODO: add theme button-->
+        <!--<SearchButton />-->
+        <ThemeSwitcher />
+        <MobileNav />
+      </div>
+    </div>
+  </header>
 </div>

@@ -1,5 +1,5 @@
 ---
-// Giscus comments (GitHub Discussions). The script is injected from code instead of being a static <script> tag
+// Giscus comments (GitHub Discussions). The Giscus loader is injected from code instead of being a static script element
 // because Astro View Transitions run a normal script only once per full load: opening a second post by clicking a
 // link would otherwise show no comment box.
 ---
@@ -33,17 +33,27 @@
       "data-theme": isDark() ? "dark" : "light",
       "data-lang": "en",
     };
-    Object.entries(attributes).forEach(([name, value]) => script.setAttribute(name, value));
+    Object.entries(attributes).forEach(([name, value]) =>
+      script.setAttribute(name, value),
+    );
     host.appendChild(script);
   };
 
   // The site's own light/dark toggle changes the <html> class; keep the comment box in step with it.
   const syncTheme = () => {
-    const frame = document.querySelector<HTMLIFrameElement>("iframe.giscus-frame");
-    frame?.contentWindow?.postMessage({ giscus: { setConfig: { theme: isDark() ? "dark" : "light" } } }, GISCUS_ORIGIN);
+    const frame = document.querySelector<HTMLIFrameElement>(
+      "iframe.giscus-frame",
+    );
+    frame?.contentWindow?.postMessage(
+      { giscus: { setConfig: { theme: isDark() ? "dark" : "light" } } },
+      GISCUS_ORIGIN,
+    );
   };
 
   document.addEventListener("astro:page-load", mountComments);
-  new MutationObserver(syncTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  new MutationObserver(syncTheme).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
   mountComments();
 </script>
