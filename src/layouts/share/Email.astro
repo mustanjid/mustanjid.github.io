@@ -3,9 +3,9 @@ import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const { url = Astro.url.href, title = '', description = '' } = Astro.props;
-const body = [description, url].filter(Boolean).join('\n\n');
-const href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+const { url = Astro.url.href, title = '' } = Astro.props;
+// Body is only the link (no description); the subject keeps the title because mail apps need one.
+const href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`;
 ---
 <div>
 <a aria-label="Share by email" title="Share by email" class="fill-current text-gray-700" href={href}>

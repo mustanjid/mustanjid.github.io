@@ -1,0 +1,25 @@
+---
+// Details link + Share button shown on an award, certificate or the featured achievement
+// when "Enable sharing" is switched on for it in the CMS.
+import ShareButton from "@/components/ShareButton.astro";
+import { pagesData } from "@/data/content";
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const t = pagesData.achievements;
+const path = `/award/${slug}/`;
+const url = new URL(path, Astro.site).href;
+---
+
+<div class="flex flex-wrap items-center gap-2.5">
+  <a
+    href={path}
+    class="inline-flex min-h-9 items-center gap-1 rounded-md bg-primary-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400"
+  >
+    {t.detailsLabel} <span aria-hidden="true">&rarr;</span>
+  </a>
+  <ShareButton url={url} label={t.shareLabel} />
+</div>

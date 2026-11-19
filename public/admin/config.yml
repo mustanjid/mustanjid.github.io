@@ -82,7 +82,7 @@ collections:
           - { label: "Site description", name: description, widget: text, hint: "Used for SEO and link previews." }
           - { label: "Author name", name: author, widget: string, hint: "Shown in the footer copyright." }
           - { label: "SEO keywords", name: keywords, widget: list, required: false }
-          - { label: "Default link preview image (logo)", name: ogImage, widget: image, media_folder: public/static, public_folder: /static, hint: "The default picture shown when any page is shared, unless that page picks its own. Recommended 1200x630." }
+          - { label: "Default link preview image (logo)", name: ogImage, widget: image, media_folder: /public/static, public_folder: /static, hint: "The default picture shown when any page is shared, unless that page picks its own. Recommended 1200x630." }
           - label: "Navigation menu"
             name: navigation
             widget: list
@@ -164,11 +164,28 @@ collections:
               - { label: "Eyebrow line", name: eyebrow, widget: string, required: false, hint: "Example: Featured achievement · October 2023" }
               - { label: "Title", name: title, widget: string, required: false }
               - { label: "Description", name: description, widget: text, required: false }
-              - { label: "Photo", name: image, widget: image, required: false, media_folder: public/static/images, public_folder: /static/images }
+              - { label: "Photo", name: image, widget: image, required: false, media_folder: /public/static/images, public_folder: /static/images }
               - { label: "Photo description (alt text)", name: imageAlt, widget: string, required: false }
               - { label: "Organizers", name: organizers, widget: string, required: false }
               - { label: "Team", name: team, widget: string, required: false }
               - { label: "Location", name: location, widget: string, required: false }
+              - { label: "Enable sharing", name: shareEnabled, widget: boolean, default: false, hint: "Turn on to show Share and Details buttons on this item and give it its own shareable page with a link preview." }
+              - label: "Link preview image (when shared)"
+                name: sharePreview
+                widget: object
+                required: false
+                collapsed: true
+                hint: "Controls the picture shown when this is shared on WhatsApp, LinkedIn, Facebook or X. Only matters when sharing is enabled."
+                fields:
+                  - label: "Preview picture"
+                    name: source
+                    widget: select
+                    default: cover
+                    options:
+                      - { label: "Photo (default logo if there is none)", value: cover }
+                      - { label: "Default site logo", value: logo }
+                      - { label: "Custom: choose or upload an image", value: custom }
+                  - { label: "Custom image", name: image, widget: image, required: false, hint: "Only used when 'Custom' is selected above. Best at 1200x630; large files are shrunk automatically." }
           - label: "Awards & scholarships"
             name: awards
             widget: list
@@ -177,16 +194,67 @@ collections:
             fields:
               - { label: "Date or range", name: date, widget: string, hint: "Example: 2020–2022" }
               - { label: "Title", name: title, widget: string }
+              - { label: "Awarded by", name: issuer, widget: string, required: false, hint: "Optional. Example: Division of Research, Daffodil International University" }
               - { label: "Description", name: description, widget: text, required: false }
+              - { label: "Enable sharing", name: shareEnabled, widget: boolean, default: false, hint: "Turn on to show Share and Details buttons on this item and give it its own shareable page with a link preview." }
+              - label: "Link preview image (when shared)"
+                name: sharePreview
+                widget: object
+                required: false
+                collapsed: true
+                hint: "Controls the picture shown when this is shared on WhatsApp, LinkedIn, Facebook or X. Only matters when sharing is enabled."
+                fields:
+                  - label: "Preview picture"
+                    name: source
+                    widget: select
+                    default: cover
+                    options:
+                      - { label: "Default site logo (no photo on awards)", value: cover }
+                      - { label: "Default site logo", value: logo }
+                      - { label: "Custom: choose or upload an image", value: custom }
+                  - { label: "Custom image", name: image, widget: image, required: false, hint: "Only used when 'Custom' is selected above. Best at 1200x630; large files are shrunk automatically." }
           - label: "Certificates"
             name: certificates
             widget: list
             required: false
             summary: "{{fields.title}} — {{fields.provider}}"
             fields:
-              - { label: "Title", name: title, widget: string }
-              - { label: "Provider", name: provider, widget: string }
-              - { label: "Certificate image", name: image, widget: image, media_folder: public/static/images/certificates, public_folder: /static/images/certificates }
+              - { label: "Title", name: title, widget: string, hint: "Required." }
+              - { label: "Provider", name: provider, widget: string, hint: "Required. Who issued it. Example: freeCodeCamp, Coursera, DevSkill" }
+              - { label: "Certificate image", name: image, widget: image, media_folder: /public/static/images/certificates, public_folder: /static/images/certificates, hint: "Required." }
+              - { label: "Institution", name: institution, widget: string, required: false, hint: "Optional. Where you studied, if different from the provider. Example: Daffodil International University" }
+              - label: "Learning mode"
+                name: learningMode
+                widget: select
+                required: false
+                hint: "Optional."
+                options:
+                  - { label: "Remote", value: remote }
+                  - { label: "Physical (on-site)", value: physical }
+                  - { label: "Hybrid", value: hybrid }
+              - { label: "Duration", name: duration, widget: string, required: false, hint: "Optional. Example: 6 weeks, 40 hours" }
+              - { label: "Issue date", name: issued, widget: string, required: false, hint: "Optional. Example: March 2023" }
+              - { label: "Credential ID", name: credentialId, widget: string, required: false }
+              - { label: "Credential link", name: credentialUrl, widget: string, required: false, hint: "Optional. Public verification URL." }
+              - { label: "Skills covered", name: skills, widget: list, required: false, hint: "Optional. One skill per line item.", field: { label: "Skill", name: skill, widget: string } }
+              - { label: "Special remarks", name: remarks, widget: text, required: false, hint: "Optional. Anything worth noting: grade, rank, project, scholarship." }
+              - { label: "Enable sharing", name: shareEnabled, widget: boolean, default: false, hint: "Turn on to show Share and Details buttons on this item and give it its own shareable page with a link preview." }
+              - label: "Link preview image (when shared)"
+                name: sharePreview
+                widget: object
+                required: false
+                collapsed: true
+                hint: "Controls the picture shown when this is shared on WhatsApp, LinkedIn, Facebook or X. Only matters when sharing is enabled."
+                fields:
+                  - label: "Preview picture"
+                    name: source
+                    widget: select
+                    default: cover
+                    options:
+                      - { label: "Certificate image (shown whole)", value: cover }
+                      - { label: "Default site logo", value: logo }
+                      - { label: "Custom: choose or upload an image", value: custom }
+                  - { label: "Custom image", name: image, widget: image, required: false, hint: "Only used when 'Custom' is selected above. Best at 1200x630; large files are shrunk automatically." }
 
       - name: moments
         label: "Moments gallery"
@@ -260,7 +328,7 @@ collections:
         fields:
           - { label: "Headline", name: headline, widget: string, required: false, hint: "One line under your name. Example: Support Engineer (NetOps) · Researcher" }
           - { label: "Summary", name: summary, widget: text, required: false, hint: "Blank line = new paragraph." }
-          - { label: "Downloadable CV (PDF)", name: pdf, widget: file, required: false, media_folder: public/static, public_folder: /static, hint: "Optional. Adds a Download button to the CV page." }
+          - { label: "Downloadable CV (PDF)", name: pdf, widget: file, required: false, media_folder: /public/static, public_folder: /static, hint: "Optional. Adds a Download button to the CV page." }
           - label: "Experience"
             name: experience
             widget: list
@@ -392,6 +460,9 @@ collections:
               - { label: "Certificates heading", name: certificatesHeading, widget: string }
               - { label: "Certificates hint", name: certificatesHint, widget: string }
               - { label: "Close label", name: closeLabel, widget: string }
+              - { label: "Share button label", name: shareLabel, widget: string }
+              - { label: "Details link label", name: detailsLabel, widget: string }
+              - { label: "Back link label", name: backLabel, widget: string }
           - label: "Moments page"
             name: moments
             widget: object

@@ -1,0 +1,105 @@
+---
+// Details + share page for one award, certificate or the featured achievement.
+// Only items with "Enable sharing" switched on in the CMS get a page.
+import RootLayout from "@/layouts/RootLayout.astro";
+import SocialShare from "@/layouts/share/SocialShare.astro";
+import { certificateFacts, getAchievements } from "@/functions";
+import { pagesData } from "@/data/content";
+import { shareImageSource } from "@/og";
+
+export async function getStaticPaths() {
+  const { featured, awards, certificates } = getAchievements();
+  return [
+    ...(featured.enabled && featured.title && featured.shareEnabled ? [{ params: { slug: featured.slug }, props: { kind: "achievement", item: featured } }] : []),
+    ...awards.filter((award) => award.shareEnabled).map((item) => ({ params: { slug: item.slug }, props: { kind: "award", item } })),
+    ...certificates.filter((certificate) => certificate.shareEnabled).map((item) => ({ params: { slug: item.slug }, props: { kind: "certificate", item } })),
+  ];
+}
+
+const t = pagesData.achievements;
+const { kind, item } = Astro.props as { kind: "achievement" | "award" | "certificate"; item: any };
+
+type Fact = { label: string; value: string; href?: string };
+let eyebrow = "";
+let title = "";
+let subtitle = "";
+let body = "";
+let remarks = "";
+let image: string | undefined;
+let imageAlt = "";
+let containImage = false;
+let facts: Fact[] = [];
+
+if (kind === "certificate") {
+  eyebrow = "Certificate";
+  title = item.title;
+  subtitle = item.provider;
+  image = item.image;
+  imageAlt = `${item.title} — ${item.provider}`;
+  containImage = true;
+  facts = certificateFacts(item);
+  remarks = item.remarks ?? "";
+} else if (kind === "award") {
+  eyebrow = item.date;
+  title = item.title;
+  subtitle = item.issuer ? `Awarded by ${item.issuer}` : "";
+  body = item.description ?? "";
+} else {
+  eyebrow = item.eyebrow ?? "";
+  title = item.title;
+  body = item.description ?? "";
+  image = item.image;
+  imageAlt = item.imageAlt ?? title;
+  facts = [
+    item.organizers && { label: "Organizers", value: item.organizers },
+    item.team && { label: "Team", value: item.team },
+    item.location && { label: "Location", value: item.location },
+  ].filter(Boolean) as Fact[];
+}
+
+const description = body || remarks || [subtitle, facts.find((fact) => fact.label === "Institution")?.value].filter(Boolean).join(" · ") || eyebrow || title;
+// Certificates share their own image (shown whole); awards have no photo so use the default logo unless one is chosen.
+const preview = shareImageSource(image, item.sharePreview);
+---
+
+<RootLayout title={`${title} | ${t.title}`} description={description} image={preview} imageAlt={imageAlt || title} wide>
+  <article class="mx-auto max-w-4xl py-8">
+    <a href="/award" class="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">&larr; {t.backLabel}</a>
+
+    <header class="mt-6">
+      {eyebrow && <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{eyebrow}</p>}
+      <h1 class="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl">{title}</h1>
+      {subtitle && <p class="mt-2 text-base font-medium text-gray-600 dark:text-gray-300">{subtitle}</p>}
+    </header>
+
+    {image && (
+      <figure class="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-800">
+        <img src={image} alt={imageAlt} class:list={["w-full", containImage ? "max-h-[36rem] object-contain p-3" : "max-h-[30rem] object-cover"]} loading="eager" decoding="async" />
+      </figure>
+    )}
+
+    {facts.length > 0 && (
+      <dl class="mt-6 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[9rem_minmax(0,1fr)]">
+        {facts.map((fact) => (
+          <>
+            <dt class="font-semibold text-gray-500 dark:text-gray-400">{fact.label}</dt>
+            <dd class="text-gray-700 dark:text-gray-200">
+              {fact.href ? <a href={fact.href} target="_blank" rel="noopener noreferrer" class="font-semibold text-primary-600 hover:underline dark:text-primary-400">{fact.value}</a> : fact.value}
+            </dd>
+          </>
+        ))}
+      </dl>
+    )}
+
+    {body && <p class="mt-6 max-w-2xl whitespace-pre-line text-base leading-7 text-gray-700 dark:text-gray-300">{body}</p>}
+
+    {remarks && (
+      <section class="mt-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Special remarks</h2>
+        <p class="mt-2 max-w-2xl whitespace-pre-line text-base leading-7 text-gray-700 dark:text-gray-300">{remarks}</p>
+      </section>
+    )}
+
+    <SocialShare title={title} />
+  </article>
+</RootLayout>

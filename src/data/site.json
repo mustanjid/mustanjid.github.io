@@ -17,7 +17,7 @@
     "Machine Learning",
     "Pattern Recognition"
   ],
-  "ogImage": "public/static/logo1.png",
+  "ogImage": "/static/logo1.png",
   "navigation": [
     {
       "title": "Home",

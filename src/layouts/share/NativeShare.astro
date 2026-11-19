@@ -3,7 +3,7 @@ import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const { url = Astro.url.href, title = '', description = '' } = Astro.props;
+const { url = Astro.url.href } = Astro.props;
 ---
 
 <!-- Opens the phone's own share sheet (WhatsApp, Messenger, LinkedIn app...). Hidden until the browser reports support. -->
@@ -13,8 +13,6 @@ const { url = Astro.url.href, title = '', description = '' } = Astro.props;
     class="text-gray-700 hover:text-red-600 dark:text-gray-400"
     data-share-action="native"
     data-share-url={url}
-    data-share-title={title}
-    data-share-text={description}
     aria-label="Share via..."
     title="Share via..."
   >

@@ -74,7 +74,10 @@
     "awardsHeading": "Awards & scholarships",
     "certificatesHeading": "Certificates",
     "certificatesHint": "Select a certificate to view it at a larger size.",
-    "closeLabel": "Close"
+    "closeLabel": "Close",
+    "shareLabel": "Share",
+    "detailsLabel": "View details",
+    "backLabel": "All achievements"
   },
   "moments": {
     "seoTitle": "MB-Moments",

@@ -41,9 +41,17 @@ const researchPage = z.object({
   interests: z.array(z.string()).default([]),
 });
 
+// "Link preview image" choice shared by every item that can be shared (see src/og.ts shareImageSource).
+const sharePreviewField = z.preprocess(blank, z.object({
+  source: z.enum(["cover", "logo", "custom"]).default("cover"),
+  image: text,
+}).optional());
+
 const achievements = z.object({
   featured: z.object({
     enabled: z.boolean().default(false),
+    shareEnabled: z.boolean().default(false),   // switch in the CMS: Share/Details buttons + own shareable page
+    sharePreview: sharePreviewField,
     eyebrow: text,
     title: text,
     description: text,
@@ -56,12 +64,27 @@ const achievements = z.object({
   awards: z.array(z.object({
     date: z.string().min(1),
     title: z.string().min(1),
+    issuer: text,                                // awarded by
     description: text,
+    shareEnabled: z.boolean().default(false),
+    sharePreview: sharePreviewField,
   })).default([]),
   certificates: z.array(z.object({
+    // required
     title: z.string().min(1),
     provider: z.string().min(1),
     image: z.string().min(1),
+    // optional details
+    institution: text,
+    learningMode: z.preprocess(blank, z.enum(["remote", "physical", "hybrid"]).optional()),
+    duration: text,
+    issued: text,
+    credentialId: text,
+    credentialUrl: text,
+    skills: z.array(z.string()).default([]),
+    remarks: text,
+    shareEnabled: z.boolean().default(false),
+    sharePreview: sharePreviewField,
   })).default([]),
 });
 
@@ -121,7 +144,7 @@ const pages = z.object({
   thoughts: labels(["seoTitle", "seoDescription", "title", "subtitle", "filterLabel", "allTopicsLabel", "readMoreLabel"]),
   research: labels(["seoTitle", "seoDescription", "interestsTitle", "publicationsTitle", "scholarLinkLabel", "groupUnderReview", "groupJournal", "groupConference", "groupThesis", "empty"]),
   projects: labels(["seoTitle", "seoDescription", "title", "subtitle", "tabLatest", "detailsLabel", "emptyProjects", "backLabel", "overviewLabel", "areasLabel", "toolsLabel", "liveLabel", "sourceLabel", "notesLabel", "paperLabel", "paperDetailsLabel"]),
-  achievements: labels(["seoTitle", "seoDescription", "title", "subtitle", "filterAll", "filterAwards", "filterCertificates", "awardsHeading", "certificatesHeading", "certificatesHint", "closeLabel"]),
+  achievements: labels(["seoTitle", "seoDescription", "title", "subtitle", "filterAll", "filterAwards", "filterCertificates", "awardsHeading", "certificatesHeading", "certificatesHint", "closeLabel", "shareLabel", "detailsLabel", "backLabel"]),
   moments: labels(["seoTitle", "seoDescription", "title", "backLabel", "shareLabel", "detailsLabel"]),
   about: labels(["seoTitle", "seoDescription", "title", "subtitle", "latestPostsTitle"]),
   cv: labels(["seoTitle", "seoDescription", "title", "downloadLabel", "summaryTitle", "experienceTitle", "educationTitle", "skillsTitle", "publicationsTitle", "awardsTitle", "certificatesTitle"]),

@@ -8,6 +8,8 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 
 export const OG_WIDTH = 1200;
+/** Last-resort preview image if the default chosen in the CMS is missing; this file ships with the site. */
+export const FALLBACK_OG_IMAGE = "/static/logo.png";
 export const OG_HEIGHT = 630;
 
 export const isLocalImage = (src: string) => !/^[a-z][a-z0-9+.-]*:/i.test(src) && !src.startsWith("//");

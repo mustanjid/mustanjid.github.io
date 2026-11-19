@@ -1,5 +1,5 @@
 import {getCollection, type CollectionEntry} from "astro:content";
-import {momentsData} from "@/data/content";
+import {achievementsData, momentsData} from "@/data/content";
 
 /**
  * Filter blog posts by published date and order them.
@@ -146,3 +146,45 @@ export const getMoments = () => {
         return {...item, slug, images: item.photos.map(({image}) => image)};
     });
 };
+
+export const LEARNING_MODE_LABEL = {remote: 'Remote', physical: 'Physical (on-site)', hybrid: 'Hybrid'} as const;
+
+type AchievementKind = 'achievement' | 'award' | 'certificate';
+
+/**
+ * Featured achievement, awards and certificates, each with a slug that is unique across all three
+ * (they share one route, /award/<slug>/). Only items with "Enable sharing" switched on get a page and share buttons.
+ */
+export const getAchievements = () => {
+    const used = new Set<string>();
+    const unique = (value: string, fallback: string) => {
+        const base = slugify(value) || fallback;
+        let slug = base;
+        for (let n = 2; used.has(slug); n++) slug = `${base}-${n}`;
+        used.add(slug);
+        return slug;
+    };
+    const {featured, awards, certificates} = achievementsData;
+    return {
+        featured: {...featured, slug: unique(`${featured.title ?? ''}`, 'featured-achievement')},
+        awards: awards.map((award, index) => ({...award, slug: unique(`${award.title}`, `award-${index + 1}`)})),
+        certificates: certificates.map((certificate, index) => ({
+            ...certificate,
+            slug: unique(`${certificate.title} ${certificate.provider}`, `certificate-${index + 1}`),
+        })),
+    };
+};
+
+/** Label/value rows for the optional certificate details (details page and the certificate pop-up). */
+export const certificateFacts = (certificate: ReturnType<typeof getAchievements>['certificates'][number]) =>
+    [
+        certificate.institution && {label: 'Institution', value: certificate.institution},
+        certificate.learningMode && {label: 'Learning mode', value: LEARNING_MODE_LABEL[certificate.learningMode]},
+        certificate.duration && {label: 'Duration', value: certificate.duration},
+        certificate.issued && {label: 'Issued', value: certificate.issued},
+        certificate.credentialId && {label: 'Credential ID', value: certificate.credentialId},
+        certificate.credentialUrl && {label: 'Credential', value: 'View credential', href: certificate.credentialUrl},
+        certificate.skills.length > 0 && {label: 'Skills', value: certificate.skills.join(', ')},
+    ].filter(Boolean) as {label: string; value: string; href?: string}[];
+
+export type {AchievementKind};

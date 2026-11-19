@@ -58,7 +58,7 @@ const buttonClass = "inline-flex min-h-9 items-center rounded-md border border-p
         {pdfLink && <a class={buttonClass} href={pdfLink} target="_blank" rel="noopener noreferrer">PDF</a>}
         <button class={buttonClass} type="button" data-cite-copy={citation}>Cite</button>
         <button class={buttonClass} type="button" data-paper-open={dialogId} aria-haspopup="dialog" aria-controls={dialogId}>Details</button>
-        <ShareButton url={shareUrl} title={data.title} text={data.summary} label={pagesData.research.shareLabel} />
+        <ShareButton url={shareUrl} label={pagesData.research.shareLabel} />
         {data.datasetUrl && <a class={buttonClass} href={data.datasetUrl} target="_blank" rel="noopener noreferrer">Dataset</a>}
         {data.projectUrl && <a class={buttonClass} href={data.projectUrl} target="_blank" rel="noopener noreferrer">Project</a>}
         {data.codeUrl && <a class={buttonClass} href={data.codeUrl} target="_blank" rel="noopener noreferrer">Code</a>}

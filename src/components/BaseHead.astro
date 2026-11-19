@@ -5,7 +5,7 @@ import { siteData } from "@/data/content";
 import '@/styles/global.css';
 import {SITE_METADATA} from "@/consts";
 import {ViewTransitions} from 'astro:transitions';
-import {OG_HEIGHT, OG_WIDTH, ogImagePath} from "@/og";
+import {FALLBACK_OG_IMAGE, OG_HEIGHT, OG_WIDTH, ogImagePath} from "@/og";
 
 interface Props {
   title: string;
@@ -24,7 +24,7 @@ const toAbsolute = (src: string) => (/^https?:\/\//.test(src) ? src : new URL(sr
 const {title, description: pageDescription, image, imageAlt, type = "website", publishedTime} = Astro.props;
 const description = pageDescription?.trim() || siteData.description;
 // Prefer the re-encoded 1200x630 JPEG; a page with no (or a missing) image falls back to the site-wide default.
-const ogPath = ogImagePath(image) ?? ogImagePath(siteData.ogImage) ?? siteData.ogImage;
+const ogPath = ogImagePath(image) ?? ogImagePath(siteData.ogImage) ?? ogImagePath(FALLBACK_OG_IMAGE) ?? siteData.ogImage;
 const ogImage = toAbsolute(ogPath);
 const isGeneratedImage = ogPath.startsWith("/og/");
 const ogImageAlt = imageAlt?.trim() || title;

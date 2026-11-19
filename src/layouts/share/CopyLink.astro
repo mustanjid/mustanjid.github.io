@@ -3,11 +3,11 @@ import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const { url = Astro.url.href, title = '' } = Astro.props;
+const { url = Astro.url.href } = Astro.props;
 ---
 
 <div>
-  <button type="button" class="fill-current text-gray-700" data-share-action="copy" data-share-url={url} data-share-title={title} aria-label="Copy link" title="Copy link">
+  <button type="button" class="fill-current text-gray-700" data-share-action="copy" data-share-url={url} aria-label="Copy link" title="Copy link">
     <style>
       svg:hover {
         fill: #f21818;

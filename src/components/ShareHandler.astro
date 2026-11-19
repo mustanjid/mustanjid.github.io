@@ -50,12 +50,12 @@
     document.addEventListener("click", async (event) => {
       const button = (event.target as Element).closest<HTMLElement>("[data-share-action]");
       if (!button) return;
-      const { shareAction, shareUrl, shareTitle, shareText } = button.dataset;
+      const { shareAction, shareUrl } = button.dataset;
       const url = shareUrl || window.location.href.split("#")[0];
 
       if (shareAction === "native" && typeof navigator.share === "function") {
         try {
-          await navigator.share({ title: shareTitle, text: shareText, url });
+          await navigator.share({ url }); // the link only: the preview card carries the title, image and description
           return;
         } catch (error) {
           if ((error as DOMException).name === "AbortError") return; // person closed the share sheet

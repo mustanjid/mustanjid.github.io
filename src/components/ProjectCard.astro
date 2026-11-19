@@ -84,7 +84,7 @@ const linkClass = "text-sm font-semibold text-primary-600 hover:underline dark:t
             {data.url && <a class={linkClass} href={data.url} target="_blank" rel="noopener noreferrer">{t.liveLabel}</a>}
             {data.srccode && <a class={linkClass} href={data.srccode} target="_blank" rel="noopener noreferrer">{t.sourceLabel}</a>}
             {data.projectdesc && <a class={linkClass} href={data.projectdesc} target="_blank" rel="noopener noreferrer">{t.notesLabel}</a>}
-            <span class="ml-auto"><ShareButton url={shareUrl} title={data.title} text={data.description} label={t.shareLabel} /></span>
+            <span class="ml-auto"><ShareButton url={shareUrl} label={t.shareLabel} /></span>
         </div>
     </div>
 </article>

@@ -3,10 +3,9 @@ import type ButtonProps from './types';
 
 type Props = ButtonProps;
 
-const { url = Astro.url.href, title = '', via = 'mustanjis_se' } = Astro.props;
-const params = new URLSearchParams({ url, text: title });
-if (via) params.set('via', via);
-const href = `https://twitter.com/intent/tweet?${params.toString()}`;
+const { url = Astro.url.href } = Astro.props;
+// Link only: no tweet text and no "via" handle. X builds the preview card from the page's Open Graph tags.
+const href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`;
 ---
 
 <div>
