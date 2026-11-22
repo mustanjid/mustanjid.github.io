@@ -1,6 +1,6 @@
 ---
 tagline:
-  - Support Engineer (NetOps)
+  - NetOps Engineer
   - Research Assistant
 ---
 
