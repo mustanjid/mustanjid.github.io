@@ -1,8 +1,11 @@
 ---
 import {getEntry} from "astro:content"
 import AuthorLayoutHome from "@/layouts/AuthorLayoutHome.astro";
+import { siteData } from "@/data/content";
 
+// If the "default" author is deleted in the CMS, fall back to the site author name instead of failing.
 const author = await getEntry('authors', 'default')
+const content = author?.data ?? { name: siteData.author, email: "" }
 ---
 
-<AuthorLayoutHome content={author.data} />
+<AuthorLayoutHome content={content} />

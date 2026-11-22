@@ -402,7 +402,7 @@ collections:
               - { label: "Updates link label", name: updatesLinkLabel, widget: string }
               - { label: "Now label", name: nowLabel, widget: string }
               - { label: "Tech news label", name: techNewsLabel, widget: string }
-              - { label: "Current work stamp", name: stampLabel, widget: string, hint: "Text on the stamp shown on the current research and current project cards." }
+              - { label: "Stamp text", name: stampLabel, widget: string, hint: "Text on the stamp shown on the latest research and project cards. Example: Latest." }
               - { label: "Current project eyebrow", name: currentProjectEyebrow, widget: string }
               - { label: "Areas label", name: areasLabel, widget: string }
               - { label: "Tools label", name: toolsLabel, widget: string }
@@ -793,18 +793,22 @@ collections:
       - { label: "Description", name: description, widget: string, required: false }
       - { label: "Body", name: body, widget: markdown, required: false }
 
-  # ---------------------------------------------------------------- Authors (edit only)
+  # ---------------------------------------------------------------- Authors
   - name: authors
     label: "Authors"
+    description: "The author named 'default' is the one shown on the Home and About pages. If it is deleted, those pages fall back to the author name in Site identity."
     folder: src/content/authors
     extension: mdx
     format: frontmatter
-    create: false
-    delete: false
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: name
+    summary: "{{name}}"
     fields:
       - { label: "Name", name: name, widget: string }
-      - { label: "Email", name: email, widget: string }
-      - { label: "Avatar", name: avatar, widget: string, required: false }
+      - { label: "Email", name: email, widget: string, hint: "Required. It is not shown on the site." }
+      - { label: "Photo", name: avatar, widget: image, required: false, media_folder: /public/static/images, public_folder: /static/images, hint: "Upload a photo or choose one from the library. Shown on the Home and About pages for the default author." }
       - { label: "Occupation", name: occupation, widget: string, required: false }
       - { label: "Company", name: company, widget: string, required: false }
       - { label: "Twitter / HackerRank link", name: twitter, widget: string, required: false }

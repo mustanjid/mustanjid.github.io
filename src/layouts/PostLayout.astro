@@ -1,5 +1,5 @@
 ---
-import { pagesData } from "@/data/content";
+import { pagesData, siteData } from "@/data/content";
 import { getCollection, type CollectionEntry, getEntries } from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
 import Link from "../components/Link.astro";
@@ -18,7 +18,8 @@ interface Props {
 }
 
 const { post, next, prev } = Astro.props as Props;
-const authors: CollectionEntry<"authors">[] = await getEntries(post.data.authors);
+const knownAuthors = await getCollection("authors");
+const authors = post.data.authors.map((slug) => knownAuthors.find((author) => author.slug === slug)).filter((author): author is CollectionEntry<"authors"> => Boolean(author));
 const tags: CollectionEntry<"tags">[] = await getEntries(post.data.tags);
 const explicitRelated: CollectionEntry<"blog">[] = await getEntries(post.data.related);
 const postTagSlugs = new Set(post.data.tags.map(({ slug }) => slug));
@@ -28,7 +29,7 @@ const relatedByTag = sortBlogPosts(await getCollection("blog", excludeDrafts))
 const related = [...explicitRelated, ...relatedByTag]
   .filter((entry, index, entries) => entry.slug !== post.slug && entries.findIndex(({ slug }) => slug === entry.slug) === index)
   .slice(0, 4);
-const authorNames = authors.map(({ data }) => data.name).join(", ");
+const authorNames = authors.map(({ data }) => data.name).join(", ") || siteData.author;
 const { Content, headings } = await post.render();
 const hasBengali = /[\u0980-\u09FF]/.test(`${post.data.title} ${post.body}`);
 const readableBody = post.body

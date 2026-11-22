@@ -37,7 +37,8 @@ const blog = defineCollection({
         summary: optional(z.string()),
         images: optional(z.string()),
         sharePreview,
-        authors: z.array(reference('authors')).default(['default']),
+        // author slugs; not validated as references, so deleting an author in the CMS can never break a post
+        authors: z.array(z.string()).default(['default']),
         // TODO: Add support for tags-and-list layout
         layout: z.enum(['list', 'tags-and-list']).default('list'),
         bibliography: optional(z.string()),
