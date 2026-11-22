@@ -18,7 +18,8 @@
     "projectDetailsLabel": "Project details",
     "repositoryLabel": "Repository",
     "implementationLabel": "View implementation",
-    "currentDevProjectEyebrow": "Current project / DevOps & development"
+    "currentDevProjectEyebrow": "Current project / DevOps & development",
+    "stampLabel": "Current work"
   },
   "thoughts": {
     "seoTitle": "MB-Thoughts",

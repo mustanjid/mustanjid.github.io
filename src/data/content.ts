@@ -38,6 +38,7 @@ const site = z.object({
   // Like / Love buttons (see src/reactions.ts and supabase/reactions.sql). The key is the PUBLIC one.
   reactions: z.object({
     enabled: z.boolean().default(false),
+    icon: z.preprocess(blank, z.enum(["heart", "thumb"]).default("heart")),   // the one reaction button
     url: text,
     key: text,
   }).default({}),
@@ -146,7 +147,7 @@ const labels = <K extends string>(keys: readonly K[]) =>
   );
 
 const pages = z.object({
-  home: labels(["latestPublicationsEyebrow", "latestPublicationsTitle", "publicationsEmpty", "allResearchButton", "latestThoughtsTitle", "thoughtsEmpty", "allThoughtsButton", "readLabel", "updatesTitle", "updatesLinkLabel", "nowLabel", "techNewsLabel", "currentProjectEyebrow", "currentDevProjectEyebrow", "areasLabel", "toolsLabel", "projectDetailsLabel", "repositoryLabel", "implementationLabel"]),
+  home: labels(["latestPublicationsEyebrow", "latestPublicationsTitle", "publicationsEmpty", "allResearchButton", "latestThoughtsTitle", "thoughtsEmpty", "allThoughtsButton", "readLabel", "updatesTitle", "updatesLinkLabel", "nowLabel", "techNewsLabel", "stampLabel", "currentProjectEyebrow", "currentDevProjectEyebrow", "areasLabel", "toolsLabel", "projectDetailsLabel", "repositoryLabel", "implementationLabel"]),
   thoughts: labels(["seoTitle", "seoDescription", "title", "subtitle", "filterLabel", "allTopicsLabel", "readMoreLabel"]),
   research: labels(["seoTitle", "seoDescription", "interestsTitle", "publicationsTitle", "scholarLinkLabel", "groupUnderReview", "groupJournal", "groupConference", "groupThesis", "empty"]),
   projects: labels(["seoTitle", "seoDescription", "title", "subtitle", "tabLatest", "detailsLabel", "emptyProjects", "backLabel", "overviewLabel", "areasLabel", "toolsLabel", "liveLabel", "sourceLabel", "notesLabel", "paperLabel", "paperDetailsLabel"]),

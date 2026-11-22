@@ -20,6 +20,7 @@
   "ogImage": "/static/og-image (1).jpg",
   "reactions": {
     "enabled": true,
+    "icon": "heart",
     "url": "https://kotlrrsjvglqjitlxfcz.supabase.co",
     "key": "sb_publishable_bbvvoCxONzYxSlKXYSKG4A_6AY2Gj-E"
   },

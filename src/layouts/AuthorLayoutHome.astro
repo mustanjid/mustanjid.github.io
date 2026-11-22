@@ -5,6 +5,7 @@ import { getEntry, type CollectionEntry } from "astro:content";
 import SocialIcon from "@/components/social-icons/index.astro";
 import { settings } from "@/data/settings";
 import SocialLinks from "@/components/SocialLinks.astro";
+import TechNewsBox from "@/components/TechNewsBox.astro";
 
 interface Props {
   content: CollectionEntry<"authors">["data"];
@@ -66,6 +67,7 @@ const tagline = intro?.data.tagline ?? [];
     <div class="home-intro space-y-2 text-justify text-[15px] leading-6 text-gray-600 dark:text-gray-300 sm:text-[17px]">
       {Content && <Content />}
     </div>
+    <TechNewsBox />
   </div>
   </div>
 </section>

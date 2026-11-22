@@ -1,6 +1,4 @@
 ---
-// Like / Love buttons for one item. `id` must be unique per item and URL-safe, e.g. "post:my-slug".
-// A visitor can pick one reaction per item (Love after Like switches it; tapping again removes it).
 import { getReactionConfig } from "@/reactions";
 
 interface Props {
@@ -10,31 +8,33 @@ interface Props {
 }
 
 const { id, compact = false } = Astro.props;
-const { available, demo, url, key } = getReactionConfig();
+const { available, demo, url, key, icon } = getReactionConfig();
+const isHeart = icon === "heart";
+const label = isHeart ? "Love" : "Like";
 
 const button = [
   "inline-flex items-center gap-1.5 rounded-full border border-gray-300 bg-white font-semibold text-gray-700 transition",
   "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-60",
   "dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-800",
   compact ? "min-h-8 px-2.5 py-1 text-xs" : "min-h-10 px-3.5 py-1.5 text-sm",
+  isHeart
+    ? "aria-pressed:border-rose-500 aria-pressed:bg-rose-50 aria-pressed:text-rose-600 dark:aria-pressed:border-rose-400 dark:aria-pressed:bg-rose-950/40 dark:aria-pressed:text-rose-300"
+    : "aria-pressed:border-primary-600 aria-pressed:bg-primary-50 aria-pressed:text-primary-700 dark:aria-pressed:border-primary-400 dark:aria-pressed:bg-primary-950 dark:aria-pressed:text-primary-200",
 ];
-const like = "aria-pressed:border-primary-600 aria-pressed:bg-primary-50 aria-pressed:text-primary-700 dark:aria-pressed:border-primary-400 dark:aria-pressed:bg-primary-950 dark:aria-pressed:text-primary-200";
-const love = "aria-pressed:border-rose-500 aria-pressed:bg-rose-50 aria-pressed:text-rose-600 dark:aria-pressed:border-rose-400 dark:aria-pressed:bg-rose-950/40 dark:aria-pressed:text-rose-300";
 const iconSize = compact ? 14 : 18;
 ---
 
 {available && (
-  // Hidden until the counts load; stays hidden if the counter service can't be reached or JavaScript is off.
+  // Hidden until the count loads; stays hidden if the counter service can't be reached or JavaScript is off.
   <div data-reactions hidden data-reaction-id={id} data-endpoint={url} data-key={key} data-demo={demo ? "1" : undefined}>
-    <div class="flex flex-wrap items-center gap-2" role="group" aria-label="React to this">
-      <button type="button" data-reaction="like" aria-pressed="false" aria-label="Like" class:list={[button, like]}>
-        <svg xmlns="http://www.w3.org/2000/svg" height={iconSize} width={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11" /><path d="M14 5.9 13 10h5.8a2 2 0 0 1 1.95 2.45l-1.4 6.5A2 2 0 0 1 17.4 20.5H7V10l3.6-6.3a1.7 1.7 0 0 1 3.4 1.2z" /></svg>
-        {!compact && <span>Like</span>}
-        <span data-reaction-count class="tabular-nums"></span>
-      </button>
-      <button type="button" data-reaction="love" aria-pressed="false" aria-label="Love" class:list={[button, love]}>
-        <svg xmlns="http://www.w3.org/2000/svg" height={iconSize} width={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0 1 12 6.6 4.6 4.6 0 0 1 20 9.5c0 6.1-8 11-8 11z" /></svg>
-        {!compact && <span>Love</span>}
+    <div class="flex flex-wrap items-center gap-2">
+      <button type="button" data-reaction="like" aria-pressed="false" aria-label={label} title={label} class:list={button}>
+        {isHeart ? (
+          <svg xmlns="http://www.w3.org/2000/svg" height={iconSize} width={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0 1 12 6.6 4.6 4.6 0 0 1 20 9.5c0 6.1-8 11-8 11z" /></svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" height={iconSize} width={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11" /><path d="M14 5.9 13 10h5.8a2 2 0 0 1 1.95 2.45l-1.4 6.5A2 2 0 0 1 17.4 20.5H7V10l3.6-6.3a1.7 1.7 0 0 1 3.4 1.2z" /></svg>
+        )}
+        {!compact && <span>{label}</span>}
         <span data-reaction-count class="tabular-nums"></span>
       </button>
       {demo && <span class="text-[11px] font-medium text-amber-600 dark:text-amber-400">Demo only: not connected yet</span>}
@@ -51,13 +51,13 @@ const iconSize = compact ? 14 : 18;
 
 <script>
   // Delegated, document-level listeners so the buttons keep working after Astro View Transitions swap the page.
-  type Kind = "like" | "love";
-  type Totals = { like: number; love: number };
+  type Kind = "like"; // the single reaction (shown as a heart or a thumbs-up)
+  type Totals = { like: number };
 
   const w = window as unknown as { __reactionsReady?: boolean };
   const MINE = "reactions:v1"; // this visitor's own choice per item (kept in this browser only)
   const DEMO = "reactions:demo:v1"; // fake counts used by `npm run dev` when nothing is connected
-  const KINDS: Kind[] = ["like", "love"];
+  const KINDS: Kind[] = ["like"];
   const totals: Record<string, Totals> = {};
 
   const readJson = <T,>(name: string, fallback: T): T => {
@@ -76,11 +76,11 @@ const iconSize = compact ? 14 : 18;
   };
 
   const bars = () => [...document.querySelectorAll<HTMLElement>("[data-reactions]")];
-  const totalsFor = (id: string): Totals => (totals[id] ??= { like: 0, love: 0 });
+  const totalsFor = (id: string): Totals => (totals[id] ??= { like: 0 });
 
   const paint = (bar: HTMLElement) => {
     const id = bar.dataset.reactionId ?? "";
-    const mine = readJson<Record<string, Kind>>(MINE, {})[id];
+    const mine = readJson<Record<string, string>>(MINE, {})[id];
     KINDS.forEach((kind) => {
       const button = bar.querySelector<HTMLElement>(`[data-reaction="${kind}"]`);
       if (!button) return;
@@ -105,11 +105,11 @@ const iconSize = compact ? 14 : 18;
     const ids = [...new Set(list.map((bar) => bar.dataset.reactionId ?? ""))].filter(Boolean);
     const { endpoint = "", key = "" } = list[0].dataset;
 
-    ids.forEach((id) => (totals[id] = { like: 0, love: 0 }));
+    ids.forEach((id) => (totals[id] = { like: 0 }));
     try {
       if (!endpoint) {
         const demo = readJson<Record<string, Totals>>(DEMO, {});
-        ids.forEach((id) => (totals[id] = { like: demo[id]?.like ?? 0, love: demo[id]?.love ?? 0 }));
+        ids.forEach((id) => (totals[id] = { like: demo[id]?.like ?? 0 }));
       } else {
         for (let i = 0; i < ids.length; i += 40) {
           const chunk = ids.slice(i, i + 40);
@@ -118,7 +118,7 @@ const iconSize = compact ? 14 : 18;
           if (!response.ok) throw new Error(String(response.status));
           const rows = (await response.json()) as { item_id: string; kind: Kind; total: number }[];
           rows.forEach((row) => {
-            if (KINDS.includes(row.kind)) totals[row.item_id][row.kind] = Number(row.total) || 0;
+            if (row.kind === "like") totals[row.item_id].like = Number(row.total) || 0;
           });
         }
       }
@@ -156,10 +156,9 @@ const iconSize = compact ? 14 : 18;
       if (!button || !bar || bar.dataset.busy === "1") return;
 
       const id = bar.dataset.reactionId ?? "";
-      const clicked = button.dataset.reaction as Kind;
       const mine = readJson<Record<string, Kind>>(MINE, {});
-      const before = mine[id];
-      const after = before === clicked ? undefined : clicked; // tapping the active one removes it
+      const before: Kind | undefined = mine[id] === "like" ? "like" : undefined;
+      const after: Kind | undefined = before ? undefined : "like"; // tapping again removes it
 
       const snapshot = { ...totalsFor(id) };
       const current = totalsFor(id);

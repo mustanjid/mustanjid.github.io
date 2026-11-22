@@ -3,6 +3,7 @@ import { getFeaturedProject, STAGE_LABEL } from "@/functions";
 import { pagesData } from "@/data/content";
 import type { CollectionEntry } from "astro:content";
 import ShareButton from "@/components/ShareButton.astro";
+import WorkStamp from "@/components/WorkStamp.astro";
 
 interface Props {
   size?: "default" | "large" | "tile";
@@ -56,6 +57,7 @@ const chipClass = isTile
             ? "relative h-40 self-stretch sm:h-48 xl:h-auto xl:min-h-48"
             : "relative min-h-28 self-stretch sm:min-h-full",
       ]}>
+        <WorkStamp />
         {project.image ? (
           <img src={project.image} alt="" class:list={["absolute inset-0 h-full w-full object-center", isTile || isLarge ? "object-contain p-2" : "object-contain"]} loading="lazy" />
         ) : (

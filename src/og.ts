@@ -4,7 +4,7 @@
 // WhatsApp are unreliable with WebP, and a 2560px photo is far too heavy. So every preview image is re-encoded at
 // build time (see src/pages/og/[slug].jpg.ts) as a 1200x630 JPEG under 300 KB, and pages point at that copy.
 import { createHash } from "node:crypto";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 export const OG_WIDTH = 1200;
@@ -19,10 +19,27 @@ export const normalizeSrc = (src: string) => "/" + src.trim().replace(/^\/+/, ""
 
 export const publicFile = (src: string) => path.join(process.cwd(), "public", normalizeSrc(src));
 
+const keyCache = new Map<string, string>();
+
+/**
+ * File name (without extension) of a generated preview image. It depends on the image's CONTENT as well as its path,
+ * so replacing a picture (a new logo saved at the same path, say) gives a new /og/... URL. Facebook, WhatsApp and
+ * LinkedIn cache previews by URL, so without this they would keep showing the old image.
+ */
 export const ogKey = (src: string) => {
   const normalized = normalizeSrc(src);
+  const cached = keyCache.get(normalized);
+  if (cached) return cached;
   const name = path.basename(normalized).replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "image";
-  return `${name}-${createHash("md5").update(normalized).digest("hex").slice(0, 8)}`;
+  const hash = createHash("md5").update(normalized);
+  try {
+    hash.update(readFileSync(publicFile(normalized)));
+  } catch {
+    /* missing file: callers check existsSync first */
+  }
+  const key = `${name}-${hash.digest("hex").slice(0, 8)}`;
+  keyCache.set(normalized, key);
+  return key;
 };
 
 /**

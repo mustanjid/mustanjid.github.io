@@ -6,6 +6,7 @@ import type { CollectionEntry } from "astro:content";
 import { STAGE_LABEL } from "@/functions";
 import { pagesData } from "@/data/content";
 import ShareButton from "@/components/ShareButton.astro";
+import WorkStamp from "@/components/WorkStamp.astro";
 import ReactionBar from "@/components/ReactionBar.astro";
 import { reactionsAvailable } from "@/reactions";
 
@@ -36,7 +37,9 @@ const linkClass = "text-sm font-semibold text-primary-600 hover:underline dark:t
 ---
 
 <article class="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/50">
-    <a href={href} class="group block h-44 shrink-0 overflow-hidden border-b border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900" aria-label={`${t.detailsLabel}: ${data.title}`}>
+    <div class="relative shrink-0">
+    {data.featured && <WorkStamp />}
+    <a href={href} class="group block h-44 overflow-hidden border-b border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900" aria-label={`${t.detailsLabel}: ${data.title}`}>
         {data.imgSrc ? (
             <img src={data.imgSrc} alt="" class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
         ) : (
@@ -45,6 +48,7 @@ const linkClass = "text-sm font-semibold text-primary-600 hover:underline dark:t
             </div>
         )}
     </a>
+    </div>
 
     <div class="flex flex-1 flex-col p-5">
         <div class="flex flex-wrap items-center gap-2 text-xs">

@@ -1,0 +1,13 @@
+---
+// A small rubber-stamp style badge that marks the item as current work (the homepage "current research" and
+// "current project", and any project flagged as featured). Place it inside a `relative` container.
+import { pagesData } from "@/data/content";
+
+const label = pagesData.home.stampLabel;
+---
+
+<span
+  class="pointer-events-none absolute right-2.5 top-2.5 z-10 -rotate-6 select-none rounded-md border-2 border-rose-600 bg-white/85 px-2.5 py-1 text-[11px] font-extrabold uppercase leading-none tracking-[0.16em] text-rose-600 shadow-sm outline outline-1 outline-offset-2 outline-rose-600/40 backdrop-blur-sm dark:border-rose-400 dark:bg-gray-950/75 dark:text-rose-300 dark:outline-rose-400/40"
+>
+  {label}
+</span>

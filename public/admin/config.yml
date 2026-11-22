@@ -35,7 +35,7 @@ collections:
             name: news
             widget: object
             fields:
-              - { label: "Show daily tech and research news", name: enabled, widget: boolean, default: false }
+              - { label: "Show the Latest in tech box under the home intro", name: enabled, widget: boolean, default: false }
 
           - label: "News & announcements"
             name: announcements
@@ -87,9 +87,17 @@ collections:
             name: reactions
             widget: object
             collapsed: true
-            hint: "Adds Like and Love buttons to posts, projects, research papers, awards, certificates and moments. Needs a free Supabase project: run supabase/reactions.sql there, then paste the details below."
+            hint: "Adds one reaction button (heart or thumbs-up) to posts, projects, research papers, awards, certificates and moments. Needs a free Supabase project: run supabase/reactions.sql there, then paste the details below."
             fields:
-              - { label: "Turn on Like and Love buttons", name: enabled, widget: boolean, default: false }
+              - { label: "Turn on the reaction button", name: enabled, widget: boolean, default: false }
+              - label: "Icon"
+                name: icon
+                widget: select
+                default: heart
+                hint: "The single reaction button. Heart reads as 'Love', thumbs-up reads as 'Like'."
+                options:
+                  - { label: "Heart (Love)", value: heart }
+                  - { label: "Thumbs-up (Like)", value: thumb }
               - { label: "Supabase project URL", name: url, widget: string, required: false, hint: "Example: https://abcdefgh.supabase.co" }
               - { label: "Supabase PUBLIC key", name: key, widget: string, required: false, hint: "Project settings > API: the public 'anon' or 'publishable' key. NEVER paste the secret or service_role key; this file is public." }
           - label: "Navigation menu"
@@ -394,6 +402,7 @@ collections:
               - { label: "Updates link label", name: updatesLinkLabel, widget: string }
               - { label: "Now label", name: nowLabel, widget: string }
               - { label: "Tech news label", name: techNewsLabel, widget: string }
+              - { label: "Current work stamp", name: stampLabel, widget: string, hint: "Text on the stamp shown on the current research and current project cards." }
               - { label: "Current project eyebrow", name: currentProjectEyebrow, widget: string }
               - { label: "Areas label", name: areasLabel, widget: string }
               - { label: "Tools label", name: toolsLabel, widget: string }
