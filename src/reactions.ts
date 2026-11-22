@@ -1,6 +1,7 @@
 // One reaction button (heart or thumbs-up). Counts live in a free Supabase table (see supabase/reactions.sql); the settings come from
 // src/data/site.json ("Likes and Loves" in the CMS). Without settings, the buttons are hidden on the live site and
 // shown in a local "demo" mode while running `npm run dev`, so you can see how they look.
+import { createHash } from "node:crypto";
 import { siteData } from "@/data/content";
 
 const looksSecret = (key: string) => {
@@ -30,3 +31,13 @@ export const getReactionConfig = () => {
 
 /** True when ReactionBar will render something (live, or demo mode in `npm run dev`). */
 export const reactionsAvailable = () => getReactionConfig().available;
+
+/**
+ * The id stored with a like count. The Supabase table only accepts ids up to 120 characters, and some research-paper
+ * slugs are longer, so long ids are cut short and given a hash of the full id: still unique, and the same every build.
+ */
+export const reactionItemId = (id: string) => {
+  const safe = id.toLowerCase().replace(/[^a-z0-9:_-]+/g, "-");
+  if (safe.length <= 100) return safe;
+  return `${safe.slice(0, 90).replace(/-+$/, "")}-${createHash("md5").update(safe).digest("hex").slice(0, 8)}`;
+};

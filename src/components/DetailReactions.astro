@@ -1,0 +1,23 @@
+---
+// Icon-only action row for a detail page: the like button (its own count per item) and a comment button that jumps
+// to the page's own comment thread (see Comments.astro). `id` must be unique per item, e.g. "project:my-slug".
+import ReactionBar from "@/components/ReactionBar.astro";
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<div class="flex flex-wrap items-center gap-2">
+  <ReactionBar id={id} />
+  <a
+    href="#comments"
+    aria-label="Go to comments"
+    title="Comments"
+    class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-gray-300 bg-white px-3.5 py-1.5 text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-800"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.8-.9L3 20l1.3-4.7A8.4 8.4 0 0 1 3 11.5 8.5 8.5 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5z" /></svg>
+  </a>
+</div>

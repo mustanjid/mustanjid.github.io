@@ -16,22 +16,26 @@ const total = photos.length;
 const arrow = "absolute z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/55 text-2xl leading-none text-white hover:bg-black/75 focus:outline-none focus:ring-2 focus:ring-white";
 ---
 
-<div data-moment-gallery class="relative w-full">
+<div data-moment-gallery={variant} class:list={["relative w-full", isDetail && "overflow-hidden rounded-2xl bg-slate-900 pb-3 shadow-xl"]}>
   <ul
     data-moment-track
-    class="flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg bg-gray-100 [scrollbar-width:none] dark:bg-gray-800 [&::-webkit-scrollbar]:hidden"
+    class:list={["flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden", !isDetail && "rounded-lg bg-gray-100 dark:bg-gray-800"]}
   >
     {photos.map(({ image, description }, index) => {
       const alt = description || title;
       return (
-        <li class="w-full shrink-0 snap-center" data-moment-slide>
+        <li class:list={["w-full shrink-0 snap-center", isDetail && "relative overflow-hidden"]} data-moment-slide>
           {isDetail ? (
-            <figure>
-              <img src={image} alt={alt} class="h-72 w-full object-contain sm:h-[26rem]" loading={index === 0 ? "eager" : "lazy"} decoding="async" />
-              {description && (
-                <figcaption class="whitespace-pre-line bg-white px-4 py-3 text-sm leading-6 text-gray-700 dark:bg-gray-900 dark:text-gray-200">{description}</figcaption>
-              )}
-            </figure>
+            <>
+              {/* soft blurred copy of the photo glows behind it, so the stage picks up each photo's colours */}
+              <img src={image} alt="" aria-hidden="true" class="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover opacity-40 blur-2xl" loading="lazy" decoding="async" />
+              <figure class="relative">
+                <img src={image} alt={alt} class="h-72 w-full object-contain sm:h-[26rem]" loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                {description && (
+                  <figcaption class="whitespace-pre-line px-5 pb-4 pt-3 text-center text-sm leading-6 text-white/90 [text-shadow:0_1px_6px_rgb(0_0_0/0.5)]">{description}</figcaption>
+                )}
+              </figure>
+            </>
           ) : (
             <button
               type="button"
@@ -68,7 +72,7 @@ const arrow = "absolute z-10 flex h-10 w-10 items-center justify-center rounded-
             data-index={index}
             aria-label={`Show photo ${index + 1} of ${total}`}
             aria-current={index === 0 ? "true" : "false"}
-            class:list={["h-2.5 rounded-full transition-all", index === 0 ? "w-6 bg-primary-600" : "w-2.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"]}
+            class:list={["h-2.5 rounded-full transition-all", isDetail ? (index === 0 ? "w-6 bg-white" : "w-2.5 bg-white/35 hover:bg-white/60") : (index === 0 ? "w-6 bg-primary-600" : "w-2.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500")]}
           />
         ))}
       </div>
@@ -82,6 +86,9 @@ const arrow = "absolute z-10 flex h-10 w-10 items-center justify-center rounded-
   const dotBase = "h-2.5 rounded-full transition-all";
   const dotActive = `${dotBase} w-6 bg-primary-600`;
   const dotIdle = `${dotBase} w-2.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500`;
+  // on the dark details-page stage the dots are white instead of the site colour
+  const stageDotActive = `${dotBase} w-6 bg-white`;
+  const stageDotIdle = `${dotBase} w-2.5 bg-white/35 hover:bg-white/60`;
 
   const trackOf = (el: Element) => el.closest<HTMLElement>("[data-moment-gallery]")?.querySelector<HTMLElement>("[data-moment-track]") ?? null;
   const currentIndex = (track: HTMLElement) => (track.clientWidth ? Math.round(track.scrollLeft / track.clientWidth) : 0);
@@ -95,8 +102,9 @@ const arrow = "absolute z-10 flex h-10 w-10 items-center justify-center rounded-
 
   // Keep the dots and the "2 / 5" counter in step with the photo currently in view.
   const syncGallery = (gallery: HTMLElement, index: number) => {
+    const onStage = gallery.dataset.momentGallery === "detail";
     gallery.querySelectorAll<HTMLElement>("[data-moment-dot]").forEach((dot, i) => {
-      dot.className = i === index ? dotActive : dotIdle;
+      dot.className = i === index ? (onStage ? stageDotActive : dotActive) : onStage ? stageDotIdle : dotIdle;
       dot.setAttribute("aria-current", String(i === index));
     });
     const count = gallery.querySelector<HTMLElement>("[data-moment-count]");

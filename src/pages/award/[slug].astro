@@ -3,7 +3,8 @@
 // Only items with "Enable sharing" switched on in the CMS get a page.
 import RootLayout from "@/layouts/RootLayout.astro";
 import SocialShare from "@/layouts/share/SocialShare.astro";
-import ReactionBar from "@/components/ReactionBar.astro";
+import DetailReactions from "@/components/DetailReactions.astro";
+import Comments from "@/components/Comments.astro";
 import { certificateFacts, getAchievements } from "@/functions";
 import { pagesData } from "@/data/content";
 import { shareImageSource } from "@/og";
@@ -101,7 +102,8 @@ const preview = shareImageSource(image, item.sharePreview);
       </section>
     )}
 
-    <div class="mt-8"><ReactionBar id={`award:${item.slug}`} /></div>
+    <div class="mt-8"><DetailReactions id={`award:${item.slug}`} /></div>
     <SocialShare title={title} />
+    <Comments />
   </article>
 </RootLayout>

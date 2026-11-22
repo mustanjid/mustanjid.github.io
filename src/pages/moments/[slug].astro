@@ -2,7 +2,8 @@
 import { getCollection } from "astro:content";
 import RootLayout from "@/layouts/RootLayout.astro";
 import SocialShare from "@/layouts/share/SocialShare.astro";
-import ReactionBar from "@/components/ReactionBar.astro";
+import DetailReactions from "@/components/DetailReactions.astro";
+import Comments from "@/components/Comments.astro";
 import MomentGallery from "@/components/MomentGallery.astro";
 import { getMoments } from "@/functions";
 import { pagesData } from "@/data/content";
@@ -46,13 +47,14 @@ const cover = moment.photos[0];
       )}
     </header>
 
-    <div class="mt-6 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800">
+    <div class="mt-6">
       <MomentGallery photos={moment.photos} title={title} variant="detail" />
     </div>
 
     {moment.description && <p class="mt-6 max-w-2xl whitespace-pre-line text-base leading-7 text-gray-700 dark:text-gray-300">{moment.description}</p>}
 
-    <div class="mt-8"><ReactionBar id={`moment:${moment.slug}`} /></div>
+    <div class="mt-8"><DetailReactions id={`moment:${moment.slug}`} /></div>
     <SocialShare title={title} description={description} />
+    <Comments />
   </article>
 </RootLayout>

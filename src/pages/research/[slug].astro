@@ -1,7 +1,8 @@
 ---
 import RootLayout from "@/layouts/RootLayout.astro";
 import SocialShare from "@/layouts/share/SocialShare.astro";
-import ReactionBar from "@/components/ReactionBar.astro";
+import DetailReactions from "@/components/DetailReactions.astro";
+import Comments from "@/components/Comments.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
 import { getResearchEntries } from "@/functions";
 import { pagesData } from "@/data/content";
@@ -89,7 +90,8 @@ const meta = [data.venue, data.publisher, data.citationDetails].filter(Boolean).
       </nav>
     )}
 
-    <div class="mt-8"><ReactionBar id={`paper:${entry.slug}`} /></div>
+    <div class="mt-8"><DetailReactions id={`paper:${entry.slug}`} /></div>
     <SocialShare title={data.title} description={description} />
+    <Comments />
   </article>
 </RootLayout>

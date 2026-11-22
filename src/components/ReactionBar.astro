@@ -1,5 +1,5 @@
 ---
-import { getReactionConfig } from "@/reactions";
+import { getReactionConfig, reactionItemId } from "@/reactions";
 
 interface Props {
   id: string;
@@ -16,17 +16,17 @@ const button = [
   "inline-flex items-center gap-1.5 rounded-full border border-gray-300 bg-white font-semibold text-gray-700 transition",
   "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-60",
   "dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-800",
-  compact ? "min-h-8 px-2.5 py-1 text-xs" : "min-h-10 px-3.5 py-1.5 text-sm",
+  compact ? "min-h-8 min-w-8 justify-center px-2.5 py-1 text-xs" : "min-h-10 min-w-10 justify-center px-3.5 py-1.5 text-sm",
   isHeart
     ? "aria-pressed:border-rose-500 aria-pressed:bg-rose-50 aria-pressed:text-rose-600 dark:aria-pressed:border-rose-400 dark:aria-pressed:bg-rose-950/40 dark:aria-pressed:text-rose-300"
     : "aria-pressed:border-primary-600 aria-pressed:bg-primary-50 aria-pressed:text-primary-700 dark:aria-pressed:border-primary-400 dark:aria-pressed:bg-primary-950 dark:aria-pressed:text-primary-200",
 ];
-const iconSize = compact ? 14 : 18;
+const iconSize = compact ? 14 : 20;
 ---
 
 {available && (
   // Hidden until the count loads; stays hidden if the counter service can't be reached or JavaScript is off.
-  <div data-reactions hidden data-reaction-id={id} data-endpoint={url} data-key={key} data-demo={demo ? "1" : undefined}>
+  <div data-reactions hidden data-reaction-id={reactionItemId(id)} data-endpoint={url} data-key={key} data-demo={demo ? "1" : undefined}>
     <div class="flex flex-wrap items-center gap-2">
       <button type="button" data-reaction="like" aria-pressed="false" aria-label={label} title={label} class:list={button}>
         {isHeart ? (
@@ -34,7 +34,6 @@ const iconSize = compact ? 14 : 18;
         ) : (
           <svg xmlns="http://www.w3.org/2000/svg" height={iconSize} width={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11" /><path d="M14 5.9 13 10h5.8a2 2 0 0 1 1.95 2.45l-1.4 6.5A2 2 0 0 1 17.4 20.5H7V10l3.6-6.3a1.7 1.7 0 0 1 3.4 1.2z" /></svg>
         )}
-        {!compact && <span>{label}</span>}
         <span data-reaction-count class="tabular-nums"></span>
       </button>
       {demo && <span class="text-[11px] font-medium text-amber-600 dark:text-amber-400">Demo only: not connected yet</span>}
