@@ -51,8 +51,8 @@ const posts = page.data.map((post) => ({
                                                 </Link>
                                             </h3>
                                             <div class="flex flex-wrap">
-                                                {tags.map(({slug}) =>
-                                                        <Tag slug={slug}/>
+                                                {tags.map((ref) =>
+                                                        <Tag slug={ref.id ?? ref.slug}/>
                                                 )}
                                             </div>
                                         </div>

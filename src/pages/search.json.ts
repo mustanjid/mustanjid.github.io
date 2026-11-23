@@ -18,7 +18,7 @@ export async function GET() {
             type: 'Thought',
             title: data.title,
             url: `/blog/${slug}/`,
-            text: clip(`${data.summary ?? ''} ${(data.tags ?? []).map((t: {slug: string}) => t.slug).join(' ')}`),
+            text: clip(`${data.summary ?? ''} ${(data.tags ?? []).map((t: {id?: string; slug?: string}) => t.id ?? t.slug).join(' ')}`),
         })),
         ...research.map(({slug, data}) => ({
             type: 'Research',

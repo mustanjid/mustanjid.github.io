@@ -22,17 +22,17 @@ const knownAuthors = await getCollection("authors");
 const authors = post.data.authors.map((slug) => knownAuthors.find((author) => author.slug === slug)).filter((author): author is CollectionEntry<"authors"> => Boolean(author));
 const tags: CollectionEntry<"tags">[] = await getEntries(post.data.tags);
 const explicitRelated: CollectionEntry<"blog">[] = await getEntries(post.data.related);
-const postTagSlugs = new Set(post.data.tags.map(({ slug }) => slug));
+const postTagSlugs = new Set(post.data.tags.map((ref) => ref.id ?? ref.slug));
 const relatedByTag = sortBlogPosts(await getCollection("blog", excludeDrafts))
-  .filter(({ slug, data }) => slug !== post.slug && data.tags.some(({ slug: tagSlug }) => postTagSlugs.has(tagSlug)))
+  .filter(({ slug, data }) => slug !== post.slug && data.tags.some((ref) => postTagSlugs.has(ref.id ?? ref.slug)))
   .slice(0, 4);
 const related = [...explicitRelated, ...relatedByTag]
   .filter((entry, index, entries) => entry.slug !== post.slug && entries.findIndex(({ slug }) => slug === entry.slug) === index)
   .slice(0, 4);
 const authorNames = authors.map(({ data }) => data.name).join(", ") || siteData.author;
 const { Content, headings } = await post.render();
-const hasBengali = /[\u0980-\u09FF]/.test(`${post.data.title} ${post.body}`);
-const readableBody = post.body
+const hasBengali = /[\u0980-\u09FF]/.test(`${post.data.title} ${post.body ?? ""}`);
+const readableBody = (post.body ?? "")
   .replace(/```[\s\S]*?```/g, " ")
   .replace(/`[^`]*`/g, " ")
   .replace(/<[^>]*>/g, " ")

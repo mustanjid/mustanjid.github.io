@@ -72,7 +72,7 @@ const posts = page.data.map((post) => ({
                                         </Link>
                                     </h3>
                                     <div class="flex flex-wrap gap-y-2 pt-3">
-                                        {tags.map(({slug}) => <Tag slug={slug}/>)}
+                                        {tags.map((ref) => <Tag slug={ref.id ?? ref.slug}/>)}
                                     </div>
                                     {summary && <p class:list={["mt-3 line-clamp-3 text-sm leading-6 text-gray-600 dark:text-gray-300", hasBengali && "font-bengali"]}>{summary}</p>}
                                     <Link

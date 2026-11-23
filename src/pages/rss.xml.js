@@ -12,7 +12,7 @@ export async function GET(context) {
         site: context.site,
         items: posts.map(({slug, data: {title, summary, tags, date}}) => ({
             title,
-            categories: tags.map(({slug}) => slug), // TODO: add tags name in the future
+            categories: tags.map((ref) => ref.id ?? ref.slug), // TODO: add tags name in the future
             pubDate: date,
             description: summary,
             link: `/blog/${slug}/`,
