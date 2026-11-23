@@ -4,6 +4,8 @@ import RootLayout from "@/layouts/RootLayout.astro";
 import AuthorLayoutHome from "@/pages/aboutHero.astro";
 import CurrentResearch from "@/components/CurrentResearch.astro";
 import HomeCards from "@/components/HomeCards.astro";
+import TechNewsBox from "@/components/TechNewsBox.astro";
+import { pagesData } from "@/data/content";
 import { getProjects, getResearchKinds, isResearchProject } from "@/functions";
 
 const projects = await getProjects();
@@ -19,7 +21,7 @@ const thoughtsSpanClass = hasBothProjects ? "xl:col-span-2" : hasProject ? "xl:c
 
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description} wide>
   <AuthorLayoutHome />
-  <section aria-label="Current research, development project, and latest thoughts" class:list={["mt-5 grid items-stretch gap-4", gridColumnsClass]}>
+  <section aria-label="Current research, development project, and latest thoughts" class:list={["mt-6 grid items-stretch gap-4", gridColumnsClass]}>
     {currentResearch && <div class:list={["min-w-0", projectSpanClass]}><CurrentResearch size="tile" kind="research" project={currentResearch} /></div>}
     {currentDevelopment && <div class:list={["min-w-0", projectSpanClass]}><CurrentResearch size="tile" kind="other" project={currentDevelopment} /></div>}
     <article aria-labelledby="latest-thoughts-title" class:list={["group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:border-primary-300 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-primary-700", thoughtsSpanClass]}>
@@ -28,7 +30,10 @@ const thoughtsSpanClass = hasBothProjects ? "xl:col-span-2" : hasProject ? "xl:c
       </div>
     </article>
   </section>
-  <div class="mt-8">
+  <div class="mt-14">
     <HomeCards view="publications" />
+  </div>
+  <div class="mt-14">
+    <TechNewsBox />
   </div>
 </RootLayout>

@@ -18,16 +18,16 @@ module.exports = {
                 display: ['Space Grotesk', ...fontFamily.sans],
             },
             colors: {
-                primary: colors.blue,
+                primary: colors.sky,
                 gray: colors.gray,
             },
             typography: ({theme}) => ({
                 DEFAULT: {
                     css: {
                         a: {
-                            color: theme('colors.primary.500'),
+                            color: theme('colors.primary.700'),
                             '&:hover': {
-                                color: `${theme('colors.primary.600')}`,
+                                color: `${theme('colors.primary.800')}`,
                             },
                             code: {color: theme('colors.primary.400')},
                         },
@@ -46,9 +46,9 @@ module.exports = {
                 invert: {
                     css: {
                         a: {
-                            color: theme('colors.primary.500'),
+                            color: theme('colors.primary.400'),
                             '&:hover': {
-                                color: `${theme('colors.primary.400')}`,
+                                color: `${theme('colors.primary.300')}`,
                             },
                             code: {color: theme('colors.primary.400')},
                         },

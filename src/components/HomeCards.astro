@@ -19,7 +19,7 @@ const recentPosts = posts.map((post) => ({
 const researchEntries = await getResearchEntries();
 const underReview = researchEntries.filter(({ data }) => data.status === "under-review" || data.status === "submitted");
 const published = researchEntries.filter(({ data }) => data.status === "published" || data.status === "accepted");
-const publications = [...underReview, ...published].slice(0, 4);
+const publications = [...underReview, ...published].slice(0, 3);
 ---
 
 <section aria-label={view === "both" ? "Recent publications and thoughts" : view === "publications" ? "Recent publications" : "Latest thoughts"} class:list={[both && "mt-8 grid gap-8 md:grid-cols-2", view === "thoughts" && "flex h-full flex-col"]}>
@@ -31,7 +31,7 @@ const publications = [...underReview, ...published].slice(0, 4);
         <h2 id="latest-publications-title" class="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100">{pagesData.home.latestPublicationsTitle}</h2>
       </div>
       <div class="ml-auto flex flex-wrap items-center justify-end gap-2">
-        <a href="/research" class="inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-bold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400">
+        <a href="/research" class="inline-flex items-center gap-1 text-sm font-semibold text-primary-700 hover:underline dark:text-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400">
           All Articles <span aria-hidden="true">&rarr;</span>
         </a>
       </div>
@@ -39,15 +39,11 @@ const publications = [...underReview, ...published].slice(0, 4);
 
     {publications.length > 0 ? (
       <ul class="space-y-3">
-        {publications.map((entry) => <li><PublicationCard entry={entry} /></li>)}
+        {publications.map((entry) => <li><PublicationCard entry={entry} compact /></li>)}
       </ul>
     ) : (
       <p class="rounded-xl border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">{pagesData.home.publicationsEmpty}</p>
     )}
-
-    <a href="/research" class="mt-4 inline-flex items-center gap-1 rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-bold text-white shadow-sm transition hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:bg-primary-500 dark:text-gray-950 dark:hover:bg-primary-400">
-      All Articles <span aria-hidden="true">&rarr;</span>
-    </a>
   </section>
   )}
 

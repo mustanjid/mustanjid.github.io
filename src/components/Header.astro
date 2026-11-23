@@ -5,10 +5,12 @@ import Logo from "./Logo.astro";
 import BasketLogo from "./BasketLogo.astro";
 import MobileNav from "./MobileNav.astro";
 import ThemeSwitcher from "./ThemeSwitcher.astro";
+import SearchDialog from "./SearchDialog.astro";
 ---
 
 <div class="relative mb-20">
-  <header class="fixed z-50 bg-white dark:bg-slate-950 w-full max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0 mx-auto">
+  <header data-site-header class="site-header fixed inset-x-0 top-0 z-50 bg-white/75 dark:bg-gray-950/70">
+  <div class="mx-auto w-full max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0">
     <div class="flex h-16 items-center justify-between">
       <div>
         <a href="/" aria-label={SITE_METADATA.headerTitle}>
@@ -28,10 +30,20 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
         ))}
 
         <!--TODO: add theme button-->
-        <!--<SearchButton />-->
+        <SearchDialog />
         <ThemeSwitcher />
         <MobileNav />
       </div>
     </div>
+    </div>
   </header>
 </div>
+
+<script>
+  const syncHeader = () => {
+    document.querySelector("[data-site-header]")?.setAttribute("data-scrolled", String(window.scrollY > 8));
+  };
+  window.addEventListener("scroll", syncHeader, { passive: true });
+  document.addEventListener("astro:page-load", syncHeader);
+  syncHeader();
+</script>
