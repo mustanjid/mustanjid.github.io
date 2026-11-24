@@ -1,6 +1,6 @@
 {
   "rightNow": {
-    "enabled": false,
+    "enabled": true,
     "text": "Learning Sveltia CMS for managing my own portfolio",
     "updatedAt": "2026-11-09",
     "url": ""
