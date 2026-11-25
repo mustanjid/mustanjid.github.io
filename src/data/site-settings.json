@@ -1,13 +1,13 @@
 {
   "greeting": "Hello, there!",
   "rightNow": {
-    "enabled": true,
+    "enabled": false,
     "text": "Learning Sveltia CMS for managing my own portfolio",
     "updatedAt": "",
     "url": ""
   },
   "claudeUsage": {
-    "enabled": true,
+    "enabled": false,
     "value": "1.2M",
     "period": "Tokens used",
     "detail": "",
