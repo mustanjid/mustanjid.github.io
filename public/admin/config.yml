@@ -653,6 +653,14 @@ collections:
           - { label: "Custom image", name: image, widget: image, required: false, hint: "Only used when 'Custom' is selected above. Best at 1200x630; large files are shrunk automatically." }
       - { label: "Research areas", name: areas, widget: list, required: false, hint: "Mostly for research projects." }
       - { label: "Tools, methods or tech stack", name: stack, widget: list, required: false }
+      - { label: "Show in Ongoing projects (home page)", name: ongoing, widget: boolean, default: false }
+      - label: "Key facts (small stats on the card)"
+        name: facts
+        widget: list
+        required: false
+        fields:
+          - { label: "Label", name: label, widget: string }
+          - { label: "Value", name: value, widget: string }
       - { label: "Live demo link", name: url, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
       - { label: "Source code / repository link", name: srccode, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }
       - { label: "Project notes link (README)", name: projectdesc, widget: string, required: false, pattern: ['^https?://\S+$', "Enter a full URL starting with https://"] }

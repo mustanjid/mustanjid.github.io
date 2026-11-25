@@ -23,7 +23,7 @@ const {title, description, summary, wide = false, image, imageAlt, type, publish
 
 <html lang={SITE_METADATA.language} class="scroll-smooth">
 <BaseHead title={title} description={description ?? summary} image={image} imageAlt={imageAlt} type={type} publishedTime={publishedTime}/>
-<body class="bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-50">
+<body class="site-bg antialiased">
 <a href="#main" class="skip-link">Skip to content</a>
 
 <!--TODO: Add Google Analytics-->
@@ -31,7 +31,7 @@ const {title, description, summary, wide = false, image, imageAlt, type, publish
 <SectionContainer wide={wide}>
     <div class="flex min-h-screen flex-col justify-between font-sans">
         <Header/>
-        <main id="main" tabindex="-1" class="mb-auto text-[17px] focus:outline-none">
+        <main id="main" tabindex="-1" class="mb-auto text-[18px] focus:outline-none">
             <slot/>
         </main>
         <Footer/>

@@ -11,5 +11,22 @@
   "closing": "This site brings together my engineering work, research, and what I’m learning along the way.",
   "cvUrl": "/cv",
   "cvLabel": "CV",
-  "showMomentsLink": true
+  "showMomentsLink": true,
+  "tools": [
+    "Cisco",
+    "MikroTik",
+    "Linux",
+    "Nagios",
+    "Observium",
+    "BGP",
+    "OSPF",
+    "Node",
+    "Express",
+    "MongoDB",
+    "React",
+    "Laravel",
+    "PHP",
+    "Docker",
+    "Git"
+  ]
 }

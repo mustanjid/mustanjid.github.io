@@ -1,0 +1,103 @@
+---
+// Claude usage card. Reads the latest summary from Supabase in the browser (see scripts/claude-usage.mjs),
+// so it updates without a rebuild. Falls back to the manual value in /admin if no data is available.
+import { settings } from "@/data/settings";
+import { getReactionConfig } from "@/reactions";
+
+const usage = settings.claudeUsage;
+const { live, url, key } = getReactionConfig();
+---
+
+{usage.enabled && (
+  <article
+    class="c2-card flex flex-col gap-4"
+    aria-label="Claude usage"
+    data-claude-usage
+    data-endpoint={live ? url : undefined}
+    data-key={live ? key : undefined}
+  >
+    <p class="c2-eyebrow m-0 flex items-center justify-between gap-3">
+      <span>Claude</span>
+      <span class="normal-case tracking-normal text-[var(--c2-soft)]" data-usage-period>{usage.period}</span>
+    </p>
+
+    <div>
+      <p class="c2-title m-0 text-4xl tabular-nums" data-usage-today>{usage.value || "—"}</p>
+      <p class="c2-text m-0 text-xs" data-usage-today-label>tokens today</p>
+    </div>
+
+    <div class="c2-bars" role="img" aria-label="Tokens per day, last 14 days" data-usage-bars hidden></div>
+
+    <div class="flex items-center justify-between gap-3 text-sm">
+      <span class="c2-text" data-usage-month>{usage.detail}</span>
+      <span class="c2-text" data-usage-alltime></span>
+    </div>
+
+    <ul class="c2-models m-0 list-none p-0" data-usage-models hidden></ul>
+
+    <p class="c2-text m-0 text-xs" data-usage-updated></p>
+  </article>
+)}
+
+{usage.enabled && live && (
+  <script>
+    const fmt = (n: number) =>
+      n >= 1e9 ? `${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${(n / 1e3).toFixed(1)}K` : String(n);
+
+    const ago = (iso: string) => {
+      const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+      if (mins < 1) return "just now";
+      if (mins < 60) return `${mins} min ago`;
+      const hours = Math.round(mins / 60);
+      return hours < 48 ? `${hours} h ago` : `${Math.round(hours / 24)} days ago`;
+    };
+
+    document.querySelectorAll<HTMLElement>("[data-claude-usage]").forEach(async (card) => {
+      const { endpoint = "", key = "" } = card.dataset;
+      if (!endpoint || !key) return;
+      try {
+        const res = await fetch(`${endpoint}/rest/v1/claude_usage?id=eq.main&select=data,updated_at`, {
+          headers: { apikey: key, Authorization: `Bearer ${key}` },
+        });
+        if (!res.ok) return;
+        const [row] = await res.json();
+        if (!row?.data) return;
+        const d = row.data;
+        const q = (sel: string) => card.querySelector<HTMLElement>(sel);
+
+        q("[data-usage-today]")!.textContent = fmt(d.today ?? 0);
+        q("[data-usage-period]")!.textContent = d.monthLabel ?? "";
+        q("[data-usage-month]")!.textContent = `${fmt(d.month ?? 0)} this month`;
+        q("[data-usage-alltime]")!.textContent = `${fmt(d.allTime ?? 0)} all-time`;
+        q("[data-usage-updated]")!.textContent = `Updated ${ago(row.updated_at)}`;
+
+        const bars = q("[data-usage-bars]")!;
+        const max = Math.max(1, ...(d.last14 ?? []).map((x: { tokens: number }) => x.tokens));
+        bars.replaceChildren(
+          ...(d.last14 ?? []).map((day: { date: string; tokens: number }) => {
+            const i = document.createElement("i");
+            i.style.height = `${Math.max(3, (day.tokens / max) * 100)}%`;
+            i.title = `${day.date}: ${day.tokens.toLocaleString()} tokens`;
+            return i;
+          }),
+        );
+        bars.hidden = false;
+
+        const list = q("[data-usage-models]")!;
+        list.replaceChildren(
+          ...(d.models ?? []).map((m: { name: string; tokens: number; pct: number }) => {
+            const li = document.createElement("li");
+            li.className = "c2-model";
+            li.innerHTML = `<span></span><b></b>`;
+            (li.firstElementChild as HTMLElement).textContent = m.name;
+            (li.lastElementChild as HTMLElement).textContent = `${m.pct}% · ${fmt(m.tokens)}`;
+            return li;
+          }),
+        );
+        list.hidden = (d.models ?? []).length === 0;
+      } catch {
+        // Keep the manual fallback from /admin if the service can't be reached.
+      }
+    });
+  </script>
+)}

@@ -1,0 +1,72 @@
+---
+// Ongoing projects in the featured-card style: text on the left (kind, title, facts, chips, link),
+// browser-style screenshot on the right. Stacks to one column on small screens.
+import type { CollectionEntry } from "astro:content";
+import BrandIcon from "@/components/BrandIcon.astro";
+import { toolIcon } from "@/lib/brand-icons";
+import { STAGE_LABEL } from "@/functions";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+const { projects } = Astro.props;
+
+const hostOf = (url?: string) => {
+  try {
+    return url ? new URL(url).hostname : "";
+  } catch {
+    return "";
+  }
+};
+---
+
+<div class="grid gap-4">
+  {projects.map((project) => {
+    const { title, description, imgSrc, stack, url, srccode, stage, kind, facts } = project.data;
+    const stageLabel = stage ? STAGE_LABEL[stage] : undefined;
+    return (
+      <article class="c2-card grid items-center gap-6 md:grid-cols-2">
+        <div class="flex flex-col gap-4">
+          <p class="c2-eyebrow m-0 flex flex-wrap items-center gap-2">
+            <span class="c2-kind rounded-md border border-[var(--c2-line-strong)] px-2 py-0.5">{kind}</span>
+            {stageLabel && <span>{stageLabel}</span>}
+          </p>
+          <h3 class="c2-title m-0 text-2xl">{title}</h3>
+          <p class="c2-text m-0">{description}</p>
+
+          {facts.length > 0 && (
+            <ul class="c2-facts">
+              {facts.map((fact) => (
+                <li><b>{fact.label}</b><span>{fact.value}</span></li>
+              ))}
+            </ul>
+          )}
+
+          {stack.length > 0 && (
+            <ul class="c2-chips" aria-label="Built with">
+              {stack.map((tech) => (
+                <li class="c2-chip">
+                  {toolIcon(tech) && <BrandIcon name={tech} class="size-3.5" />}
+                  {tech}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div class="mt-1 flex flex-wrap items-center gap-3">
+            {url && <a class="cta-primary" href={url} target="_blank" rel="noopener noreferrer">Visit product</a>}
+            <a class="cta-ghost" href={`/projects/${project.slug}/`}>View details</a>
+            {srccode && <a class="cta-ghost" href={srccode} target="_blank" rel="noopener noreferrer">Source code</a>}
+          </div>
+        </div>
+
+        {imgSrc && (
+          <div class="c2-frame">
+            <div class="c2-frame-bar" aria-hidden="true"><i></i><i></i><i></i><span>{hostOf(url)}</span></div>
+            <img src={imgSrc} alt={`${title} preview`} loading="lazy" decoding="async" class="object-cover object-top" />
+          </div>
+        )}
+      </article>
+    );
+  })}
+</div>

@@ -14,8 +14,8 @@ module.exports = {
                 14: '3.5rem',
             },
             fontFamily: {
-                sans: ['Space Grotesk', ...fontFamily.sans],
-                display: ['Space Grotesk', ...fontFamily.sans],
+                sans: ['Outfit Variable', ...fontFamily.sans],
+                display: ['Outfit Variable', ...fontFamily.sans],
             },
             colors: {
                 primary: colors.sky,

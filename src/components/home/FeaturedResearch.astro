@@ -1,0 +1,51 @@
+---
+// Large text card for the current research / latest project, with a browser-style screenshot frame.
+import type { CollectionEntry } from "astro:content";
+import BrandIcon from "@/components/BrandIcon.astro";
+import { toolIcon } from "@/lib/brand-icons";
+import { STAGE_LABEL } from "@/functions";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  label: string;
+}
+const { project, label } = Astro.props;
+const { title, description, imgSrc, stack, url, srccode, stage } = project.data;
+const stageLabel = stage ? STAGE_LABEL[stage] : undefined;
+const host = (() => {
+  try {
+    return url ? new URL(url).hostname : "";
+  } catch {
+    return "";
+  }
+})();
+---
+
+<article class="c2-card grid items-center gap-6 md:grid-cols-2">
+  <div class="flex flex-col gap-3">
+    <p class="c2-eyebrow m-0">{label}{stageLabel && <span class="normal-case tracking-normal"> · {stageLabel}</span>}</p>
+    <h3 class="c2-title m-0 text-2xl">{title}</h3>
+    <p class="c2-text m-0">{description}</p>
+    {stack.length > 0 && (
+      <ul class="c2-chips mt-1" aria-label="Built with">
+        {stack.map((tech) => (
+          <li class="c2-chip">
+            {toolIcon(tech) && <BrandIcon name={tech} class="size-3.5" />}
+            {tech}
+          </li>
+        ))}
+      </ul>
+    )}
+    <div class="mt-2 flex flex-wrap gap-3">
+      {url && <a class="cta-primary" href={url} target="_blank" rel="noopener noreferrer">Visit project</a>}
+      {srccode && <a class="cta-ghost" href={srccode} target="_blank" rel="noopener noreferrer">Source code</a>}
+    </div>
+  </div>
+
+  {imgSrc && (
+    <div class="c2-frame">
+      <div class="c2-frame-bar" aria-hidden="true"><i></i><i></i><i></i><span>{host}</span></div>
+      <img src={imgSrc} alt={`${title} preview`} loading="lazy" decoding="async" />
+    </div>
+  )}
+</article>

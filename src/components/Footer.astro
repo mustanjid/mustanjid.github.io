@@ -12,40 +12,40 @@ const personalLinks = [
 ];
 ---
 
-<footer class="mt-16 border-t border-gray-200 pt-8 pb-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400">
+<footer class="mt-16 flex flex-col gap-6 border-t border-[var(--c2-line)] pt-8 text-sm">
   <div class="flex flex-wrap justify-between gap-8">
     <div class="flex max-w-[38ch] flex-col items-start gap-2">
       <a class="footer-brand-logo inline-flex items-center" href="/" aria-label={`${SITE_METADATA.headerTitle}, home`}>
         <BasketLogo />
       </a>
-      <p class="m-0 max-w-[36ch] font-light leading-6 text-gray-600 dark:text-gray-300">{siteData.footerText || SITE_METADATA.description}</p>
+      <p class="c2-text m-0 max-w-[36ch]">{siteData.footerText || SITE_METADATA.description}</p>
     </div>
 
     <nav class="flex flex-wrap gap-x-12 gap-y-6" aria-label="Footer">
       <div class="flex min-w-24 flex-col gap-2">
-        <h2 class="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400">Site</h2>
+        <h2 class="c2-eyebrow m-0 mb-1">Site</h2>
         {NAVIGATION.filter(({ href }) => href !== "/").map(({ href, title }) => (
-          <a class="transition hover:text-primary-700 dark:hover:text-primary-300" href={href}>{title}</a>
+          <a class="c2-text no-underline hover:text-[var(--c2-accent)]" href={href}>{title}</a>
         ))}
-        <a class="transition hover:text-primary-700 dark:hover:text-primary-300" href="/rss.xml">RSS feed</a>
+        <a class="c2-text no-underline hover:text-[var(--c2-accent)]" href="/rss.xml">RSS feed</a>
       </div>
 
       <div class="flex min-w-24 flex-col gap-2">
-        <h2 class="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400">Personal</h2>
+        <h2 class="c2-eyebrow m-0 mb-1">Personal</h2>
         {personalLinks.map(({ href, title }) => (
-          <a class="transition hover:text-primary-700 dark:hover:text-primary-300" href={href}>{title}</a>
+          <a class="c2-text no-underline hover:text-[var(--c2-accent)]" href={href}>{title}</a>
         ))}
       </div>
 
       <div class="flex min-w-24 flex-col gap-2">
-        <h2 class="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400">Get me on</h2>
+        <h2 class="c2-eyebrow m-0 mb-1">Get me on</h2>
         <SocialLinks class="flex flex-col gap-2" size={5} />
       </div>
     </nav>
   </div>
 
-  <div class="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gray-200 pt-4 text-xs dark:border-gray-800">
-    <a href="/" class="font-semibold text-gray-700 hover:text-primary-700 dark:text-gray-200 dark:hover:text-primary-300">{SITE_METADATA.siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}</a>
+  <div class="c2-text flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[var(--c2-line)] pt-4 text-xs">
+    <a href="/" class="font-semibold text-[var(--c2-fg)] no-underline hover:text-[var(--c2-accent)]">{SITE_METADATA.siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}</a>
     <span class="inline-flex items-center gap-2">
       <span class="relative flex h-2 w-2" aria-hidden="true">
         <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-50"></span>
@@ -59,6 +59,7 @@ const personalLinks = [
     </span>
     <span class="ml-auto">© {year} {SITE_METADATA.author}</span>
   </div>
+  
 </footer>
 
 <style is="global">

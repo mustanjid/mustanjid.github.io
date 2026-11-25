@@ -1,0 +1,90 @@
+---
+// Research articles as picture cards with PDF, Cite, Details and Share actions.
+import { getResearchEntries } from "@/functions";
+import { pagesData } from "@/data/content";
+
+const entries = await getResearchEntries();
+const list = entries
+  .filter(({ data }) => ["published", "accepted", "under-review", "submitted"].includes(data.status))
+  .slice(0, 4);
+
+const statusLabel: Record<string, string> = {
+  published: "Published",
+  accepted: "Accepted",
+  "under-review": "Under review",
+  submitted: "Submitted",
+  preprint: "Preprint",
+  "in-preparation": "In preparation",
+};
+
+// Use the saved citation if there is one, otherwise build a simple one from the fields.
+const citationOf = (data: { citation?: string; authors: string; title: string; venue?: string; date?: Date }) =>
+  data.citation || [data.authors, `${data.title}.`, data.venue, data.date ? `${data.date.getFullYear()}.` : ""].filter(Boolean).join(" ");
+---
+
+{list.length > 0 ? (
+  <ul class="grid list-none gap-4 p-0 m-0 md:grid-cols-2">
+    {list.map(({ data, slug }) => {
+      const pdf = data.pdfUrl || data.doi || data.url || "";
+      const citation = citationOf(data);
+      return (
+        <li class="c2-card flex flex-col gap-4 overflow-hidden p-0">
+          {data.image && (
+            <div class="aspect-[16/9] w-full overflow-hidden border-b border-[var(--c2-line)] bg-[var(--c2-solid)]">
+              <img src={data.image} alt={`${data.title} cover`} loading="lazy" decoding="async" class="h-full w-full object-cover" />
+            </div>
+          )}
+          <div class="flex flex-1 flex-col gap-2 px-5 pb-5 sm:px-6">
+            <div class="flex items-center justify-between gap-3">
+              <time class="c2-eyebrow m-0">{data.date ? data.date.getFullYear() : ""}</time>
+              <span class="c2-status">{statusLabel[data.status] ?? data.status}</span>
+            </div>
+            <p class="c2-title m-0 text-lg leading-snug">{data.title}</p>
+            {data.venue && <p class="c2-text m-0 text-sm">{data.venue}</p>}
+
+            <div class="mt-auto flex flex-wrap items-center gap-2 pt-3">
+              {pdf && <a class="cta-primary !py-1.5 !text-sm" href={pdf} target="_blank" rel="noopener noreferrer">PDF</a>}
+              <details class="pub-cite relative">
+                <summary class="cta-ghost !py-1.5 !text-sm cursor-pointer list-none">Cite</summary>
+                <div class="absolute bottom-full left-0 z-10 mb-2 w-[min(90vw,26rem)] rounded-xl border border-[var(--c2-line-strong)] bg-[var(--c2-solid)] p-4 shadow-lg">
+                  <p class="c2-text m-0 text-sm">{citation}</p>
+                  <button type="button" class="cta-ghost mt-3 !py-1 !text-xs" data-copy={citation}>Copy citation</button>
+                </div>
+              </details>
+              <a class="cta-ghost !py-1.5 !text-sm" href={`/research/${slug}/`}>Details</a>
+              <button type="button" class="cta-ghost !py-1.5 !text-sm" data-share={`/research/${slug}/`} data-title={data.title}>Share</button>
+            </div>
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+) : (
+  <p class="c2-text">{pagesData.home.publicationsEmpty}</p>
+)}
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(button.dataset.copy ?? "");
+      button.textContent = "Copied";
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-share]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const url = new URL(button.dataset.share ?? "/", location.origin).href;
+      const title = button.dataset.title ?? document.title;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, url });
+          return;
+        } catch {
+          // Cancelled: fall through to copying the link.
+        }
+      }
+      await navigator.clipboard.writeText(url);
+      button.textContent = "Link copied";
+    });
+  });
+</script>

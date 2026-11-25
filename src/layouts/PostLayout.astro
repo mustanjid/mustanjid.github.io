@@ -6,6 +6,7 @@ import Link from "../components/Link.astro";
 import Comments from "@/components/Comments.astro";
 import SocialShare from "./share/SocialShare.astro";
 import DetailReactions from "@/components/DetailReactions.astro";
+import ViewCount from "@/components/ViewCount.astro";
 import ScrollTopAndComments from "../components/ScrollTopAndComments.astro";
 import RootLayout from "./RootLayout.astro";
 import { excludeDrafts, sortBlogPosts } from "../functions";
@@ -110,6 +111,7 @@ const readingTime = Math.max(1, Math.ceil(readableBody.trim().split(/\s+/).filte
 
         <footer class="space-y-8 border-t border-gray-200 py-8 dark:border-gray-800">
           <DetailReactions id={`post:${post.slug}`} />
+          <ViewCount id={`post:${post.slug}`} class="ml-3" />
           <SocialShare title={post.data.title} description={post.data.summary} />
 
           {related.length > 0 && (

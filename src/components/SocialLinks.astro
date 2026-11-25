@@ -2,6 +2,7 @@
 // Renders the social icons managed in the CMS (Site content > Site identity > Social links).
 import SocialIcon from "@/components/social-icons/index.astro";
 import { siteData } from "@/data/content";
+import { socialKindFromUrl } from "@/lib/brand-icons";
 
 interface Props {
   size?: number;
@@ -12,7 +13,7 @@ interface Props {
 
 const { size = 6, class: className = "flex space-x-4", extra = [] } = Astro.props;
 const links = [
-  ...siteData.socialLinks.map(({ kind, url }) => ({ kind, href: kind === "mail" && !url.startsWith("mailto:") ? `mailto:${url}` : url })),
+  ...siteData.socialLinks.map(({ kind, url }) => ({ kind: socialKindFromUrl(url) ?? kind, href: kind === "mail" && !url.startsWith("mailto:") ? `mailto:${url}` : url })),
   ...extra.filter((item) => !siteData.socialLinks.some((link) => link.kind === item.kind)),
 ];
 ---

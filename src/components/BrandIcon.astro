@@ -1,0 +1,17 @@
+---
+// A brand mark from Simple Icons. Renders nothing when the name has no icon.
+import { toolIcon } from "@/lib/brand-icons";
+
+interface Props {
+  name: string;
+  class?: string;
+}
+const { name, class: className = "size-4" } = Astro.props;
+const icon = toolIcon(name);
+---
+
+{icon && (
+  <svg class={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor">
+    <path d={icon.path} />
+  </svg>
+)}

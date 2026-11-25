@@ -1,0 +1,44 @@
+---
+// Scrolling strip of tools and technologies, each with its brand icon when one exists.
+import BrandIcon from "@/components/BrandIcon.astro";
+import { toolIcon } from "@/lib/brand-icons";
+
+interface Props {
+  tools: string[];
+  label?: string;
+}
+const { tools, label = "Tools & stack" } = Astro.props;
+const unique = [...new Set(tools.map((tool) => tool.trim()).filter(Boolean))];
+---
+
+{unique.length > 0 && (
+  <section class="c2-card overflow-hidden p-0" aria-label={label}>
+    <p class="c2-eyebrow px-5 pt-4 sm:px-7">{label}</p>
+    <div class="marquee mt-3 py-4" data-marquee>
+      <ul class="marquee-track" aria-hidden="false">
+        {[...unique, ...unique].map((tool, index) => (
+          <li class="chip" aria-hidden={index >= unique.length ? "true" : undefined}>
+            {toolIcon(tool) ? <BrandIcon name={tool} class="size-4 text-[var(--c2-accent)]" /> : <span class="dot" aria-hidden="true"></span>}
+            <span>{tool}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .marquee { position: relative; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquee-track { display: flex; gap: 0.75rem; width: max-content; margin: 0; padding: 0; list-style: none; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap;
+    padding: 0.45rem 0.9rem; border-radius: 999px; border: 1px solid var(--c2-line);
+    background: var(--c2-solid); color: var(--c2-soft); font-size: 0.9rem; font-weight: 500;
+  }
+  .dot { width: 0.4rem; height: 0.4rem; border-radius: 999px; background: var(--c2-accent); }
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-track { animation: scroll 38s linear infinite; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+  }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+</style>

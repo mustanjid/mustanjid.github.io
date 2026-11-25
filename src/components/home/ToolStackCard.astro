@@ -1,0 +1,40 @@
+---
+// Scrolling tool strip with two rows moving in opposite directions. Icons are matched by name
+// (brand icon when one exists, otherwise the emoji set in /admin). Driven by the Tools setting.
+import BrandIcon from "@/components/BrandIcon.astro";
+import { toolIcon } from "@/lib/brand-icons";
+import { settings } from "@/data/settings";
+
+const tools = settings.tools;
+const half = Math.ceil(tools.length / 2);
+const topRow = tools.slice(0, half);
+const bottomRow = tools.slice(half).length ? tools.slice(half) : topRow;
+const rows = [topRow, bottomRow];
+---
+
+{tools.length > 0 && (
+  <section class="c2-card flex h-full flex-col overflow-hidden" aria-label="Tools I use">
+    <div class="flex items-center justify-between gap-3">
+      <p class="c2-eyebrow m-0">Tools & stack</p>
+      <span class="text-xs text-[var(--c2-soft)]">{tools.length} tools</span>
+    </div>
+    <div class="mt-4 space-y-3">
+      {rows.map((row, index) => (
+        <div class="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+          <ul class:list={["c2-track flex w-max list-none gap-2.5 p-0 m-0", index === 1 && "rev"]}>
+            {[...row, ...row].map((tool, i) => (
+              <li class="c2-chip" aria-hidden={i >= row.length ? "true" : undefined}>
+                {toolIcon(tool.name) ? (
+                  <BrandIcon name={tool.name} class="size-4 text-[var(--c2-accent)]" />
+                ) : (
+                  <span aria-hidden="true">{tool.icon}</span>
+                )}
+                {tool.url ? <a href={tool.url} target="_blank" rel="noopener noreferrer" class="text-inherit no-underline">{tool.name}</a> : <span>{tool.name}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

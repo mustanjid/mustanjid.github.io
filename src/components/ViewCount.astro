@@ -1,0 +1,51 @@
+---
+// "N views" counter for one item. Counts a view at most once per item per browser per day.
+// Uses the same Supabase project as Likes and Loves (src/data/site.json). Hidden if not connected.
+import { getReactionConfig, reactionItemId } from "@/reactions";
+
+interface Props {
+  id: string;
+  class?: string;
+}
+const { id, class: className = "" } = Astro.props;
+const { live, url, key } = getReactionConfig();
+const itemId = reactionItemId(id);
+---
+
+{live && (
+  <span class:list={["view-count hidden text-sm text-gray-500 dark:text-gray-400", className]} data-view-id={itemId} data-endpoint={url} data-key={key}>
+    <span data-view-total></span> views
+  </span>
+)}
+
+{live && (
+  <script>
+    const DAY = new Date().toISOString().slice(0, 10);
+    const headers = (key: string) => ({ apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" });
+
+    document.querySelectorAll<HTMLElement>("[data-view-id]").forEach(async (el) => {
+      const { viewId: id, endpoint = "", key = "" } = el.dataset;
+      if (!endpoint || !key || !id) return;
+      const seenKey = `views:v1:${id}`;
+      try {
+        if (localStorage.getItem(seenKey) !== DAY) {
+          await fetch(`${endpoint}/rest/v1/rpc/view_item`, {
+            method: "POST",
+            headers: headers(key),
+            body: JSON.stringify({ p_item: id }),
+          });
+          localStorage.setItem(seenKey, DAY);
+        }
+        const res = await fetch(`${endpoint}/rest/v1/views?item_id=eq.${encodeURIComponent(id)}&select=total`, { headers: headers(key) });
+        if (!res.ok) return;
+        const [row] = await res.json();
+        const total = Number(row?.total ?? 0);
+        const target = el.querySelector("[data-view-total]");
+        if (target) target.textContent = total.toLocaleString();
+        el.hidden = false;
+      } catch {
+        // Counter unreachable: leave it hidden so the page still works.
+      }
+    });
+  </script>
+)}

@@ -130,6 +130,8 @@ const projects = defineCollection({
         paper: optional(reference('research')), // related publication
         areas: z.array(z.string()).default([]),
         stack: z.array(z.string()).default([]),
+        ongoing: z.boolean().default(false), // show in the home page "Ongoing projects" section
+        facts: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
     }),
 });
 

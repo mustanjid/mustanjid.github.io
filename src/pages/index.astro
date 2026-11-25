@@ -1,9 +1,12 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import { SITE_METADATA } from "@/consts";
 import RootLayout from "@/layouts/RootLayout.astro";
-import AuthorLayoutHome from "@/pages/aboutHero.astro";
-import CurrentResearch from "@/components/CurrentResearch.astro";
-import HomeCards from "@/components/HomeCards.astro";
+import IntroCard from "@/components/home/IntroCard.astro";
+import ClaudeCard from "@/components/home/ClaudeCard.astro";
+import ToolStackCard from "@/components/home/ToolStackCard.astro";
+import OngoingProjects from "@/components/home/OngoingProjects.astro";
+import PublicationList from "@/components/home/PublicationList.astro";
 import TechNewsBox from "@/components/TechNewsBox.astro";
 import RightNow from "@/components/RightNow.astro";
 import HomeSpotlightThought from "@/components/HomeSpotlightThought.astro";
@@ -14,30 +17,60 @@ const projects = await getProjects();
 const researchKinds = await getResearchKinds();
 const currentResearch = projects.find((project) => isResearchProject(project, researchKinds));
 const latestProject = projects.find((project) => !isResearchProject(project, researchKinds));
+// Projects marked "Show in Ongoing projects" in the CMS; falls back to current research + latest project.
+const flagged = projects.filter((project) => project.data.ongoing);
+const ongoing = (flagged.length > 0
+  ? flagged
+  : [currentResearch, latestProject].filter(Boolean)) as CollectionEntry<"projects">[];
 ---
 
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description} wide>
-  <AuthorLayoutHome />
-  <RightNow />
-  <TechNewsBox />
-
-  <section aria-label="Featured work and latest thoughts" class="mt-8">
-    <div class="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-gray-200 pb-3 dark:border-gray-800">
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">A little of what I'm working on</p>
-        <h2 class="mt-1 text-2xl font-bold text-gray-950 dark:text-gray-50">Explore my work</h2>
-      </div>
-    </div>
-    <div class="grid items-stretch gap-4 lg:grid-cols-3">
-      {currentResearch && <CurrentResearch size="tile" kind="research" project={currentResearch} />}
-      {latestProject && <CurrentResearch size="tile" kind="other" project={latestProject} />}
+  <div class="grid gap-4 pt-6 md:grid-cols-2 lg:grid-cols-6 lg:auto-rows-auto">
+    <div class="md:col-span-2 lg:col-span-4 lg:row-span-2"><IntroCard /></div>
+    <div class="flex flex-col gap-4 md:col-span-2 lg:col-span-2 lg:row-span-2 [&>*]:flex-1 [&>*]:min-h-0">
       <HomeSpotlightThought />
+      <ToolStackCard />
     </div>
-  </section>
-
-  <div class="mt-12">
-    <HomeCards view="publications" />
   </div>
 
-  <HomeActivity />
+  <div class="mt-4"><RightNow /></div>
+
+  <div class="mt-4 grid items-stretch gap-4 lg:grid-cols-12">
+    <div class="lg:col-span-4"><ClaudeCard /></div>
+    <div class="lg:col-span-8"><TechNewsBox /></div>
+  </div>
+
+  {ongoing.length > 0 && (
+    <section aria-labelledby="ongoing-projects" class="mt-12">
+      <div class="c2-section-head">
+        <div>
+          <p class="c2-eyebrow m-0">What I'm building</p>
+          <h2 id="ongoing-projects" class="c2-title mt-1 text-2xl">Ongoing projects</h2>
+        </div>
+        <a href="/projects" class="cta-ghost">View all</a>
+      </div>
+      <OngoingProjects projects={ongoing} />
+    </section>
+  )}
+
+  <section aria-labelledby="publications" class="mt-12">
+    <div class="c2-section-head">
+      <div>
+        <p class="c2-eyebrow m-0">Research articles</p>
+        <h2 id="publications" class="c2-title mt-1 text-2xl">Publications</h2>
+      </div>
+      <a href="/research" class="cta-ghost">View all</a>
+    </div>
+    <PublicationList />
+  </section>
+
+  <section aria-labelledby="activity-heading" class="mt-12">
+    <div class="c2-section-head">
+      <div>
+        <p class="c2-eyebrow m-0">Recent</p>
+        <h2 id="activity-heading" class="c2-title mt-1 text-2xl">Activity</h2>
+      </div>
+    </div>
+    <HomeActivity />
+  </section>
 </RootLayout>
