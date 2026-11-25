@@ -21,6 +21,7 @@ collections:
         file: src/data/site-settings.json
         format: json
         fields:
+          - { label: "Intro greeting", name: greeting, widget: string, required: false, default: "Hello, folks!", hint: "Short greeting above your name on the homepage intro card." }
           - label: "Right now"
             name: rightNow
             widget: object
@@ -30,6 +31,28 @@ collections:
               - { label: "What I'm thinking about (max 140 characters)", name: text, widget: string, required: false, pattern: ['^.{0,140}$', "Keep it under 140 characters"] }
               - { label: "Last updated", name: updatedAt, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false, hint: "Set this to today whenever you change the line." }
               - { label: "Link for this status", name: url, widget: string, required: false }
+
+          - label: "Claude token usage"
+            name: claudeUsage
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Show usage card data", name: enabled, widget: boolean, default: false }
+              - { label: "Token usage value", name: value, widget: string, required: false, hint: "Enter a verified figure, for example 1.2M. This is a manually maintained display, not a live API connection." }
+              - { label: "Usage period / label", name: period, widget: string, required: false, default: "Tokens used" }
+              - { label: "Additional context", name: detail, widget: string, required: false }
+              - { label: "Last updated", name: updatedAt, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+
+          - label: "Tools I use"
+            name: tools
+            widget: list
+            required: false
+            summary: "{{fields.icon}} {{fields.name}}"
+            hint: "These appear as icon-and-name chips in the homepage tools card. Use an emoji or short symbol for the icon."
+            fields:
+              - { label: "Tool name", name: name, widget: string }
+              - { label: "Icon (emoji or symbol)", name: icon, widget: string, default: "🔧", required: false }
+              - { label: "Website link", name: url, widget: string, required: false }
 
           - label: "Daily news"
             name: news
@@ -80,6 +103,7 @@ collections:
           - { label: "Site title", name: title, widget: string, hint: "Browser tab title and RSS title." }
           - { label: "Header title", name: headerTitle, widget: string, hint: "Text shown next to the logo in the header." }
           - { label: "Site description", name: description, widget: text, hint: "Used for SEO and link previews." }
+          - { label: "Footer text", name: footerText, widget: text, required: false, hint: "Optional short description shown under the logo in the footer. Leave blank to reuse the site description." }
           - { label: "Author name", name: author, widget: string, hint: "Shown in the footer copyright." }
           - { label: "SEO keywords", name: keywords, widget: list, required: false }
           - { label: "Default link preview image (logo)", name: ogImage, widget: image, media_folder: /public/static, public_folder: /static, hint: "The default picture shown when any page is shared, unless that page picks its own. Recommended 1200x630." }

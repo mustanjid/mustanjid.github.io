@@ -9,12 +9,25 @@ const url = z.preprocess(blank, z.string().url().optional());
 const date = z.preprocess(blank, z.coerce.date().optional());
 
 const schema = z.object({
+  greeting: z.string().max(60).default("Hello, folks!"),
   rightNow: z.object({
     enabled: z.boolean().default(false),
     text: z.string().max(140, "Right now line must be 140 characters or fewer").default(""),
     updatedAt: date,
     url,
   }).default({}),
+  claudeUsage: z.object({
+    enabled: z.boolean().default(false),
+    value: z.string().max(40).default(""),
+    period: z.string().max(60).default("Tokens used"),
+    detail: text,
+    updatedAt: date,
+  }).default({}),
+  tools: z.array(z.object({
+    name: z.string().min(1).max(40),
+    icon: z.string().max(8).default("🔧"),
+    url,
+  })).default([]),
   news: z.object({
     enabled: z.boolean().default(false),
   }).default({}),

@@ -20,6 +20,14 @@ export default defineConfig({
     prefetch: true,
     redirects: paperRedirects,
     markdown: {rehypePlugins: [rehypeLinkStyles]},
+    // Patch files are not site assets; exclude them from Vite's watcher on Windows.
+    vite: {
+        server: {
+            watch: {
+                ignored: ["**/*.patch"]
+            }
+        }
+    },
     site: SITE_METADATA.siteUrl,
     integrations: [mdx(), sitemap(), tailwind()]
 });

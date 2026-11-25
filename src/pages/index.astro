@@ -5,35 +5,39 @@ import AuthorLayoutHome from "@/pages/aboutHero.astro";
 import CurrentResearch from "@/components/CurrentResearch.astro";
 import HomeCards from "@/components/HomeCards.astro";
 import TechNewsBox from "@/components/TechNewsBox.astro";
-import { pagesData } from "@/data/content";
+import RightNow from "@/components/RightNow.astro";
+import HomeSpotlightThought from "@/components/HomeSpotlightThought.astro";
+import HomeActivity from "@/components/HomeActivity.astro";
 import { getProjects, getResearchKinds, isResearchProject } from "@/functions";
 
 const projects = await getProjects();
 const researchKinds = await getResearchKinds();
-const currentResearch = projects.find((project) => isResearchProject(project, researchKinds) && project.data.featured);
-const currentDevelopment = projects.find((project) => !isResearchProject(project, researchKinds) && project.data.featured);
-const hasBothProjects = Boolean(currentResearch && currentDevelopment);
-const hasProject = Boolean(currentResearch || currentDevelopment);
-const gridColumnsClass = hasBothProjects ? "xl:grid-cols-8" : hasProject ? "xl:grid-cols-7" : "xl:grid-cols-1";
-const projectSpanClass = hasBothProjects ? "xl:col-span-3" : "xl:col-span-4";
-const thoughtsSpanClass = hasBothProjects ? "xl:col-span-2" : hasProject ? "xl:col-span-3" : "xl:col-span-1";
+const currentResearch = projects.find((project) => isResearchProject(project, researchKinds));
+const latestProject = projects.find((project) => !isResearchProject(project, researchKinds));
 ---
 
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description} wide>
   <AuthorLayoutHome />
-  <section aria-label="Current research, development project, and latest thoughts" class:list={["mt-6 grid items-stretch gap-4", gridColumnsClass]}>
-    {currentResearch && <div class:list={["min-w-0", projectSpanClass]}><CurrentResearch size="tile" kind="research" project={currentResearch} /></div>}
-    {currentDevelopment && <div class:list={["min-w-0", projectSpanClass]}><CurrentResearch size="tile" kind="other" project={currentDevelopment} /></div>}
-    <article aria-labelledby="latest-thoughts-title" class:list={["group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:border-primary-300 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-primary-700", thoughtsSpanClass]}>
-      <div class="flex flex-1 flex-col p-4 sm:p-5">
-        <HomeCards view="thoughts" />
+  <RightNow />
+  <TechNewsBox />
+
+  <section aria-label="Featured work and latest thoughts" class="mt-8">
+    <div class="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-gray-200 pb-3 dark:border-gray-800">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">A little of what I'm working on</p>
+        <h2 class="mt-1 text-2xl font-bold text-gray-950 dark:text-gray-50">Explore my work</h2>
       </div>
-    </article>
+    </div>
+    <div class="grid items-stretch gap-4 lg:grid-cols-3">
+      {currentResearch && <CurrentResearch size="tile" kind="research" project={currentResearch} />}
+      {latestProject && <CurrentResearch size="tile" kind="other" project={latestProject} />}
+      <HomeSpotlightThought />
+    </div>
   </section>
-  <div class="mt-14">
+
+  <div class="mt-12">
     <HomeCards view="publications" />
   </div>
-  <div class="mt-14">
-    <TechNewsBox />
-  </div>
+
+  <HomeActivity />
 </RootLayout>

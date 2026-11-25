@@ -1,7 +1,4 @@
 ---
-// "Latest in tech" box shown under the home-page intro. Headlines come from the public Hacker News API in the
-// visitor's browser (a static site has no server to ask), are cached for 15 minutes, and fall back to a plain link
-// if the API can't be reached. Switch it on or off in the CMS: Homepage switches > Daily news.
 import { pagesData } from "@/data/content";
 import { settings } from "@/data/settings";
 
@@ -10,74 +7,92 @@ const label = pagesData.home.techNewsLabel;
 ---
 
 {enabled && (
-  <section aria-labelledby="tech-news-title" data-tech-news-box class="rounded-xl border border-gray-200 bg-white/80 p-4 shadow-sm backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50">
-    <div class="flex items-center justify-between gap-3">
-      <h2 id="tech-news-title" class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-gray-800 dark:text-gray-100">
-        <span class="inline-block h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
-        {label}
-      </h2>
-      <a href="https://news.ycombinator.com/" target="_blank" rel="noopener noreferrer" class="shrink-0 text-xs font-semibold text-primary-700 hover:underline dark:text-primary-300">
-        via Hacker News <span aria-hidden="true">&rarr;</span>
-      </a>
+  <section aria-label={label} data-tech-news-box class="mt-4 flex min-w-0 items-center gap-3 overflow-hidden rounded-xl border border-gray-200 bg-white/80 px-3 py-3 shadow-sm dark:border-gray-800 dark:bg-gray-900/50 sm:px-4">
+    <h2 class="flex shrink-0 items-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] text-gray-700 dark:text-gray-200">
+      <span class="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
+      <span>{label}</span>
+    </h2>
+    <div class="min-w-0 flex-1 overflow-hidden" data-tech-news-viewport>
+      <div data-tech-news-track class="tech-news-track flex w-max items-center" aria-busy="true">
+        <div data-tech-news-items class="flex shrink-0 items-center gap-8 pr-8 text-sm text-gray-500 dark:text-gray-400">
+          <span>Loading latest technology stories…</span>
+        </div>
+      </div>
     </div>
-    <ul data-tech-news-list aria-busy="true" class="mt-3 divide-y divide-gray-200 dark:divide-gray-800">
-      <li class="py-2 text-sm text-gray-500 dark:text-gray-400">Loading latest tech stories...</li>
-    </ul>
+    <a href="https://news.ycombinator.com/" target="_blank" rel="noopener noreferrer" class="hidden shrink-0 text-xs font-semibold text-primary-700 hover:underline dark:text-primary-300 sm:inline">
+      Hacker News ↗
+    </a>
   </section>
 )}
 
+<style>
+  .tech-news-track {
+    animation: tech-news-scroll 75s linear infinite;
+    will-change: transform;
+  }
+  [data-tech-news-box]:hover .tech-news-track,
+  [data-tech-news-box]:focus-within .tech-news-track {
+    animation-play-state: paused;
+  }
+  @keyframes tech-news-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tech-news-track { animation: none; }
+  }
+</style>
+
 <script>
   type Story = { id: number; title: string; url: string; score: number; time: number };
-
-  const STORE = "tech-news:v1";
+  const STORE = "tech-news:v2";
   const MAX_AGE_MS = 15 * 60 * 1000;
-  const SHOW = 5;
   const API = "https://hacker-news.firebaseio.com/v0";
   const techTopic = /\b(ai|artificial intelligence|apple|browser|cloud|computer|cybersecurity|data|developer|digital|github|gpu|hacker|internet|javascript|linux|machine learning|microsoft|nvidia|open source|programming|python|robot|rust|security|server|software|startup|technology|tech|web)\b/i;
   const w = window as unknown as { __techNewsReady?: boolean };
 
-  const hostOf = (url: string) => new URL(url).hostname.replace(/^www\./, "");
-  const ago = (unixSeconds: number) => {
-    const minutes = Math.max(1, Math.round((Date.now() / 1000 - unixSeconds) / 60));
-    if (minutes < 60) return `${minutes} min ago`;
-    const hours = Math.round(minutes / 60);
-    return hours < 24 ? `${hours} h ago` : `${Math.round(hours / 24)} d ago`;
-  };
-
-  const render = (list: HTMLElement, stories: Story[]) => {
-    list.replaceChildren(
-      ...stories.map((story) => {
-        const item = document.createElement("li");
-        item.className = "py-2";
+  const render = (stories: Story[]) => {
+    const track = document.querySelector<HTMLElement>("[data-tech-news-box] [data-tech-news-track]");
+    if (!track) return;
+    const makeItems = (hidden = false) => {
+      const group = document.createElement("div");
+      group.className = "flex shrink-0 items-center gap-8 pr-8";
+      if (hidden) group.setAttribute("aria-hidden", "true");
+      for (const story of stories) {
         const link = document.createElement("a");
         link.href = story.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-        link.className = "line-clamp-2 text-sm font-semibold leading-5 text-gray-900 hover:text-primary-700 hover:underline dark:text-gray-100 dark:hover:text-primary-300";
+        link.className = "max-w-[48ch] truncate text-sm font-medium text-gray-700 hover:text-primary-700 hover:underline dark:text-gray-200 dark:hover:text-primary-300";
         link.textContent = story.title;
-        link.setAttribute("aria-label", `${story.title} (opens in a new tab)`);
-        const meta = document.createElement("p");
-        meta.className = "mt-0.5 text-xs text-gray-500 dark:text-gray-400";
-        meta.textContent = `${hostOf(story.url)} · ${story.score} points · ${ago(story.time)}`;
-        item.append(link, meta);
-        return item;
-      }),
-    );
-    list.setAttribute("aria-busy", "false");
+        if (hidden) link.tabIndex = -1;
+        group.append(link);
+        const separator = document.createElement("span");
+        separator.className = "text-emerald-500";
+        separator.textContent = "✳";
+        separator.setAttribute("aria-hidden", "true");
+        group.append(separator);
+      }
+      return group;
+    };
+    track.replaceChildren(makeItems(), makeItems(true));
+    track.setAttribute("aria-busy", "false");
   };
 
-  const showFallback = (list: HTMLElement) => {
-    const item = document.createElement("li");
-    item.className = "py-2";
+  const showFallback = () => {
+    const track = document.querySelector<HTMLElement>("[data-tech-news-box] [data-tech-news-track]");
+    if (!track) return;
+    const group = document.createElement("div");
+    group.className = "flex shrink-0 items-center gap-3 pr-8 text-sm text-gray-500 dark:text-gray-400";
     const link = document.createElement("a");
     link.href = "https://news.ycombinator.com/";
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.className = "text-sm font-medium text-gray-600 underline dark:text-gray-300";
-    link.textContent = "Live headlines are unavailable right now. Browse Hacker News.";
-    item.append(link);
-    list.replaceChildren(item);
-    list.setAttribute("aria-busy", "false");
+    link.className = "underline";
+    link.textContent = "Latest technology headlines are unavailable. Browse Hacker News.";
+    group.append(link);
+    track.replaceChildren(group);
+    track.setAttribute("aria-busy", "false");
   };
 
   const readCache = (): Story[] | undefined => {
@@ -96,46 +111,37 @@ const label = pagesData.home.techNewsLabel;
       const response = await fetch(`${API}/topstories.json`, { signal: controller.signal });
       if (!response.ok) throw new Error("headline list unavailable");
       const ids = ((await response.json()) as number[]).slice(0, 30);
-      const records = await Promise.all(
-        ids.map(async (id) => {
-          try {
-            const result = await fetch(`${API}/item/${id}.json`, { signal: controller.signal });
-            return result.ok ? ((await result.json()) as { type?: string; title?: string; url?: string; score?: number; time?: number }) : undefined;
-          } catch {
-            return undefined;
-          }
-        }),
-      );
+      const records = await Promise.all(ids.map(async (id) => {
+        try {
+          const result = await fetch(`${API}/item/${id}.json`, { signal: controller.signal });
+          return result.ok ? ((await result.json()) as { type?: string; title?: string; url?: string; score?: number; time?: number }) : undefined;
+        } catch {
+          return undefined;
+        }
+      }));
       const stories = records
         .filter((record): record is { type: string; title: string; url: string; score?: number; time?: number } => Boolean(record?.type === "story" && record.title && record.url && /^https?:\/\//.test(record.url)))
         .map((record, index) => ({ id: ids[index], title: record.title, url: record.url, score: record.score ?? 0, time: record.time ?? 0 }));
-      // tech-looking headlines first, then fill up from the rest of the front page
-      const ordered = [...stories.filter((story) => techTopic.test(story.title)), ...stories.filter((story) => !techTopic.test(story.title))];
-      return ordered.slice(0, SHOW);
+      return [...stories.filter((story) => techTopic.test(story.title)), ...stories.filter((story) => !techTopic.test(story.title))].slice(0, 8);
     } finally {
       window.clearTimeout(timeout);
     }
   };
 
   const load = async () => {
-    const list = document.querySelector<HTMLElement>("[data-tech-news-box] [data-tech-news-list]");
-    if (!list || list.dataset.loaded === "true") return;
-    list.dataset.loaded = "true";
+    const box = document.querySelector<HTMLElement>("[data-tech-news-box]");
+    if (!box || box.dataset.loaded === "true") return;
+    box.dataset.loaded = "true";
     try {
-      const stories = readCache() ?? (await fetchStories());
+      const stories = readCache() ?? await fetchStories();
       if (stories.length === 0) throw new Error("no headlines");
-      try {
-        sessionStorage.setItem(STORE, JSON.stringify({ at: Date.now(), stories }));
-      } catch {
-        /* private mode: just refetch next time */
-      }
-      render(list, stories);
+      try { sessionStorage.setItem(STORE, JSON.stringify({ at: Date.now(), stories })); } catch { /* private mode */ }
+      render(stories);
     } catch {
-      showFallback(list);
+      showFallback();
     }
   };
 
-  // The page body is replaced on every client-side navigation, so look for the box again after each one.
   if (!w.__techNewsReady) {
     w.__techNewsReady = true;
     document.addEventListener("astro:page-load", load);

@@ -22,6 +22,7 @@ const site = z.object({
   title: z.string().min(1),
   headerTitle: z.string().min(1),
   description: z.string().min(1),
+  footerText: z.string().optional().default(""),
   author: z.string().min(1),
   keywords: z.array(z.string()).default([]),
   ogImage: z.string().min(1).default("/static/logo.png"),

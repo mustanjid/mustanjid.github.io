@@ -1,0 +1,117 @@
+---
+import { getCollection } from "astro:content";
+import { siteData } from "@/data/content";
+import { excludeDrafts, getProjects, getResearchEntries, sortBlogPosts } from "@/functions";
+
+const github = siteData.socialLinks.find(({ kind }) => kind === "github")?.url ?? "https://github.com/mustanjid";
+const githubUsername = github.replace(/\/+$/, "").split("/").pop() || "mustanjid";
+const [rawPosts, research, projects] = await Promise.all([
+  getCollection("blog", excludeDrafts),
+  getResearchEntries(),
+  getProjects(),
+]);
+const posts = sortBlogPosts(rawPosts);
+const now = new Date();
+const dayMs = 24 * 60 * 60 * 1000;
+const currentStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29);
+const previousStart = new Date(currentStart.getTime() - 30 * dayMs);
+const currentPosts = posts.filter(({ data }) => data.date >= currentStart && data.date <= now);
+const previousPosts = posts.filter(({ data }) => data.date >= previousStart && data.date < currentStart);
+const delta = currentPosts.length - previousPosts.length;
+const dailyCounts = Array.from({ length: 30 }, (_, index) => {
+  const day = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29 + index);
+  return posts.filter(({ data }) => data.date.toDateString() === day.toDateString()).length;
+});
+const maxDaily = Math.max(1, ...dailyCounts);
+const points = dailyCounts.map((count, index) => ({
+  x: (335 * index) / (dailyCounts.length - 1),
+  y: 50 - (count / maxDaily) * 44,
+}));
+const linePath = points.map(({ x, y }, index) => `${index === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+const fillPath = `${linePath} L335 56 L0 56 Z`;
+const tagCounts = new Map<string, number>();
+for (const post of currentPosts) {
+  for (const tag of post.data.tags) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+}
+const topTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
+const tagTotal = topTags.reduce((sum, [, count]) => sum + count, 0);
+const latestPost = posts[0];
+const compactCount = (value: number) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : String(value);
+---
+
+<section aria-label="GitHub activity and publishing statistics" class="mt-12 grid gap-4 lg:grid-cols-2">
+  <article class="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900/60 sm:p-6">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.15em] text-primary-700 dark:text-primary-300">Open source</p>
+        <h2 class="mt-1 text-xl font-bold text-gray-950 dark:text-gray-50">GitHub contributions</h2>
+      </div>
+      <a href={github} target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-primary-700 hover:underline dark:text-primary-300">@{githubUsername} ↗</a>
+    </div>
+    <div class="mt-5 overflow-x-auto rounded-xl border border-gray-100 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-950">
+      <img
+        src={`https://ghchart.rshah.org/16a34a/${githubUsername}`}
+        alt={`GitHub contribution graph for ${githubUsername}`}
+        class="mx-auto h-auto min-w-[620px] max-w-full"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">Contribution activity from the public GitHub profile.</p>
+  </article>
+
+  <article class="flex min-h-[281px] min-w-0 flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900/60 sm:p-6">
+    <p class="m-0 font-mono text-[11.5px] uppercase tracking-[0.08em] text-gray-500 dark:text-gray-400">Thoughts · last 30 days</p>
+    <div class="flex items-end justify-between gap-3">
+      <div class="flex items-baseline gap-2">
+        <strong class="text-4xl font-bold tracking-tight text-gray-950 dark:text-gray-50">{compactCount(posts.length)}</strong>
+        <span class="text-xs text-gray-500 dark:text-gray-400">published thoughts</span>
+      </div>
+      <span class:list={["shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold", delta > 0 ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" : delta < 0 ? "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300" : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"]}>
+        {delta > 0 ? "▲" : delta < 0 ? "▼" : "•"} {Math.abs(delta)} vs previous 30 days
+      </span>
+    </div>
+    <div class="-mx-1" role="img" aria-label={`Daily published thoughts over the last 30 days; ${currentPosts.length} new posts`}>
+      <svg class="h-14 w-full overflow-visible" viewBox="0 0 335 56" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="thoughts-chart-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="currentColor" stop-opacity="0.24" />
+            <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="6" x2="335" y2="6" stroke="currentColor" opacity="0.10" />
+        <line x1="0" y1="30" x2="335" y2="30" stroke="currentColor" opacity="0.10" />
+        <line x1="0" y1="54" x2="335" y2="54" stroke="currentColor" opacity="0.10" />
+        <path d={fillPath} fill="url(#thoughts-chart-gradient)" class="text-primary-500" />
+        <path d={linePath} fill="none" stroke="var(--color-primary-600, #2563eb)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        {points.length > 0 && <circle cx={points[points.length - 1].x} cy={points[points.length - 1].y} r="3" fill="var(--color-primary-600, #2563eb)" />}
+      </svg>
+    </div>
+    <div class="flex items-center justify-between text-[11px] text-gray-400">
+      <span>30 days ago</span>
+      <span>{currentPosts.length} new {currentPosts.length === 1 ? "thought" : "thoughts"}</span>
+      <span>Today</span>
+    </div>
+    {topTags.length > 0 ? (
+      <div class="mt-1">
+        <p class="mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-gray-500 dark:text-gray-400">Recent topics</p>
+        <div class="flex h-2 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800" role="img" aria-label={`Recent topics: ${topTags.map(([tag, count]) => `${tag}, ${count}`).join("; ")}`}>
+          {topTags.map(([tag, count], index) => <span title={`${tag}: ${count}`} style={`width:${(count / tagTotal) * 100}%;opacity:${1 - index * 0.14}`} class="bg-primary-600 dark:bg-primary-400" />)}
+        </div>
+        <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+          {topTags.map(([tag, count]) => (
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-gray-500 dark:text-gray-400"><span class="h-1.5 w-1.5 rounded-full bg-primary-600 dark:bg-primary-400" />{tag} <b class="font-semibold text-gray-700 dark:text-gray-200">{count}</b></span>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">No new posts in the last 30 days. Browse the archive for earlier thoughts.</p>
+    )}
+    {latestPost && (
+      <a href={`/blog/${latestPost.slug}`} class="mt-auto flex items-center justify-between gap-3 border-t border-gray-100 pt-3 text-sm dark:border-gray-800">
+        <span class="min-w-0"><span class="mr-2 font-mono text-[10px] uppercase tracking-[0.08em] text-gray-400">Latest thought</span><span class="block truncate font-semibold text-gray-800 hover:text-primary-700 dark:text-gray-100 dark:hover:text-primary-300">{latestPost.data.title}</span></span>
+        <span class="shrink-0 text-xs font-semibold text-primary-700 dark:text-primary-300">Read →</span>
+      </a>
+    )}
+  </article>
+</section>
