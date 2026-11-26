@@ -339,3 +339,7 @@ body.site-bg { background-color: var(--c2-bg); color: var(--c2-fg); }
     transition: border-color 0.2s ease;
 }
 .cta-outline:hover { border-color: var(--c2-accent); }
+
+/* Intro text size follows its length (set in IntroCard) */
+.c2-lead-lg { font-size: 1.4rem; line-height: 1.65; }
+.c2-lead-md { font-size: 1.05rem; line-height: 1.7; }

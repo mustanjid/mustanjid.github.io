@@ -11,6 +11,8 @@ const tagline = intro?.data.tagline ?? [];
 const name = author?.data.name ?? "";
 const avatar = author?.data.avatar;
 const { greeting } = settings;
+// Short intro text is set large; longer text is set at a moderate size so the card stays balanced.
+const introSize = (intro?.body?.length ?? 0) < 400 ? "c2-lead-lg" : "c2-lead-md";
 // Labelled buttons for GitHub / LinkedIn, taken from the Social links in /admin.
 const profileButtons = siteData.socialLinks
   .filter(({ kind }) => kind === "github" || kind === "linkedin")
@@ -36,7 +38,7 @@ const profileButtons = siteData.socialLinks
     </h1>
 
     {Content && (
-      <div class="c2-lead mt-5 text-justify">
+      <div class:list={["c2-lead mt-5 text-justify", introSize]}>
         <Content />
       </div>
     )}

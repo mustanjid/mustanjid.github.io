@@ -1,14 +1,14 @@
 {
   "title": "Mustanjid's Basket (MB)",
   "headerTitle": "Mustanjid's Basket",
-  "description": "Md Al Mustanjid is a NetOps Engineer, Research Assistant, and bioinformatics enthusiast.",
+  "description": "Md Al Mustanjid is a NetOps Support Engineer, research assistant, and bioinformatics enthusiast.",
   "footerText": "",
   "author": "Md Al Mustanjid",
   "keywords": [
     "Md Al Mustanjid",
     "Portfolio",
     "Data center",
-    "NetOps Engineer",
+    "Support Engineer",
     "NetOps",
     "Systems and Network",
     "Research",
@@ -16,8 +16,7 @@
     "Bioinformatics",
     "Systems Biology",
     "Machine Learning",
-    "Pattern Recognition",
-    "Automation"
+    "Pattern Recognition"
   ],
   "ogImage": "/static/og-image (1).jpg",
   "reactions": {

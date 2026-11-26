@@ -9,14 +9,14 @@ const tools = settings.tools;
 const half = Math.ceil(tools.length / 2);
 const topRow = tools.slice(0, half);
 const bottomRow = tools.slice(half).length ? tools.slice(half) : topRow;
-const rows = [topRow, bottomRow];
+const rows = tools.length > 1 ? [topRow, bottomRow] : [topRow];
 ---
 
 {tools.length > 0 && (
-  <section class="c2-card flex h-full flex-col overflow-hidden" aria-label="Tools I use">
+  <section class="c2-card flex flex-col overflow-hidden" aria-label="Tools I use">
     <div class="flex items-center justify-between gap-3">
       <p class="c2-eyebrow m-0">Tools & stack</p>
-      <span class="text-xs text-[var(--c2-soft)]">{tools.length} tools</span>
+      <span class="text-xs text-[var(--c2-soft)]">{tools.length} {tools.length === 1 ? "tool" : "tools"}</span>
     </div>
     <div class="mt-4 space-y-3">
       {rows.map((row, index) => (

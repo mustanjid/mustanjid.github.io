@@ -25,20 +25,18 @@ const ongoing = (flagged.length > 0
 ---
 
 <RootLayout title={SITE_METADATA.title} description={SITE_METADATA.description} wide>
-  <div class="grid gap-4 pt-6 md:grid-cols-2 lg:grid-cols-6 lg:auto-rows-auto">
-    <div class="md:col-span-2 lg:col-span-4 lg:row-span-2"><IntroCard /></div>
-    <div class="flex flex-col gap-4 md:col-span-2 lg:col-span-2 lg:row-span-2 [&>*]:flex-1 [&>*]:min-h-0">
-      <HomeSpotlightThought />
+  <div class="flex flex-col gap-4 pt-6 lg:flex-row lg:items-stretch">
+    <div class="flex min-w-0 flex-1 flex-col gap-4">
+      <div class="flex flex-1 flex-col [&>*]:flex-1"><IntroCard /></div>
+      <div class="flex flex-col gap-4 md:flex-row [&>*]:flex-1"><RightNow /><ClaudeCard /></div>
+    </div>
+    <div class="flex min-w-0 flex-col gap-4 lg:w-[340px] lg:flex-none">
+      <div class="flex flex-1 flex-col [&>*]:flex-1"><HomeSpotlightThought /></div>
       <ToolStackCard />
     </div>
   </div>
 
-  <div class="mt-4"><RightNow /></div>
-
-  <div class="mt-4 grid items-stretch gap-4 lg:grid-cols-12">
-    <div class="lg:col-span-4"><ClaudeCard /></div>
-    <div class="lg:col-span-8"><TechNewsBox /></div>
-  </div>
+  <div class="mt-4"><TechNewsBox /></div>
 
   {ongoing.length > 0 && (
     <section aria-labelledby="ongoing-projects" class="mt-12">

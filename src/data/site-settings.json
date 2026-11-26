@@ -1,27 +1,13 @@
 {
-  "greeting": "Hello, there!",
+  "greeting": "Hello, folks!",
   "rightNow": {
-    "enabled": false,
+    "enabled": true,
     "text": "Learning Sveltia CMS for managing my own portfolio",
-    "updatedAt": "",
+    "updatedAt": "2026-11-09",
     "url": ""
   },
-  "claudeUsage": {
-    "enabled": false,
-    "value": "1.2M",
-    "period": "Tokens used",
-    "detail": "",
-    "updatedAt": ""
-  },
-  "tools": [
-    {
-      "name": "Mikrotik",
-      "icon": "",
-      "url": ""
-    }
-  ],
   "news": {
-    "enabled": false
+    "enabled": true
   },
   "announcements": {
     "enabled": false,
@@ -42,5 +28,13 @@
     "url": "",
     "expires": ""
   },
-  "scholarUrl": "https://scholar.google.com/citations?user=MPlz5dQAAAAJ&hl=en&authuser=1"
+  "scholarUrl": "https://scholar.google.com/citations?user=MPlz5dQAAAAJ&hl=en&authuser=1",
+  "claudeUsage": {
+    "enabled": false,
+    "value": "",
+    "period": "Tokens used",
+    "detail": "",
+    "updatedAt": ""
+  },
+  "tools": []
 }

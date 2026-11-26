@@ -7,7 +7,7 @@ import { pagesData } from "@/data/content";
 const posts = sortBlogPosts((await getCollection("blog", excludeDrafts)) ?? []).slice(0, 3);
 ---
 
-<article aria-labelledby="my-thoughts-title" class="c2-card flex h-full min-w-0 flex-col">
+<article aria-labelledby="my-thoughts-title" class="c2-card flex min-w-0 flex-col">
   <h2 id="my-thoughts-title" class="c2-title m-0 text-xl">My thoughts</h2>
 
   {posts.length > 0 ? (
