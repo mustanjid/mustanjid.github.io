@@ -6,6 +6,20 @@
     "updatedAt": "2026-11-09",
     "url": ""
   },
+  "claudeUsage": {
+    "enabled": true,
+    "value": "12",
+    "period": "Tokens used",
+    "detail": "",
+    "updatedAt": ""
+  },
+  "tools": [
+    {
+      "name": "mikrotik",
+      "icon": "🔧",
+      "url": ""
+    }
+  ],
   "news": {
     "enabled": true
   },
@@ -28,13 +42,5 @@
     "url": "",
     "expires": ""
   },
-  "scholarUrl": "https://scholar.google.com/citations?user=MPlz5dQAAAAJ&hl=en&authuser=1",
-  "claudeUsage": {
-    "enabled": false,
-    "value": "",
-    "period": "Tokens used",
-    "detail": "",
-    "updatedAt": ""
-  },
-  "tools": []
+  "scholarUrl": "https://scholar.google.com/citations?user=MPlz5dQAAAAJ&hl=en&authuser=1"
 }
