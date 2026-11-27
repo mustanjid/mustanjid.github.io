@@ -1,54 +1,57 @@
 ---
 import { Image } from "astro:assets";
 import { getEntry } from "astro:content";
-import { siteData } from "@/data/content";
+import SocialLinks from "@/components/SocialLinks.astro";
 import { settings } from "@/data/settings";
 
 const author = await getEntry("authors", "default");
 const intro = await getEntry("home", "intro");
 const { Content } = intro ? await intro.render() : { Content: null };
 const tagline = intro?.data.tagline ?? [];
-const name = author?.data.name ?? "";
+const roleLine = tagline.join(" · ");
+const shortRoleLine = roleLine.length > 42 ? `${roleLine.slice(0, 39).trimEnd()}…` : roleLine;
+const name = author?.data.name ?? "Md Al Mustanjid";
 const avatar = author?.data.avatar;
 const { greeting } = settings;
-// Short intro text is set large; longer text is set at a moderate size so the card stays balanced.
-const introSize = (intro?.body?.length ?? 0) < 400 ? "c2-lead-lg" : "c2-lead-md";
-// Labelled buttons for GitHub / LinkedIn, taken from the Social links in /admin.
-const profileButtons = siteData.socialLinks
-  .filter(({ kind }) => kind === "github" || kind === "linkedin")
-  .map(({ kind, url }) => ({ label: kind === "github" ? "GitHub" : "LinkedIn", href: url }));
 ---
 
-<section class="c2-card flex h-full flex-col justify-between gap-6 p-6 sm:p-8" aria-labelledby="home-title">
-  <div>
-    <div class="flex items-center gap-4">
+<section class="c2-card flex h-full max-h-[600px] min-h-0 flex-col gap-4 p-5 sm:p-5 lg:p-6" aria-labelledby="home-title">
+  <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+    <div class="flex min-w-0 flex-1 items-center gap-3.5">
       {avatar && (
-        <Image src={avatar} alt={`Portrait of ${name}`} width={72} height={72} loading="eager" class="h-[72px] w-[72px] shrink-0 rounded-[20px] border border-[var(--c2-line-strong)] object-cover" />
+        <Image src={avatar} alt={`Portrait of ${name}`} width={72} height={72} loading="eager" class="h-16 w-16 shrink-0 rounded-2xl border border-[var(--c2-line-strong)] object-cover sm:h-[72px] sm:w-[72px]" />
       )}
-      <div class="flex flex-col gap-0.5">
-        <p class="m-0 font-mono text-[15px] text-[var(--c2-soft)]">{greeting}</p>
-        <p class="m-0 text-sm text-[var(--c2-soft)]">
-          <b class="font-semibold text-[var(--c2-fg)]">{name}</b>{tagline.length > 0 && <> · {tagline.join(" · ")}</>}
-        </p>
+      <div class="min-w-0">
+        <p class="m-0 font-sans text-base font-semibold tracking-tight text-[var(--c2-fg)] sm:text-lg">{greeting} <span aria-hidden="true">👋</span></p>
+        <h1 id="home-title" class="m-0 mt-1 text-sm font-semibold leading-5 text-[var(--c2-fg)] sm:text-[15px]">
+          {name}{tagline.length > 0 && <span class="font-normal text-[var(--c2-soft)]"> · {tagline.join(" · ")}</span>}
+        </h1>
       </div>
     </div>
-
-    <h1 id="home-title" class="c2-title mt-6 mb-0 text-4xl leading-[1.1] sm:text-5xl">
-      I'm <span class="c2-grad">{name}</span>.
-    </h1>
-
-    {Content && (
-      <div class:list={["c2-lead mt-5 text-justify", introSize]}>
-        <Content />
-      </div>
-    )}
+    <SocialLinks
+      class="flex shrink-0 items-center gap-2"
+      size={4}
+      extra={settings.scholarUrl ? [{ kind: "scholar", href: settings.scholarUrl }] : []}
+    />
   </div>
 
-  <div class="flex flex-wrap items-center gap-3">
-    <a href="/blog" class="cta-primary">My thoughts</a>
-    {profileButtons.map(({ label, href }) => (
-      <a href={href} class="cta-outline" target="_blank" rel="noopener noreferrer">{label}</a>
-    ))}
-    <a href="/cv" class="cta-outline">View CV</a>
-  </div>
+  <div class="h-px w-full bg-[var(--c2-line)]" aria-hidden="true"></div>
+
+  <h2 class="c2-title m-0 text-[1.4rem] leading-tight sm:text-[1.65rem]">
+    I'm <span class="c2-grad">{name}</span>.
+  </h2>
+
+  {Content && (
+    <div class="home-intro min-w-0 text-[13.5px] leading-[1.65] text-[var(--c2-text)] sm:text-[14px]">
+      <Content />
+    </div>
+  )}
 </section>
+
+<style is:global>
+  .home-intro p { margin: 0 0 0.65rem; }
+  .home-intro p:last-child { margin-bottom: 0; }
+  .home-intro a:not([class]) {
+    @apply font-medium text-primary-700 underline decoration-primary-300 underline-offset-2 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200;
+  }
+</style>

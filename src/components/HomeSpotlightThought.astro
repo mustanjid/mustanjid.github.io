@@ -4,21 +4,28 @@ import FormattedDate from "@/components/FormattedDate.astro";
 import { excludeDrafts, sortBlogPosts } from "@/functions";
 import { pagesData } from "@/data/content";
 
-const posts = sortBlogPosts((await getCollection("blog", excludeDrafts)) ?? []).slice(0, 3);
+const posts = sortBlogPosts((await getCollection("blog", excludeDrafts)) ?? []).slice(0, 2);
 ---
 
-<article aria-labelledby="my-thoughts-title" class="c2-card flex min-w-0 flex-col">
-  <h2 id="my-thoughts-title" class="c2-title m-0 text-xl">My thoughts</h2>
+<article aria-labelledby="my-thoughts-title" class="c2-card flex h-full min-h-0 flex-1 flex-col p-4 sm:p-[18px]">
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <p class="c2-eyebrow m-0 text-[10px] tracking-[0.12em]">Recently written</p>
+      <h2 id="my-thoughts-title" class="c2-title m-0 mt-1 text-base">My thoughts</h2>
+    </div>
+    <span class="text-xs text-[var(--c2-soft)]">{posts.length} recent</span>
+  </div>
 
   {posts.length > 0 ? (
-    <ul class="mt-3 list-none p-0 m-0">
-      {posts.map((post, index) => (
-        <li class="border-t border-[var(--c2-line)] py-3 first:border-t-0 first:pt-0">
-          <time class="block text-xs text-[var(--c2-faint)]" datetime={post.data.date.toISOString()}><FormattedDate date={post.data.date} /></time>
-          <a href={`/blog/${post.slug}`} class:list={["c2-title mt-1 block no-underline hover:text-[var(--c2-accent)]", index === 0 ? "text-base leading-snug line-clamp-3" : "text-sm leading-5 line-clamp-2"]}>
+    <ul class="mt-2.5 list-none divide-y divide-[var(--c2-line)] p-0">
+      {posts.map((post) => (
+        <li class="py-2 first:pt-1 last:pb-1">
+          <time class="block text-[11px] leading-4 text-[var(--c2-faint)]" datetime={post.data.date.toISOString()}>
+            <FormattedDate date={post.data.date} />
+          </time>
+          <a href={`/blog/${post.slug}`} title={post.data.title} class="c2-title mt-1 block text-[13px] font-semibold leading-[1.35rem] no-underline transition hover:text-[var(--c2-accent)] sm:text-sm">
             {post.data.title}
           </a>
-          {index === 0 && post.data.summary && <p class="c2-text mt-1 line-clamp-2 text-sm">{post.data.summary}</p>}
         </li>
       ))}
     </ul>
@@ -26,7 +33,7 @@ const posts = sortBlogPosts((await getCollection("blog", excludeDrafts)) ?? []).
     <p class="c2-text mt-4 text-sm">{pagesData.home.thoughtsEmpty}</p>
   )}
 
-  <div class="mt-auto pt-4">
-    <a href="/blog" class="cta-ghost">View all</a>
+  <div class="mt-auto border-t border-[var(--c2-line)] pt-2.5">
+    <a href="/blog" class="cta-ghost">All thoughts <span aria-hidden="true">→</span></a>
   </div>
 </article>
