@@ -1,13 +1,13 @@
 {
-  "greeting": "Hello, folks!",
+  "greeting": "Hello, there!",
   "rightNow": {
-    "enabled": true,
+    "enabled": false,
     "text": "Learning Sveltia CMS for managing my own portfolio",
     "updatedAt": "2026-11-09",
     "url": ""
   },
   "claudeUsage": {
-    "enabled": true,
+    "enabled": false,
     "value": "12",
     "period": "Tokens used",
     "detail": "",
@@ -18,10 +18,15 @@
       "name": "mikrotik",
       "icon": "🔧",
       "url": ""
+    },
+    {
+      "name": "python",
+      "icon": "🔧",
+      "url": ""
     }
   ],
   "news": {
-    "enabled": true
+    "enabled": false
   },
   "announcements": {
     "enabled": false,
