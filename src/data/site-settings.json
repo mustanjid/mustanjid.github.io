@@ -16,12 +16,17 @@
   "tools": [
     {
       "name": "mikrotik",
-      "icon": "🔧",
+      "icon": "",
       "url": ""
     },
     {
       "name": "python",
-      "icon": "🔧",
+      "icon": "",
+      "url": ""
+    },
+    {
+      "name": "cisco",
+      "icon": "",
       "url": ""
     }
   ],
